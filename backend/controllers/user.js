@@ -6,7 +6,7 @@ module.exports = {
   signup: async (req, res, next) => {
     try {
       // Params
-      var firstName = req.body.first_name;
+      var firstName = req.body.first_name ;
       var lastName = req.body.last_name;
       var email = req.body.email;
       var password = req.body.password;
@@ -18,9 +18,9 @@ module.exports = {
       // verification - regex - mdp etc...
       // verif existance
       // vérif unique
-      const newUser = await db.User.findOrCreate({
-        first_Name: firstName,
-        last_Name: lastName,
+      const newUser = await db.User.create({
+        first_name: firstName,
+        last_name: lastName,
         email: email,
         password: password
       })
@@ -30,12 +30,9 @@ module.exports = {
         })
       })
       .catch(function (error) {
-        return res.status(500).json({ 'error': 'cannot add user' });
+        console.log(error);
+        return res.status(500).json({'error': 'cannot add user' });
       });
-
-
-
-
 
       //bcrypt.hash(password, 5, async (error, bcryptedPassword) => {
       //  try {
