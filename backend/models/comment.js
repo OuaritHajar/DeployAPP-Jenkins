@@ -22,9 +22,6 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false
         }
       });
-
-
-
     }
   };
   Comment.init({

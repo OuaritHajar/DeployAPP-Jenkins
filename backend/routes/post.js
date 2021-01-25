@@ -1,10 +1,10 @@
 // Imports
 const express = require('express');
-const usersCtrl = require('../controllers/user');
+const postsCtrl = require('../controllers/post');
 const router = express.Router();
 
 // Users routes
-router.post('/signup', usersCtrl.signup);
+router.get('/post', postsCtrl.findAll);
 //router.post('/login', usersCtrl.login);
 
 module.exports = router;
