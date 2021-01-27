@@ -8,10 +8,10 @@ const commentCtrl = require('../controllers/comment');
 // Posts routes
 router.post('/newpost', postsCtrl.createPost);
 router.get('/allposts', postsCtrl.listPosts);
-router.get('/:id', postsCtrl.selectOnePost);
+router.get('/:postId', postsCtrl.selectOnePost);
 
 // Comment routes
-router.post('/:id/newcomment', commentCtrl.createComment);
-router.get('/:id/postcomments', commentCtrl.listPostComments);
+router.post('/:postId/newcomment', commentCtrl.createComment);
+router.get('/:postId/postcomments', commentCtrl.listPostComments);
 
 module.exports = router;

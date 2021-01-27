@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
 
-      user_id: {
+      userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -18,7 +18,7 @@ module.exports = {
         }
       },
 
-      post_id: {
+      postId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {

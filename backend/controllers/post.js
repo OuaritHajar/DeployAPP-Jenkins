@@ -101,21 +101,14 @@ module.exports = {
     selectOnePost: function(req,res) {
         db.Post.findOne({ 
             attributes: ['title','img_url','description','UserId','createdAt','updatedAt'],
-            where: { 'id': req.params.id }
+            where: { 'id': req.params.postId }
         })
         .then(function(post) {
             if(post) {
 
-
-
-
                 res.status(200).json(post);
 
                 //db.Comment.findAll()
-
-
-
-
 
 
             } else {

@@ -30,7 +30,7 @@ module.exports = {
 
                     // récupère le post
                     db.Post.findOne({
-                        where: { id: req.params.id }
+                        where: { id: req.params.postId }
                     })
                         .then(function (postFound) {
                             if (postFound) {
@@ -99,14 +99,14 @@ module.exports = {
 
                     // récupère le post
                     db.Post.findOne({
-                        where: { id: req.params.id }
+                        where: { id: req.params.postId }
                     })
                         .then(function (postFound) {
                             if (postFound) {
 
                                 // récupère les commentaires
                                 db.Comment.findAll({
-                                    where: { postId: req.params.id }
+                                    where: { postId: req.params.postId }
                                 })
                                     .then(function (postComments) {
                                         if (postComments) {
