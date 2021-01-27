@@ -26,7 +26,7 @@ module.exports = {
           key:'id'
         }
       },
-      like_post_value: {
+      like: {
         allowNull: true,
         type: Sequelize.INTEGER
       },

@@ -34,6 +34,7 @@ module.exports = {
                     title, title,
                     img_url: img_url,
                     description: description,
+                    like: 0,
                     UserId: userFound.id
                 })
                 .then(function(newPost) {

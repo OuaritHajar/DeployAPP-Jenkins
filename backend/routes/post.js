@@ -4,6 +4,7 @@ const router = express.Router();
 
 const postsCtrl = require('../controllers/post');
 const commentCtrl = require('../controllers/comment');
+const likesCtrl = require('../controllers/like');
 
 // Posts routes
 router.post('/newpost', postsCtrl.createPost);
@@ -13,5 +14,8 @@ router.get('/:postId', postsCtrl.selectOnePost);
 // Comment routes
 router.post('/:postId/newcomment', commentCtrl.createComment);
 router.get('/:postId/postcomments', commentCtrl.listPostComments);
+
+// Like routes
+router.post('/:postId/like', likesCtrl.likePost);
 
 module.exports = router;
