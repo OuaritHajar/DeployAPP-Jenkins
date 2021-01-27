@@ -200,31 +200,25 @@ module.exports = {
     var userId = jwtUtils.getUserId(headerAuth);
 
 
-
     // on cherche l'utilisateur
     db.User.findOne({
       where: { id: userId }
     })
       .then(function (userFound) {
-        if (userFound) {
-
-
-
-          // si on le trouve on le supprime
-          userFound.destroy({
-            where: { id: userId }
-          })
-            .then(function () {
-              res.status(201).json({'message': 'User deleted'}) 
+        if (userFound && userId) {
+          if ( userId == req.params.userId ) {
+            db.User.destroy({
+              where: { id: req.params.userId }
             })
-            .catch(function (err) {
-              res.status(500).json({ 'error': 'cannot update user' });
-            });
-
-
-
-
-
+              .then(function () {
+                res.status(201).json({'message': 'User ' + req.params.userId + ' deleted'}) 
+              })
+              .catch(function (err) {
+                res.status(500).json({ 'error': 'cannot update user' });
+              });
+          } else {
+            return res.status(404).json({'error' : 'no permission'})
+          }
         } else {
           res.status(404).json({ 'error': 'user not found' });
         }
@@ -232,10 +226,4 @@ module.exports = {
         return res.status(500).json({ 'error': 'unable to verify user' });
       });
   }
-
-
-
-
-
-
 };
