@@ -173,7 +173,6 @@ module.exports = {
             .then(function (userFound) {
                 if (userFound) {
 
-
                     // on cherche le post souhaiter dans la requete
                     db.Post.findOne({
                         where: { id: postId }
@@ -181,15 +180,17 @@ module.exports = {
                         .then(function (postFound) {
                             if (postFound) {
 
-
                                 // on cherche le comment souhaiter dans la requete
                                 db.Comment.findOne({
                                     where: { id: commentId }
                                 })
                                     .then(function (commentFound) {
                                         if (commentFound) {
+
                                             // on verifie que la comment a été créé par le proprio
                                             if (commentFound.UserId == userFound.id) {
+
+                                                //update
                                                 commentFound.update({
                                                     description: (description ? description : description)
                                                 })
@@ -257,6 +258,8 @@ module.exports = {
 
                                     // on vverifie que le commentaire appartient à l'user
                                     if (commentFound.UserId == userFound.id) {
+
+                                        //delete
                                         db.Post.destroy({
                                             where: { id: req.params.commentId }
                                         })
