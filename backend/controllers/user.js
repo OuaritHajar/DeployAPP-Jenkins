@@ -194,8 +194,45 @@ module.exports = {
 
 
 
+  deleteUser: function (req, res) {
+    // Getting auth header
+    var headerAuth = req.headers['authorization'];
+    var userId = jwtUtils.getUserId(headerAuth);
 
-  // supprimer user
+
+
+    // on cherche l'utilisateur
+    db.User.findOne({
+      where: { id: userId }
+    })
+      .then(function (userFound) {
+        if (userFound) {
+
+
+
+          // si on le trouve on le supprime
+          userFound.destroy({
+            where: { id: userId }
+          })
+            .then(function () {
+              res.status(201).json({'message': 'User deleted'}) 
+            })
+            .catch(function (err) {
+              res.status(500).json({ 'error': 'cannot update user' });
+            });
+
+
+
+
+
+        } else {
+          res.status(404).json({ 'error': 'user not found' });
+        }
+      }).catch(function (err) {
+        return res.status(500).json({ 'error': 'unable to verify user' });
+      });
+  }
+
 
 
 

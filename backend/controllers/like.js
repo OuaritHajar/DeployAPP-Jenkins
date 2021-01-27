@@ -41,7 +41,7 @@ module.exports = {
                         .then(function(isUserAlreadyLiked) {
                             if(!isUserAlreadyLiked) {
 
-                                // truc un peu chelou ici
+                                // méthode add sur l'instance 
                                 postFound.addUser(userFound)
                                 .then(function(alreadyLikeFound) {
 
@@ -81,5 +81,11 @@ module.exports = {
         .catch(function (err) {
              res.status(404).json(err);
         });
-        }
+        },
+
+
+
+
+    // remove like
+
     }
