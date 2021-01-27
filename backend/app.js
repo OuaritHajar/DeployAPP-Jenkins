@@ -46,27 +46,16 @@ app.use((req, res, next) => {
 
 //sers un dossier static (chemin : )
 //app.use('/images', express.static(path.join(__dirname, 'images')));
-//Route 
-//app.use('/api/', );
+
+
+
+
+
+
 //Route user
-app.get('/', function(req,res) {
-    res.setHeader('Content-Type','text/html');
-    res.status(200).send('<h1>Yeah ca fonctionne</h1>')
-});
 
-app.use('/api/', postRoutes);
+app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
-
-app.post('/users', async(req,res) => {
-    const { first_name, last_name, email, password } = req.body;
-
-    try{
-        const user = await User.create({first_name, last_name, email, password});
-        return res.json(user);
-    }catch(err){
-        console.log(err).json(err);
-    }
-})
 
 //exporter cette application pour etre asccessible depuis servernode
 module.exports = app;

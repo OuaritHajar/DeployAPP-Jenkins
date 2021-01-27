@@ -50,8 +50,9 @@ module.exports = {
                   password: bcryptedPassword
                 })
                   .then(function (newUser) {
+                    console.log(newUser);
                     return res.status(201).json({
-                      'userId': newUser.id
+                      'userId': newUser.id,
                     })
                   })
                   .catch(function (error) {
@@ -128,6 +129,7 @@ module.exports = {
 
 
   getUserProfile: function(req, res) {
+    // Getting auth header
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth); 
 
@@ -190,6 +192,12 @@ module.exports = {
 
 
 
+
+
+
+
+
+  // supprimer user
 
 
 
