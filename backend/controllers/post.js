@@ -151,7 +151,6 @@ module.exports = {
                         where: { id: postId }
                     })
                         .then(function (postFound) {
-                            console.log(postFound)
                             // on verifie que la post a été créé par le proprio
                             if (postFound.UserId == userId) {
 
