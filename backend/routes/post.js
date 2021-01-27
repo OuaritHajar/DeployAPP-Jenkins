@@ -10,6 +10,7 @@ const likesCtrl = require('../controllers/like');
 router.post('/newpost', postsCtrl.createPost);
 router.get('/allposts', postsCtrl.listPosts);
 router.get('/:postId', postsCtrl.selectOnePost);
+router.put('/:postId/updatepost', postsCtrl.updateOnePost);
 
 // Comment routes
 router.post('/:postId/newcomment', commentCtrl.createComment);
