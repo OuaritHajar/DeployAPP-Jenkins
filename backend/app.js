@@ -6,12 +6,13 @@ const { Sequelize } = require('sequelize');
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 
+
 // Body Parser config 
 app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
 app.use(bodyParser.json());
 
-//const helmet = require("helmet");
-//const path = require('path');
+const helmet = require("helmet");
+const path = require('path');
 //require('dotenv').config();
 
 //connect au cluster - base de donnée
@@ -42,10 +43,10 @@ app.use((req, res, next) => {
 });
 
 //securisation des headers
-//app.use(helmet());
+app.use(helmet());
 
 //sers un dossier static (chemin : )
-//app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 

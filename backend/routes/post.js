@@ -6,11 +6,13 @@ const postsCtrl = require('../controllers/post');
 const commentCtrl = require('../controllers/comment');
 const likesCtrl = require('../controllers/like');
 
+const multer = require('../middleware/multer-config');
+
 // Posts routes
 router.post('/newpost', postsCtrl.createPost);
 router.get('/allposts', postsCtrl.listPosts);
 router.get('/:postId', postsCtrl.selectOnePost);
-router.put('/:postId/updatepost', postsCtrl.updateOnePost);
+router.put('/:postId/updatepost', multer, postsCtrl.updateOnePost);
 router.delete('/:postId/delete', postsCtrl.removeOnePost);
 
 // Comment routes

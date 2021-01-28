@@ -16,7 +16,7 @@ p{
 }
 
 body {
-  margin-top: 120px;
+  margin-top: 103px;
   margin-bottom:30px;
   background-color: #f1f1f1;
   font-size: 1rem;
@@ -71,7 +71,7 @@ h5 {
   margin-left:auto;
   margin-right:auto;
   margin-top:20px;
-  margin-bottom:30px;
+  margin-bottom:40px;
   background-color: #c5c5c5;
 }
 
@@ -146,29 +146,14 @@ h5 {
   margin-left:auto;
 }
 .interaction-post{
-
   margin-left:auto;
   margin-right:auto;
 }
 
-
-
-
-
-
-.postexemple{
-  height:400px;
-  width: 80%;
-
-  margin-left:auto;
-  margin-right:auto;
-
-  margin-top:20px;
-
-  border-color: #303030;
-  background-color: #6d4e4e;
+.btn-ajouter-post{
+  display: flex;
+  justify-content: center;
 }
-
 
 
 
@@ -223,7 +208,6 @@ h5 {
 
 
 /* Inscription */
-
 .form-login{
   width:80%;
   border:solid rgb(151, 151, 151) 1px;
