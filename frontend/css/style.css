@@ -17,7 +17,7 @@ p{
 
 body {
   margin-top: 120px;
-  margin-bottom:15px;
+  margin-bottom:30px;
   background-color: #f1f1f1;
   font-size: 1rem;
 }
@@ -26,19 +26,16 @@ h1 {
   font-size: 2rem;
   font-weight: bold;
   font-family: 'Roboto', sans-serif;
-  color: #292929;
+  color: #df5757;
 }
 
 h2 {
   font-size:1.7rem;
-  padding-left:40px;
   color: #5e5e5e;
   font-weight: bold;
   font-family: 'Roboto', sans-serif;
 
-
   margin:5px 0 10px 0;
-
 }
 
 h3 {
@@ -57,8 +54,8 @@ h4 {
 h5 {
   font-weight: bold;
   color: #363636;
-  margin-top: 25px;
-  margin-left: 10px;
+  margin-top: 30px;
+  margin-bottom:15px;
 }
 
 .spacer{
@@ -85,10 +82,20 @@ h5 {
 
 
 
-/* Navigation */
 
+
+/* Navigation */
+.navbar-brand{
+  display:flex;
+}
 .navbar-brand img{
-  max-height: 50px;
+  height: 100%;
+  max-height: 60px;
+
+  margin-right:10px;
+}
+.navbar-brand h1{
+  margin-top:10px;
 }
 
 
@@ -112,11 +119,17 @@ h5 {
 .vrai-post-exemple{
   margin-left:auto;
   margin-right:auto;
+
+  padding-left:30px;
+  padding-right:30px
 }
 
 .vrai-post-exemple img{
-  width: 90%;
+  width: 100%;
   max-width: 550px;
+}
+.vrai-post-exemple a img{
+  display:flex;
 }
 .author{
   font-size:0.8rem;
@@ -124,13 +137,17 @@ h5 {
 }
 .description{
   margin-bottom:20px;
+
+  text-align: justify;
 }
-.vrai-post-exemple img image-post{
+.vrai-post-exemple img{
   margin-right:auto;
   margin-left:auto;
 }
 .interaction-post{
-  margin-left:0px;
+
+  margin-left:auto;
+  margin-right:auto;
 }
 
 
@@ -160,24 +177,34 @@ h5 {
 
 
 
-/* Aside */
 
+
+
+/* Aside */
+.aside{
+  width: 90%;
+  background-color: #e4e4e4;
+  border-radius: 8px;
+  
+  margin-left:auto;
+  margin-right:auto;
+  padding-top:10px;
+}
 .text-presentation{
   text-align: justify;
   margin-top:10px;
 }
 .reseausociaux{
-  margin-left:20px;
-}
-.aside{
-  width:100%;
+  margin-left:30px;
 }
 .aside a {
   color:#020202;
 }
-.ml-2{
-  margin-left:2px;
+.center{
+  margin-left:auto;
+  margin-right:auto;
 }
+
 
 
 
@@ -200,6 +227,8 @@ h5 {
   margin-top:20px;
   padding:20px;
 }
+
+
 
 
 
@@ -237,6 +266,9 @@ h5 {
 
 
 
+
+
+
 /* Edit profil */
 .form-update-profil{
   border: rgb(119, 119, 119) solid 1px;
@@ -246,6 +278,10 @@ h5 {
 
   padding:15px;
 }
+
+
+
+
 
 
 
@@ -317,31 +353,53 @@ footer .mention {
 
 /*Média Queries */
 
+@media screen and (min-width: 1200px) {
+  .interaction-post{
+    width: 72%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .interaction-post{
+    width: 87%;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .interaction-post{
+    width: 87%;
+  }
+}
+
 @media screen and (max-width: 767px) {
   .navbar {
     background-color: rgba(117, 155, 68, 0.945);
   }
-  footer{
-    min-width:100px;
-    margin:0;
-    padding:0;
+  .interaction-post{
+    width: 100%;
   }
 }
+
 @media screen and (max-width: 574px) {
   body{
     margin-left:5vw;
     margin-right:5vw;
   }
-  h1 {
-    font-size: 3rem;
+  .navbar-brand img{
+    height: 100%;
+    max-height: 40px;
+  
+    margin-right:10px;
+    margin-top:2px;
   }
-
+  h1 {
+    font-size: 1.5rem;
+  }
   h4 {
     font-size: 3rem;
   }
-
-  #presentation p {
-    font-size: 1.4rem !important;
+  .interaction-post{
+    width: 100%;
   }
 
   article {
