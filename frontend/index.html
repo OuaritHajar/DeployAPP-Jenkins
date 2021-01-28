@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +9,14 @@
     <!-- Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <!-- Google font-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    
+
     <!-- Bootstrap CDN-->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -29,21 +31,23 @@
 
 
 <body>
-    <div class="container-fluid">
+    <div class="container">
         <header>
-            <!-- barre de navigation-->
-            <nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-dark">
+<!-- barre de navigation-->
+            <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
 
-                <a class="navbar-brand" href="#">Groupomania</a>
+                <a class="navbar-brand" href="#">
+                    <img src="img/icon-left-font-monochrome-white.svg" alt="logo groupomania">
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler2"
                     aria-controls="navbarToggler03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-    
-                <div class="collapse navbar-collapse" id="navbarToggler2">
-                    <ul class="navbar-nav mr-auto mt-lg-0">
+<!-- navbar items -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarToggler2">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="*" id="login">Se connecter</a>
+                            <a class="nav-link" href="login.html" id="login">Se connecter</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="signup.html">S'enregistrer</a>
@@ -52,50 +56,112 @@
                 </div>
             </nav>
         </header>
-
+<!-- MAIN -->
         <main>
+            <section>
+                <div class="row">
+                    <div class="col-lg-10 col-md-9 col-sm-12" >
+<!-- Post-->
+                        <article>
+                            <div class="vrai-post-exemple">
+                                <p class="author">posté par Hector Gloridalio</p>
+                                <h2>Titre de mon post</h2>
+                                <p class="description">Description de l'image que je peux partager a mon reseau histoire de je sais pas trop quoi écrire. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt iste ipsa enim provident expedita amet dolorum soluta ducimus natus, tempora et recusandae pariatur inventore itaque sequi harum? Laudantium, corrupti culpa.</p>
+                                <a href="post.html"><img src="img/image-post.jpg" alt="premier post poto" class="image-post"></a>
+                                <div class="row interaction-post">
+                                    <p><a href="*" class="like">Likes</a>: 120 </p>
+                                    <p class="spacer">-</p>
+                                    <p><a href="*" class="commentaire"> Commentaire </a>: 236</p>
+                                </div> 
+                                <div class="seperate"></div>
+                            </div>
+                        </article>
+                        
+
+                        <article>
+                            <div class="vrai-post-exemple">
+                                <p class="author">posté par Hector Gloridalio</p>
+                                <h2>Titre de mon post</h2>
+                                <p class="description">Description de l'image que je peux partager a mon reseau histoire de je sais pas trop quoi écrire. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt iste ipsa enim provident expedita amet dolorum soluta ducimus natus, tempora et recusandae pariatur inventore itaque sequi harum? Laudantium, corrupti culpa.</p>
+                                <a href="post.html"><img src="img/image-post.jpg" alt="premier post poto" class="image-post"></a>
+                                <div class="row interaction-post">
+                                    <p><a href="*" class="like">Likes</a>: 120 </p>
+                                    <p class="spacer">-</p>
+                                    <p><a href="*" class="commentaire"> Commentaire </a>: 236</p>
+                                </div> 
+                                <div class="seperate"></div>
+                            </div>
+                        </article>
+
+                        <article>
+                            <div class="vrai-post-exemple">
+                                <p class="author">posté par Hector Gloridalio</p>
+                                <h2>Titre de mon post</h2>
+                                <p class="description">Description de l'image que je peux partager a mon reseau histoire de je sais pas trop quoi écrire. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt iste ipsa enim provident expedita amet dolorum soluta ducimus natus, tempora et recusandae pariatur inventore itaque sequi harum? Laudantium, corrupti culpa.</p>
+                                <a href="post.html"><img src="img/image-post.jpg" alt="premier post poto" class="image-post"></a>
+                                <div class="row interaction-post">
+                                    <p><a href="*" class="like">Likes</a>: 120 </p>
+                                    <p class="spacer">-</p>
+                                    <p><a href="*" class="commentaire"> Commentaire </a>: 236</p>
+                                </div> 
+                                <div class="seperate"></div>
+                            </div>
+                        </article>
+                    </div>
+<!--Aside-->
+                    <div class="col-lg-2 col-md-3 aside">
+                        <p class="text-presentation"> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptates quae odio eaque et quasi
+                            perspiciatis quod animi sint, similique corrupti corporis ratione nam blanditiis esse
+                            voluptatibus quis, soluta autem totam?</p>
+                        <div class="row">
+<!-- Contact -->                         
+                            <article>
+                                <h5>CONTACT</h5>
+                                <ul>
+                                    <li>Nom et prénom</li>
+                                    <li>12 Rue du là-bas</li>
+                                    <li>68600, Par-là-bas</li>
+                                    <li>06 52 63 85 46</li>
+                                    <li>contact@hotmail.fr</li>
+                                </ul>
+                            </article>
+                        </div>
+                        <div class="row">
+<!--Reseau sociaux-->
+                            <article>
+                                <h5>SUIVEZ NOUS</h5>
+                                <div class="reseausociaux">
+                                    <a class="social" href="#" title="Twitter"><span class="fa fa-twitter fa-2x"></span></a>
+                                    <a class="social" href="#" title="Facebook"><span class="fa fa-facebook fa-2x"></span></a>
+                                    <a class="social" href="#" title="Tuconnais?"><span class="fa fa-dribbble fa-2x"></span></a>
+                                    <a class="social" href="#" title="Instagram"><span class="fa fa-instagram fa-2x"></span></a>
+                                </div>
+                            </article>
+                        
+<!-- Newsletter-->
+                            <article>
+                                <h5>NEWSLETTER</h5>
+                                <p class="ml-2">Ajouter votre email pour recevoir la newsletter</p>
+                                <form class="form ml-2">
+                                    <div class="form-group">
+                                        <input type="text" class="form-group" placeholder="adresse@mail.fr">
+                                        <button type="button" class="btn btn-secondary btn-form">Envoyez</button>
+                                    </div>
+                                </form>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
             <div id="jstest"></div>
         </main>
 
-        <footer>
+        <footer class="fixed-bottom">
             <section>
-                <div class="row">
-                    <!-- Contact -->
-                    <article class="col-xs-6 col-sm-4 col-md-4">
-                        <h5>NOUS CONTACTER</h5>
-                        <ul>
-                            <li>Nom et prénom</li>
-                            <li>12 Rue du là-bas loin</li>
-                            <li>68600, Par-là-bas</li>
-                            <li>06 52 63 85 46</li>
-                            <li>adressecontact@hotmail.fr</li>
-                        </ul>
-                    </article>
 
-                    <!--Reseau sociaux-->
-                    <article class="col-xs-6 col-sm-4 col-md-4">
-                        <h5>SUIVEZ NOUS</h5>
-                        <div class="reseausociaux">
-                            <a class="social" href="#" title="Twitter"><span class="fa fa-twitter fa-2x"></span></a>
-                            <a class="social" href="#" title="Facebook"><span class="fa fa-facebook fa-2x"></span></a>
-                            <a class="social" href="#" title="Tuconnais?"><span class="fa fa-dribbble fa-2x"></span></a>
-                            <a class="social" href="#" title="Instagram"><span class="fa fa-instagram fa-2x"></span></a>
-                        </div>
-                    </article>
-
-                    <!-- Newsletter-->
-                    <article class="col-xs-7 col-sm-4 col-md-4">
-                        <h5>UNE IDEE ?</h5>
-                        <p>Une idée? Une suggestion ? Partagez nous là.</p>
-                        <form class="form">
-                            <div class="form-group">
-                                <textarea type="text" class="form-control" placeholder="Un conseil ?"
-                                    title="jeaispasencorequoiécririci" rows="3"></textarea>
-                                <button type="button" class="btn btn-secondary btn-form">Envoyez</button>
-                            </div>
-                        </form>
-                    </article>
-                </div>
             </section>
             <p class="mention">
                 <a href="#">Mentions légales</a> -
@@ -106,4 +172,5 @@
 </body>
 
 <script src="js/index.js"></script>
+
 </html>

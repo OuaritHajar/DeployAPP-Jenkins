@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Groupomania SignUp</title>
+    <title>Groupomania</title>
 
     <!-- Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
-    <!-- Google font-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
+    <!-- Google font-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Bootstrap CDN-->
@@ -30,104 +31,170 @@
 
 
 <body>
-    <div class="container-fluid">
+    <div class="container">
         <header>
             <!-- barre de navigation-->
-            <nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
 
-                <a class="navbar-brand" href="#">Groupomania</a>
+                <a class="navbar-brand" href="index.html">
+                    <img src="img/icon-left-font-monochrome-white.svg" alt="logo groupomania">
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler2"
                     aria-controls="navbarToggler03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <div class="collapse navbar-collapse" id="navbarToggler2">
-                    <ul class="navbar-nav mr-auto mt-lg-0">
+                <!-- navbar items -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarToggler2">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="*" id="login">Se connecter</a>
+                            <a class="nav-link" href="login.html" id="login">Se connecter</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="signup.html">S'enregistrer</a>
+                            <a class="nav-link active" href="signup.html">S'enregistrer</a>
                         </li>
                     </ul>
                 </div>
             </nav>
         </header>
-
+        <!-- MAIN -->
         <main>
             <section>
+                <div class="row">
+                    <div class="col-lg-10 col-md-9 col-sm-12">
+                        <!-- Post-->
+                        <section>
 
-                <h1>S'enregistrer</h1>
-                <form action="login.html">
-                    <div class="form-inline">
-                        <label class="my-1 mr-2" for="first-name">Nom :</label>
-                        <input type="text" id="first-name" class="form-control" placeholder="Name" required>
+                            <h1>Inscription</h1>
+                            <p>Rentrer les informations pour créer un compte utilisateur sur notre application de réseau
+                                social</p>
+
+
+                            <form action="login.html" class="form__login">
+                                <!-- Nom / Prenom -->
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputName">Nom : </label>
+                                        <input type="text" class="form-control" placeholder="Nom" name="nom"
+                                            id="inputLastName" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputLastName">Prénom :</label>
+                                        <input type="text" class="form-control" placeholder="Prénom" id="inputFirstName"
+                                            required>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-row">
+                                    <!-- Email-->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputEmail4">Email</label>
+                                        <input type="email" class="form-control" id="inputEmail" required
+                                            placeholder="exemple@messagerie.fr">
+                                    </div>
+                                    <!-- Ville -->
+                                    <div class="form-group col-md-6">
+                                        <label for="password">Mot de passe</label>
+                                        <input type="password" class="form-control" id="password" required>
+                                    </div>
+                                </div>
+
+                                <!-- Accepter les conditions -->
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input is-invalid" type="checkbox" value=""
+                                            id="invalidCheck30" required>
+                                        <label class="form-check-label" for="invalidCheck30">
+                                            Agree to terms and conditions
+                                        </label>
+                                        <div class="invalid-feedback">
+                                            You must agree before submitting.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- sauvegarde donné-->
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="gridCheck">
+                                        <label class="form-check-label" for="gridCheck">
+                                            Sauvegardez les informations
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button id="btnSubmit" type="button" class="btn btn-primary">
+                                    s'enregistrer
+                                </button>
+                            </form>
+
+                        </section>
+
+
+
+
+
+
                     </div>
+                    <!--Aside-->
+                    <div class="col-lg-2 col-md-3 aside">
+                        <p class="text-presentation"> Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                            Voluptates quae odio eaque et quasi
+                            perspiciatis quod animi sint, similique corrupti corporis ratione nam blanditiis esse
+                            voluptatibus quis, soluta autem totam?</p>
+                        <div class="row">
+                            <!-- Contact -->
+                            <article>
+                                <h5>CONTACT</h5>
+                                <ul>
+                                    <li>Nom et prénom</li>
+                                    <li>12 Rue du là-bas</li>
+                                    <li>68600, Par-là-bas</li>
+                                    <li>06 52 63 85 46</li>
+                                    <li>contact@hotmail.fr</li>
+                                </ul>
+                            </article>
+                        </div>
+                        <div class="row">
+                            <!--Reseau sociaux-->
+                            <article>
+                                <h5>SUIVEZ NOUS</h5>
+                                <div class="reseausociaux">
+                                    <a class="social" href="#" title="Twitter"><span
+                                            class="fa fa-twitter fa-2x"></span></a>
+                                    <a class="social" href="#" title="Facebook"><span
+                                            class="fa fa-facebook fa-2x"></span></a>
+                                    <a class="social" href="#" title="Tuconnais?"><span
+                                            class="fa fa-dribbble fa-2x"></span></a>
+                                    <a class="social" href="#" title="Instagram"><span
+                                            class="fa fa-instagram fa-2x"></span></a>
+                                </div>
+                            </article>
 
-                    <div class="form-inline">
-                        <label class="my-1 mr-2" for="last-name-name">Prénom:</label>
-                        <input type="text" id="last-name" class="form-control" placeholder="Prénom" required>
+                            <!-- Newsletter-->
+                            <article>
+                                <h5>NEWSLETTER</h5>
+                                <p class="ml-2">Ajouter votre email pour recevoir la newsletter</p>
+                                <form class="form ml-2">
+                                    <div class="form-group">
+                                        <input type="text" class="form-group" placeholder="adresse@mail.fr">
+                                        <button type="button" class="btn btn-secondary btn-form">Envoyez</button>
+                                    </div>
+                                </form>
+                            </article>
+                        </div>
                     </div>
-
-                    <div class="form-inline">
-                        <label class="my-1 mr-2" for="email">Email :</label>
-                        <input type="text" id="email" class="form-control" placeholder="adresse@message.fr" required>
-                    </div>
-
-                    <div class="form-inline">
-                        <label class="my-1 mr-2" for="password">Mot de passe :</label>
-                        <input type="text" id="password" class="form-control" required>
-                    </div>
-
-                    <div>
-                        <button id="btn" type="submit" class="btn btn-primary my-1 btn-panier mt-2">
-                            S'enregistrer
-                        </button>
-                    </div>
-                </form>
-
+                </div>
             </section>
+
+
+
+            <div id="jstest"></div>
         </main>
 
-        <footer>
+        <footer class="fixed-bottom">
             <section>
-                <div class="row">
-                    <!-- Contact -->
-                    <article class="col-xs-6 col-sm-4 col-md-4">
-                        <h5>NOUS CONTACTER</h5>
-                        <ul>
-                            <li>Nom et prénom</li>
-                            <li>12 Rue du là-bas loin</li>
-                            <li>68600, Par-là-bas</li>
-                            <li>06 52 63 85 46</li>
-                            <li>adressecontact@hotmail.fr</li>
-                        </ul>
-                    </article>
 
-                    <!--Reseau sociaux-->
-                    <article class="col-xs-6 col-sm-4 col-md-4">
-                        <h5>SUIVEZ NOUS</h5>
-                        <div class="reseausociaux">
-                            <a class="social" href="#" title="Twitter"><span class="fa fa-twitter fa-2x"></span></a>
-                            <a class="social" href="#" title="Facebook"><span class="fa fa-facebook fa-2x"></span></a>
-                            <a class="social" href="#" title="Tuconnais?"><span class="fa fa-dribbble fa-2x"></span></a>
-                            <a class="social" href="#" title="Instagram"><span class="fa fa-instagram fa-2x"></span></a>
-                        </div>
-                    </article>
-
-                    <!-- Newsletter-->
-                    <article class="col-xs-7 col-sm-4 col-md-4">
-                        <h5>UNE IDEE ?</h5>
-                        <p>Une idée? Une suggestion ? Partagez nous là.</p>
-                        <form class="form">
-                            <div class="form-group">
-                                <textarea type="text" class="form-control" placeholder="Un conseil ?"
-                                    title="jeaispasencorequoiécririci" rows="3"></textarea>
-                                <button type="button" class="btn btn-secondary btn-form">Envoyez</button>
-                            </div>
-                        </form>
-                    </article>
-                </div>
             </section>
             <p class="mention">
                 <a href="#">Mentions légales</a> -

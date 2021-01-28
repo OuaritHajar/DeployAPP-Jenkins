@@ -92,7 +92,6 @@ module.exports = {
             limit = ITEMS_LIMIT;
         }
 
-
         // récupère l'user
         db.User.findOne({
             where: { id: userId }
@@ -210,7 +209,6 @@ module.exports = {
                                     .catch(function (err) {
                                         res.status(404).json({ 'error': 'comment not found' })
                                     })
-
                             } else {
                                 return res.status(404).json({ 'error': 'post not found' })
                             }

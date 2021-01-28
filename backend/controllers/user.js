@@ -212,6 +212,14 @@ module.exports = {
             })
               .then(function () {
                 res.status(201).json({'message': 'User ' + req.params.userId + ' deleted'}) 
+
+
+
+
+                // suprimer contenu
+
+
+
               })
               .catch(function (err) {
                 res.status(500).json({ 'error': 'cannot update user' });
