@@ -7,10 +7,13 @@ var jwtUtils = require('../utils/jwt.utils');
 module.exports = {
     createPost: function (req, res) {
 
+
+
         // Getting auth header
         var headerAuth = req.headers['authorization'];
         var userId = jwtUtils.getUserId(headerAuth);
 
+        console.log(req.body);
         // Params
         var title = req.body.title;
         var img_url = req.body.img_url;
@@ -189,6 +192,7 @@ module.exports = {
         // Getting auth header
         var headerAuth = req.headers['authorization'];
         var userId = jwtUtils.getUserId(headerAuth);
+        var postId = JSON.parse(req.params.postId);
 
         // on cherche l'utilisateur
         db.Post.findOne({
@@ -203,8 +207,9 @@ module.exports = {
                     .then(function(userFound) {
 
                         if (postFound.UserId == userFound.id) {
+
                             db.Post.destroy({
-                                where: { id: req.params.postId }
+                                where: { id: postId }
                             })
                                 .then(function () {
                                     res.status(201).json({ 'message': 'Post ' + req.params.postId + ' deleted' })

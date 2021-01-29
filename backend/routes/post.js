@@ -6,20 +6,25 @@ const postsCtrl = require('../controllers/post');
 const commentCtrl = require('../controllers/comment');
 const likesCtrl = require('../controllers/like');
 
-const multer = require('../middleware/multer-config');
+
+// import upload image
+const upload = require('../config/upload.config.js');
+const fileWorker = require('../controllers/upload.controller.js');
+
 
 // Posts routes
 router.post('/newpost', postsCtrl.createPost);
+router.post('/newpost/img_url', upload.single("img_url"), fileWorker.upload);
 router.get('/allposts', postsCtrl.listPosts);
 router.get('/:postId', postsCtrl.selectOnePost);
-router.put('/:postId/updatepost', multer, postsCtrl.updateOnePost);
+router.put('/:postId/updatepost', postsCtrl.updateOnePost);
 router.delete('/:postId/delete', postsCtrl.removeOnePost);
 
 // Comment routes
 router.post('/:postId/newcomment', commentCtrl.createComment);
 router.get('/:postId/postcomments', commentCtrl.listPostComments);
 router.put('/:postId/:commentId', commentCtrl.updateOneComment);
-router.delete('/:postId/:commentId/delete', commentCtrl.deleteOneComment)
+router.delete('/:postId/:commentId/delete', commentCtrl.deleteOneComment);
 
 // Like routes
 router.post('/:postId/like', likesCtrl.likePost);

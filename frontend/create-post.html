@@ -69,37 +69,27 @@
 
 
 
-                            <form action="index.html" class="form-update-profil">
+                            <form method="post" enctype="multipart/form-data" action="index.html" class="form-update-profil" name="image">
                                 <div class="form-row">
                                     
                                     <!-- Image -->
                                     <div class="col-md-12 mb-3">
-                                        <label for="validationServer04">Titre</label>
-                                        <input type="text" class="form-control is-invalid" id="validationServer04"
+                                        <label for="validationServer04">Titre :</label>
+                                        <input type="text" class="form-control" id="validationServer04"
                                             placeholder="Entrer votre titre" required>
-                                        <div class="invalid-feedback">
-                                            Please provide a valid title.
-                                        </div>
                                     </div>
 
                                     <!-- Description -->
                                     <div class="col-md-12 mb-3">
-                                        <label for="validationServer05">Description</label>
-                                        <textarea class="form-control is-invalid" id="validationServer05"
-                                            placeholder="Description" required></textarea>
-                                        <div class="invalid-feedback">
-                                            Please provide description.
-                                        </div>
+                                        <label for="validationServer05">Description :</label>
+                                        <textarea class="form-control" id="validationServer05"
+                                            placeholder="Description" rows="6" required></textarea>
                                     </div>
     
                                     <!-- Image-->
                                     <div class="col-md-12 mb-3">
-                                        <label for="validationServer01">Image</label>
-                                        <input type="text" class="form-control is-valid" id="validationServer01"
-                                            placeholder="c://dosier-image" value="c://dossier" required>
-                                        <div class="valid-feedback">
-                                            Looks good!
-                                        </div>
+                                        <label for="validationServer01">Image :</label>
+                                        <input type="file" class="form-control" id="validationServer01" required>
                                     </div>
                                 </div>
     

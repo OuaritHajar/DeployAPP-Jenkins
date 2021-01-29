@@ -1,19 +1,22 @@
 // Imports
 const express = require('express');
 const bodyParser = require('body-parser');
-const app = express();
 const { Sequelize } = require('sequelize');
+
+const app = express();
+global.__basedir = __dirname;
+const db = require('./config/db.config.js');
+
+//const initRoutes = require("./routes/web");
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
+
+const helmet = require("helmet");
 
 
 // Body Parser config 
 app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
 app.use(bodyParser.json());
-
-const helmet = require("helmet");
-const path = require('path');
-//require('dotenv').config();
 
 //connect au cluster - base de donnée
 const sequelize = new Sequelize('database_development', 'root', 'motdepasse', {
@@ -24,6 +27,7 @@ const sequelize = new Sequelize('database_development', 'root', 'motdepasse', {
     //}
 });
 
+// test de connection
 const testConnection = async () => {
     try {
         await sequelize.authenticate();
@@ -45,18 +49,22 @@ app.use((req, res, next) => {
 //securisation des headers
 app.use(helmet());
 
-//sers un dossier static (chemin : )
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
-
-
-
 
 
 //Route user
 
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
+
+
+db.sequelize.sync();
+//db.sequelize.sync({ force: true }).then(() => {
+//  console.log("Drop and re-sync db.");
+//});
+//require('./routes/upload.router.js')(app);
+
+
+
 
 //exporter cette application pour etre asccessible depuis servernode
 module.exports = app;
