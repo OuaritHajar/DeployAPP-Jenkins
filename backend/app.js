@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Sequelize } = require('sequelize');
-
+require('dotenv').config();
 const app = express();
 global.__basedir = __dirname;
 const db = require('./config/db.config.js');
@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les o
 app.use(bodyParser.json());
 
 //connect au cluster - base de donnée
-const sequelize = new Sequelize('database_development', 'root', 'motdepasse', {
+const sequelize = new Sequelize(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASS, {
     host: 'localhost',
     dialect: 'mysql',
     //define:{
@@ -53,6 +53,7 @@ app.use(helmet());
 
 //Route user
 
+require('./routes/upload.router.js')(app);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 
@@ -61,7 +62,6 @@ db.sequelize.sync();
 //db.sequelize.sync({ force: true }).then(() => {
 //  console.log("Drop and re-sync db.");
 //});
-//require('./routes/upload.router.js')(app);
 
 
 

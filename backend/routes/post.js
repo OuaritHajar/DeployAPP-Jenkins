@@ -7,14 +7,10 @@ const commentCtrl = require('../controllers/comment');
 const likesCtrl = require('../controllers/like');
 
 
-// import upload image
-const upload = require('../config/upload.config.js');
-const fileWorker = require('../controllers/upload.controller.js');
 
 
 // Posts routes
 router.post('/newpost', postsCtrl.createPost);
-router.post('/newpost/img_url', upload.single("img_url"), fileWorker.upload);
 router.get('/allposts', postsCtrl.listPosts);
 router.get('/:postId', postsCtrl.selectOnePost);
 router.put('/:postId/updatepost', postsCtrl.updateOnePost);

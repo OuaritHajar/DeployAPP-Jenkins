@@ -2,6 +2,8 @@
 const db = require('../models');
 var jwtUtils = require('../utils/jwt.utils');
 
+const testmulter = require('../routes/upload.router');
+console.log(testmulter.app);
 
 // Routes
 module.exports = {
@@ -13,7 +15,6 @@ module.exports = {
         var headerAuth = req.headers['authorization'];
         var userId = jwtUtils.getUserId(headerAuth);
 
-        console.log(req.body);
         // Params
         var title = req.body.title;
         var img_url = req.body.img_url;
@@ -26,6 +27,8 @@ module.exports = {
         if (title.length <= 2 || description.length <= 4) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
+
+
 
         // récupère l'user
         db.User.findOne({
@@ -43,6 +46,15 @@ module.exports = {
                         .then(function (newPost) {
                             if (newPost) {
                                 return res.status(201).json(newPost);
+
+
+
+
+
+
+
+
+
                             } else {
                                 return res.status(500).json({ 'error': 'cannot create post' })
                             }
