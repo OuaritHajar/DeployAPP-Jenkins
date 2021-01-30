@@ -16,7 +16,6 @@ module.exports = {
 
         // Params
         var title = req.body.title;
-        var img_url = req.body.img_url;
         var description = req.body.description;
 
         if (title == null || description == null) {
@@ -32,16 +31,18 @@ module.exports = {
         })
             .then(function (userFound) {
                 if (userFound) {
+
+                    // on créé le post
                     db.Post.create({
                         title, title,
-                        img_url: img_url,
+                        img_url: req.file.path,
                         description: description,
                         like: 0,
                         UserId: userFound.id
                     })
                         .then(function (newPost) {
                             if (newPost) {
-                                return res.status(201).json(req.file);
+                                return res.status(201).json(newPost);
                             } else {
                                 return res.status(500).json({ 'error': 'cannot create post' })
                             }
@@ -50,7 +51,7 @@ module.exports = {
                             return res.status(404).json(err)
                         })
                 } else {
-                    res.status(404).json({ 'error': 'user not found' });
+                    return res.status(404).json({ 'error': 'user not found' });
                 }
             })
             .catch(function (err) {
@@ -139,8 +140,9 @@ module.exports = {
 
         //Params
         var title = req.body.title;
-        var img_url = req.body.img_url;
+        var img_url = req.file.path;
         var description = req.body.description;
+
 
         // on cherche l'utilisateur
         db.User.findOne({
@@ -153,9 +155,12 @@ module.exports = {
                         where: { id: postId }
                     })
                         .then(function (postFound) {
-                            // on verifie que la post a été créé par le proprio
-                            if (postFound.UserId == userId) {
 
+                            console.log(userId);
+                            // on verifie que la post a été créé par le proprio
+                            if (userId == postFound.UserId || userFound.isAdmin == true) {
+
+                                // update post
                                 postFound.update({
                                     title: (title ? title : title),
                                     img_url: (img_url ? img_url : img_url),
@@ -191,49 +196,129 @@ module.exports = {
         // Getting auth header
         var headerAuth = req.headers['authorization'];
         var userId = jwtUtils.getUserId(headerAuth);
-        var postId = JSON.parse(req.params.postId);
+        var postId = req.params.postId;
+
+
+
+
 
         // on cherche l'utilisateur
-        db.Post.findOne({
-            where: { id: req.params.postId }
+        db.User.findOne({
+            where: { id: userId }
         })
-            .then(function (postFound) {
-                if (postFound) {
+            .then(function (userFound) {
+                if (userFound) {
 
-                    db.User.findOne({
-                        where: { id: userId}
+                    // on cherche le post
+                    db.Post.findOne({
+                        where: { id: req.params.postId }
                     })
-                    .then(function(userFound) {
-
-                        if (postFound.UserId == userFound.id) {
-
-                            db.Post.destroy({
-                                where: { id: postId }
-                            })
-                                .then(function () {
-                                    res.status(201).json({ 'message': 'Post ' + req.params.postId + ' deleted' })
+                        .then(function (postFound) {
+                            if (postFound && !undefined) {
+    
+                                // on verifie la légitimité
+                                if (postFound.UserId == userFound.id || userFound.isAdmin == true) {
     
 
-                                    // suprimer contenu
-
-                                })
-                                .catch(function (err) {
-                                    res.status(500).json({ 'error': 'cannot update user' });
-                                });
-                        } else {
-                            return res.status(404).json({ 'error': 'no permission' })
-                        }
-                    })
-                    .catch(function(err) {
-                        return res.status(404).json({'error': 'user not found'});
-                    });
+                                    // on les supprimes les commentaires
+                                    db.Comment.destroy({
+                                        where: { postId: postId }
+                                    })
+                                        .then(function(allCommentsDestroy) {
+                                            res.status(202).json({'message':'All comments from post deleted'})
+                                        })
+                                        .catch(function(error){
+                                            res.status(500).json({ 'error': 'cannot destroy post' });
+                                        });
 
 
+
+
+                                    // on les supprimes les like
+                                    db.Like.destroy({
+                                        where: { postId: postId }
+                                    })
+                                        .then(function(allLikesDestroy) {
+                                            res.status(202).json({'message':'All likes from post deleted'})
+                                        })
+                                        .catch(function(error){
+                                            res.status(500).json({ 'error': 'cannot destroy post' });
+                                        });
+                                    
+
+
+
+                                    // on les supprimes l'image'
+                                    db.Image.destroy({
+                                        where: { postId: postId }
+                                    })
+                                        .then(function(allLikesDestroy) {
+                                            res.status(202).json({'message':'All likes from post deleted'})
+                                        })
+                                        .catch(function(error){
+                                            res.status(500).json({ 'error': 'cannot destroy post' });
+                                        });
+
+
+                                    // on supprime l'image du disque 
+
+
+
+
+
+
+
+
+
+
+
+
+                                    // Supprime le post
+                                    db.Post.destroy({
+                                        where: { id: postId }
+                                    })
+                                        .then(function () {
+                                            res.status(201).json({ 'message': 'Post  deleted' })    //' + req.params.postId + '
+                                        })
+                                        .catch(function (err) {
+                                            res.status(500).json({ 'error': 'cannot update user' });
+                                        });
+
+                                    
+
+                                } else {
+                                    return res.status(404).json({ 'error': 'no permission' });
+                                }
+    
+                            } else {
+                                return res.status(404).json({ 'error': 'post not found' });
+                            }
+                        }).catch(function (err) {
+                            return res.status(500).json({ 'error': 'unable to verify post' });
+                        });
                 } else {
-                    return res.status(404).json({'error': 'post not found'});
+                    return res.status(404).json({ 'error': 'user not found' });
                 }
-            }).catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
+            })
+            .catch(function (err) {
+                return res.status(404).json({ 'error':  'unable to verify user' });
             });
+
+
+
+
+
+
+
+
+
+
+
     }
+
+
 }
+
+
+
+

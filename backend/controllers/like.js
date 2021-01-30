@@ -21,7 +21,7 @@ module.exports = {
             where: { id: postId }
         })
         .then(function (postFound) {
-            if (postFound) {
+            if (postFound && !undefined) {
 
                 // récupère l'utilisateur
                 db.User.findOne({

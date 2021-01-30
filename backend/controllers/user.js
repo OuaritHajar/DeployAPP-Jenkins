@@ -20,10 +20,10 @@ module.exports = {
         return res.status(400).json({ 'error': 'missing parameters' });
       }
       if (firstName.length >= 20 || firstName.length <= 2) {
-        return res.status(400).json({'error': 'first name invalid (length : 3 - 19'});
+        return res.status(400).json({ 'error': 'first name invalid (length : 3 - 19' });
       }
       if (lastName.length >= 20 || lastName.length <= 2) {
-        return res.status(400).json({'error': 'last name invalid (length : 3 - 19'});
+        return res.status(400).json({ 'error': 'last name invalid (length : 3 - 19' });
       }
       if (!EMAIL_REGEX.test(email)) {
         return res.status(400).json({ 'error': 'email is not valid' });
@@ -33,7 +33,7 @@ module.exports = {
       }
 
 
-      
+
       db.User.findOne({
         attributes: ['email'],
         where: { email: email }
@@ -165,22 +165,29 @@ module.exports = {
 
     // on cherche l'utilisateur
     db.User.findOne({
-      attributes: ['id', 'first_name', 'last_name'],
+      attributes: ['id', 'first_name', 'last_name', 'isAdmin'],
       where: { id: userId }
     })
       .then(function (userFound) {
         if (userFound) {
-          // si on le trouve on met a jour la base de donnée
-          userFound.update({
-            first_name: (firstName ? firstName : userFound.first_name),
-            last_name: (lastName ? lastName : userFound.last_name)
-          })
-            .then(function () {
-              res.status(201).json(userFound) 
-            })
-            .catch(function (err) {
-              res.status(500).json({ 'error': 'cannot update user' });
-            });
+          if (userFound.id == req.params.userId || userFound.isAdmin == true) {
+            
+              // si on le trouve on met a jour la base de donnée
+              userFound.update({
+                first_name: (firstName ? firstName : userFound.first_name),
+                last_name: (lastName ? lastName : userFound.last_name)
+              })
+                .then(function () {
+                  res.status(201).json(userFound)
+                })
+                .catch(function (err) {
+                  res.status(500).json({ 'error': 'cannot update user' });
+                });
+
+          } else {
+            return res.status(404).json({ 'error': 'user non trouvé ou autorisé' })
+          }
+
         } else {
           res.status(404).json({ 'error': 'user not found' });
         }
@@ -207,13 +214,12 @@ module.exports = {
     })
       .then(function (userFound) {
         if (userFound && userId) {
-          if ( userId == req.params.userId ) {
+          if (userId == req.params.userId || userFound.isAdmin == true) {
             db.User.destroy({
               where: { id: req.params.userId }
             })
               .then(function () {
-                res.status(201).json({'message': 'User ' + req.params.userId + ' deleted'}) 
-
+                res.status(201).json({ 'message': 'User ' + req.params.userId + ' deleted ' })
 
 
 
@@ -226,7 +232,7 @@ module.exports = {
                 res.status(500).json({ 'error': 'cannot update user' });
               });
           } else {
-            return res.status(404).json({'error' : 'no permission'})
+            return res.status(404).json({ 'error': 'no permission' })
           }
         } else {
           res.status(404).json({ 'error': 'user not found' });

@@ -61,7 +61,7 @@ app.use('/api/posts', postRoutes);
 
 db.sequelize.sync();
 //db.sequelize.sync({ force: true }).then(() => {
-//  console.log("Drop and re-sync db.");
+// console.log("Drop and re-sync db.");
 //});
 
 
