@@ -2,6 +2,7 @@
 const db = require('../models');
 var jwtUtils = require('../utils/jwt.utils');
 
+const upload = require('../config/upload.config.js');
 
 // Routes
 module.exports = {
@@ -42,7 +43,33 @@ module.exports = {
                     })
                         .then(function (newPost) {
                             if (newPost) {
+
+                            //    // on récupère l'image
+                            //    db.Image.findOne({
+                            //        where: { id: image.id }
+                            //      })
+                            //        .then(function (imageFound) {
+                            //          if(imageFound) console.log('youpi');
+                            //          // update image
+                            //          imageFound.update({
+                            //            userId: (userId ? userId : userId),
+                            //            postId: (postId ? postId : postId)
+                            //          })
+                            //            .then(function () {
+                            //              res.status(201).json(imageFound);
+                            //            })
+                            //            .catch(function (err) {
+                            //              res.status(500).json({ 'error': 'cannot update image' });
+                            //            });
+                            //
+                            //
+                            //        }).catch(function (err) {
+                            //          res.status(404).json({ 'error': 'Image not found' })
+                            //        });
+
+
                                 return res.status(201).json(newPost);
+
                             } else {
                                 return res.status(500).json({ 'error': 'cannot create post' })
                             }
@@ -58,6 +85,12 @@ module.exports = {
                 return res.status(500).json({ 'error': 'unable to verify user' });
             });
     },
+
+
+
+
+    
+
 
 
 
@@ -197,8 +230,6 @@ module.exports = {
         var headerAuth = req.headers['authorization'];
         var userId = jwtUtils.getUserId(headerAuth);
         var postId = req.params.postId;
-
-
 
 
 

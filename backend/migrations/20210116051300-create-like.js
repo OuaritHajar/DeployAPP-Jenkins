@@ -8,7 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -17,7 +16,6 @@ module.exports = {
           key:'id'
         }
       },
-
       postId: {
         allowNull: false,
         type: Sequelize.INTEGER,

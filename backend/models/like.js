@@ -12,15 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
 
 
-      models.User.belongsToMany(models.Post, { 
-        through: models.Like
-      });
-
-      models.Post.belongsToMany(models.User, { 
-        through: models.Like
-      });
-
-
 
       models.Like.belongsTo(models.User, {
         foreignKey: {
