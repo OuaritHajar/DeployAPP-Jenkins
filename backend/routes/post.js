@@ -6,11 +6,17 @@ const postsCtrl = require('../controllers/post');
 const commentCtrl = require('../controllers/comment');
 const likesCtrl = require('../controllers/like');
 
+// Multer
+const upload = require('../config/upload.config.js');
+const fileWorker = require('../controllers/upload.controller.js');
+
 
 
 
 // Posts routes
-router.post('/newpost', postsCtrl.createPost);
+
+router.post('/newpost', upload.single("img_url"), postsCtrl.createPost, fileWorker.upload );
+
 router.get('/allposts', postsCtrl.listPosts);
 router.get('/:postId', postsCtrl.selectOnePost);
 router.put('/:postId/updatepost', postsCtrl.updateOnePost);

@@ -2,14 +2,13 @@
 const db = require('../models');
 var jwtUtils = require('../utils/jwt.utils');
 
-const testmulter = require('../routes/upload.router');
-console.log(testmulter.app);
 
 // Routes
 module.exports = {
     createPost: function (req, res) {
 
-
+        console.log(req.file);
+        console.log(req.body);
 
         // Getting auth header
         var headerAuth = req.headers['authorization'];
@@ -23,12 +22,9 @@ module.exports = {
         if (title == null || description == null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
-
         if (title.length <= 2 || description.length <= 4) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
-
-
 
         // récupère l'user
         db.User.findOne({
@@ -46,15 +42,6 @@ module.exports = {
                         .then(function (newPost) {
                             if (newPost) {
                                 return res.status(201).json(newPost);
-
-
-
-
-
-
-
-
-
                             } else {
                                 return res.status(500).json({ 'error': 'cannot create post' })
                             }
@@ -226,16 +213,8 @@ module.exports = {
                                 .then(function () {
                                     res.status(201).json({ 'message': 'Post ' + req.params.postId + ' deleted' })
     
-    
-
-
 
                                     // suprimer contenu
-    
-
-
-
-
 
                                 })
                                 .catch(function (err) {

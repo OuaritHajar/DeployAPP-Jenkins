@@ -14,26 +14,26 @@ module.exports = {
       var lastName = req.body.last_name;
       var email = req.body.email;
       var password = req.body.password;
+      var isAdmin = req.body.isAdmin;
 
-      if (firstName == null || lastName == null || email == null || password == null) {
+      if (firstName == null || lastName == null || email == null || password == null || isAdmin == null) {
         return res.status(400).json({ 'error': 'missing parameters' });
       }
-
-      //if (username.length >= 13 || username.length <= 4) {
-      //  return res.status(400).json({'error': 'wrong username (length : 5 - 12'});
-      //}
-
+      if (firstName.length >= 20 || firstName.length <= 2) {
+        return res.status(400).json({'error': 'first name invalid (length : 3 - 19'});
+      }
+      if (lastName.length >= 20 || lastName.length <= 2) {
+        return res.status(400).json({'error': 'last name invalid (length : 3 - 19'});
+      }
       if (!EMAIL_REGEX.test(email)) {
         return res.status(400).json({ 'error': 'email is not valid' });
       }
-
       if (!PASSWORD_REGEX.test(password)) {
         return res.status(400).json({ 'error': 'password is not valid : length 4-8 include number' });
       }
 
-      // TODO
 
-
+      
       db.User.findOne({
         attributes: ['email'],
         where: { email: email }
@@ -46,7 +46,8 @@ module.exports = {
                   first_name: firstName,
                   last_name: lastName,
                   email: email,
-                  password: bcryptedPassword
+                  password: bcryptedPassword,
+                  isAdmin: isAdmin
                 })
                   .then(function (newUser) {
                     console.log(newUser);

@@ -13,11 +13,6 @@ const postRoutes = require('./routes/post');
 
 const helmet = require("helmet");
 
-
-// Body Parser config 
-app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
-app.use(bodyParser.json());
-
 //connect au cluster - base de donnée
 const sequelize = new Sequelize(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASS, {
     host: 'localhost',
@@ -49,13 +44,19 @@ app.use((req, res, next) => {
 //securisation des headers
 app.use(helmet());
 
+// Body Parser config 
+app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
+app.use(bodyParser.json());
+
+
 
 
 //Route user
 
-require('./routes/upload.router.js')(app);
-app.use('/api/posts', postRoutes);
+//require('./routes/upload.router.js')(app); //  JE SAIS PAS OU PLACER CELUI LA
 app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);  
+
 
 
 db.sequelize.sync();
