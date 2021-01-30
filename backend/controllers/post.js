@@ -41,7 +41,7 @@ module.exports = {
                     })
                         .then(function (newPost) {
                             if (newPost) {
-                                return res.status(201).json(newPost);
+                                return res.status(201).json(req.file);
                             } else {
                                 return res.status(500).json({ 'error': 'cannot create post' })
                             }

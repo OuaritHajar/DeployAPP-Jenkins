@@ -1,10 +1,11 @@
 const fs = require('fs');
+const { nextTick } = require('process');
  
 const db = require('../config/db.config.js');
 const Image = db.images;
  
 // Upload a Multipart-File then saving it to MySQL database
-exports.upload = (req, res) => {  
+exports.upload = (req, res, next) => {  
   Image.create({
     type: req.file.mimetype,
     name: req.file.originalname,
@@ -14,7 +15,7 @@ exports.upload = (req, res) => {
       fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + image.name, image.data);    
       
       // exit node.js app
-      res.json({'msg': 'File uploaded successfully!', 'file': req.file});
+      next();
     }catch(e){
       console.log(e);
       res.json({'err': e});

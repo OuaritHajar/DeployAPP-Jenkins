@@ -15,7 +15,7 @@ const fileWorker = require('../controllers/upload.controller.js');
 
 // Posts routes
 
-router.post('/newpost', upload.single("img_url"), postsCtrl.createPost, fileWorker.upload );
+router.post('/newpost', upload.single("img_url"),  fileWorker.upload, postsCtrl.createPost);
 
 router.get('/allposts', postsCtrl.listPosts);
 router.get('/:postId', postsCtrl.selectOnePost);
