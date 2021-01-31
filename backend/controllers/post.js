@@ -8,9 +8,6 @@ const upload = require('../config/upload.config.js');
 module.exports = {
     createPost: function (req, res) {
 
-        console.log(req.file);
-        console.log(req.body);
-
         // Getting auth header
         var headerAuth = req.headers['authorization'];
         var userId = jwtUtils.getUserId(headerAuth);
@@ -18,6 +15,12 @@ module.exports = {
         // Params
         var title = req.body.title;
         var description = req.body.description;
+        var img_url;
+
+        if (req.file == undefined) {
+        } else {
+            img_url = req.file.path
+        }
 
         if (title == null || description == null) {
             return res.status(400).json({ 'error': 'missing parameters' });
@@ -36,37 +39,13 @@ module.exports = {
                     // on créé le post
                     db.Post.create({
                         title, title,
-                        img_url: req.file.path,
+                        img_url: img_url,
                         description: description,
                         like: 0,
                         UserId: userFound.id
                     })
                         .then(function (newPost) {
                             if (newPost) {
-
-                            //    // on récupère l'image
-                            //    db.Image.findOne({
-                            //        where: { id: image.id }
-                            //      })
-                            //        .then(function (imageFound) {
-                            //          if(imageFound) console.log('youpi');
-                            //          // update image
-                            //          imageFound.update({
-                            //            userId: (userId ? userId : userId),
-                            //            postId: (postId ? postId : postId)
-                            //          })
-                            //            .then(function () {
-                            //              res.status(201).json(imageFound);
-                            //            })
-                            //            .catch(function (err) {
-                            //              res.status(500).json({ 'error': 'cannot update image' });
-                            //            });
-                            //
-                            //
-                            //        }).catch(function (err) {
-                            //          res.status(404).json({ 'error': 'Image not found' })
-                            //        });
-
 
                                 return res.status(201).json(newPost);
 
@@ -135,6 +114,9 @@ module.exports = {
 
 
 
+    
+
+
     selectOnePost: function (req, res) {
         db.Post.findOne({
             attributes: ['title', 'img_url', 'description', 'UserId', 'createdAt', 'updatedAt'],
@@ -173,9 +155,14 @@ module.exports = {
 
         //Params
         var title = req.body.title;
-        var img_url = req.file.path;
+        var img_url;
         var description = req.body.description;
 
+        if (req.file == undefined) {
+            
+        } else {
+            img_url = req.file.path
+        }
 
         // on cherche l'utilisateur
         db.User.findOne({
@@ -189,7 +176,6 @@ module.exports = {
                     })
                         .then(function (postFound) {
 
-                            console.log(userId);
                             // on verifie que la post a été créé par le proprio
                             if (userId == postFound.UserId || userFound.isAdmin == true) {
 
@@ -216,7 +202,7 @@ module.exports = {
                     res.status(404).json({ 'error': 'user not found' });
                 }
             }).catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
+                return res.status(500).json({ 'error': 'unable to verify ussssser' });
             });
     },
 

@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       isAdmin: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.BOOLEAN
       },
       createdAt: {
@@ -38,7 +38,6 @@ module.exports = {
       }
     });
   },
-
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Users');

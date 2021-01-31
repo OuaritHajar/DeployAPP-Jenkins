@@ -10,38 +10,38 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.User.hasOne(models.Post),
-      models.User.hasMany(models.Comment),
-      models.User.hasMany(models.Like),
-      models.User.hasMany(models.Image)
+        models.User.hasMany(models.Comment),
+        models.User.hasMany(models.Like),
+        models.User.hasMany(models.Image)
     }
   };
   User.init({
-    first_name:{
+    first_name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    last_name:{
-      type:DataTypes.STRING,
-      allowNull: false
-    },
-    email:{
+    last_name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    password:{
+    email: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    isAdmin:  {
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    isAdmin: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: true
     }
   },
-  // Sequelize option
-  {
-    sequelize,
-    modelName: 'User'
-  });
+    // Sequelize option
+    {
+      sequelize,
+      modelName: 'User'
+    });
   console.log(User === sequelize.models.User);
   return User;
 };

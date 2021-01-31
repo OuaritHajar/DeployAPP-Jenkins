@@ -16,7 +16,7 @@ module.exports = {
       var password = req.body.password;
       var isAdmin = req.body.isAdmin;
 
-      if (firstName == null || lastName == null || email == null || password == null || isAdmin == null) {
+      if (firstName == null || lastName == null || email == null || password == null) {
         return res.status(400).json({ 'error': 'missing parameters' });
       }
       if (firstName.length >= 20 || firstName.length <= 2) {
@@ -50,7 +50,7 @@ module.exports = {
                   isAdmin: isAdmin
                 })
                   .then(function (newUser) {
-                    console.log(newUser);
+                    console.log(newUser.dataValues);
                     return res.status(201).json({
                       'userId': newUser.id,
                     })
