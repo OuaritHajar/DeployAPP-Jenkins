@@ -21,7 +21,7 @@ router.delete('/:postId', postsCtrl.removeOnePost);
 router.post('/:postId/comment', commentCtrl.createComment);
 router.get('/:postId/comments', commentCtrl.listPostComments);
 router.put('/:postId/comment/:commentId', commentCtrl.updateOneComment);
-router.delete('/:postId/comments/:commentId', commentCtrl.deleteOneComment);
+router.delete('/:postId/comment/:commentId', commentCtrl.deleteOneComment);
 
 // Like routes
 router.post('/:postId/like', likesCtrl.likePost);

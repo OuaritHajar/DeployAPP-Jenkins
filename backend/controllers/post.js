@@ -36,13 +36,16 @@ module.exports = {
             .then(function (userFound) {
                 if (userFound) {
 
+                    console.log(userFound);
                     // on créé le post
                     db.Post.create({
                         title, title,
                         img_url: img_url,
                         description: description,
                         like: 0,
-                        UserId: userFound.id
+                        UserId: userFound.id,
+                        first_name: userFound.first_name,
+                        
                     })
                         .then(function (newPost) {
                             if (newPost) {
@@ -67,7 +70,25 @@ module.exports = {
 
 
 
-
+ //return Product.create({
+ //    title: 'Chair',
+ //    user: {
+ //      firstName: 'Mick',
+ //      lastName: 'Broadstone',
+ //      addresses: [{
+ //        type: 'home',
+ //        line1: '100 Main St.',
+ //        city: 'Austin',
+ //        state: 'TX',
+ //        zip: '78704'
+ //      }]
+ //    }
+ //  }, {
+ //    include: [{
+ //      association: Product.User,
+ //      include: [ User.Addresses ]
+ //    }]
+ //  });
 
 
 
@@ -102,12 +123,9 @@ module.exports = {
                     db.Post.findAll({
                         order: [(order != null) ? order.split(':') : ['title', 'ASC']],
                         attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
-                        limit: (!isNaN(limit)) ? limit : null,
-                        offset: (!isNaN(offset)) ? offset : null,
-                        include: [{
-                            model: db.User,
-                            attributes: ['first_name', 'last_name']
-                        }]
+                        //limit: (!isNaN(limit)) ? limit : null,
+                        //offset: (!isNaN(offset)) ? offset : null,
+                        
                     }).then(function (posts) {
                         if (posts) {
                             res.status(200).json(posts);
@@ -149,10 +167,11 @@ module.exports = {
             .then(function (userFound) {
                 if (userFound) {
 
+
                     // récupère le post
                     db.Post.findOne({
-                        attributes: ['title', 'img_url', 'description', 'UserId', 'createdAt', 'updatedAt'],
-                        where: { 'id': req.params.postId }
+                        attributes: ['title', 'img_url', 'description', 'userId', 'createdAt', 'updatedAt'],
+                        where: { id: req.params.postId }
                     })
                         .then(function (post) {
                             if (post) {

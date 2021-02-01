@@ -14,7 +14,7 @@ module.exports = {
       var lastName = req.body.last_name;
       var email = req.body.email;
       var password = req.body.password;
-      var isAdmin = req.body.isAdmin;
+      var isAdmin = false;
 
       if (firstName == null || lastName == null || email == null || password == null) {
         return res.status(400).json({ 'error': 'missing parameters' });
@@ -206,7 +206,7 @@ module.exports = {
     // Getting auth header
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
-
+    var userParam = JSON.parse(req.params.userId);
 
     // on cherche l'utilisateur
     db.User.findOne({
@@ -216,7 +216,7 @@ module.exports = {
         if (userFound && userId) {
           if (userId == req.params.userId || userFound.isAdmin == true) {
             db.User.destroy({
-              where: { id: req.params.userId }
+              where: { id: userParam }
             })
               .then(function () {
                 res.status(201).json({ 'message': 'User ' + req.params.userId + ' deleted ' })
@@ -235,10 +235,10 @@ module.exports = {
             return res.status(404).json({ 'error': 'no permission' })
           }
         } else {
-          res.status(404).json({ 'error': 'user not found' });
+          return res.status(404).json({ 'error': 'user not found' });
         }
       }).catch(function (err) {
-        return res.status(500).json({ 'error': 'unable to verify user' });
+        return res.status(500).json({ 'error': 'unable to verify user',err });
       });
   }
 };

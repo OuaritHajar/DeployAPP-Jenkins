@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.User.hasOne(models.Post),
-        models.User.hasMany(models.Comment),
-        models.User.hasMany(models.Like),
-        models.User.hasMany(models.Image)
+      models.User.hasMany(models.Comment),
+      models.User.hasMany(models.Like),
+      models.User.hasMany(models.Image)
     }
   };
   User.init({
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
-      allowNull: true
+      allowNull: false
     }
   },
     // Sequelize option
