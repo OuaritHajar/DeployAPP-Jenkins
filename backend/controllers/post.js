@@ -68,13 +68,17 @@ module.exports = {
 
 
 
-    
+
 
 
 
 
 
     listPosts: function (req, res) {
+
+        // Getting auth header
+        var headerAuth = req.headers['authorization'];
+        var userId = jwtUtils.getUserId(headerAuth);
 
         // Params
         var ITEMS_LIMIT = 10;
@@ -87,25 +91,40 @@ module.exports = {
             limit = ITEMS_LIMIT;
         }
 
-        db.Post.findAll({
-            order: [(order != null) ? order.split(':') : ['title', 'ASC']],
-            attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
-            limit: (!isNaN(limit)) ? limit : null,
-            offset: (!isNaN(offset)) ? offset : null,
-            include: [{
-                model: db.User,
-                attributes: ['first_name', 'last_name']
-            }]
-        }).then(function (posts) {
-            if (posts) {
-                res.status(200).json(posts);
-            } else {
-                res.status(404).json({ "error": "no post fund" });
-            }
-        }).catch(function (err) {
-            console.log(err);
-            res.status(500).json({ 'error': 'invalide fields' });
-        });
+        // récupère l'user
+        db.User.findOne({
+            where: { id: userId }
+        })
+            .then(function (userFound) {
+                if (userFound) {
+
+                    // récupère tout le sposts
+                    db.Post.findAll({
+                        order: [(order != null) ? order.split(':') : ['title', 'ASC']],
+                        attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                        limit: (!isNaN(limit)) ? limit : null,
+                        offset: (!isNaN(offset)) ? offset : null,
+                        include: [{
+                            model: db.User,
+                            attributes: ['first_name', 'last_name']
+                        }]
+                    }).then(function (posts) {
+                        if (posts) {
+                            res.status(200).json(posts);
+                        } else {
+                            res.status(404).json({ "error": "no post fund" });
+                        }
+                    }).catch(function (err) {
+                        console.log(err);
+                        res.status(500).json({ 'error': 'invalide fields' });
+                    });
+                } else {
+                    return res.status(404).json({ 'error': 'user not found' });
+                }
+            })
+            .catch(function (err) {
+                return res.status(500).json({ 'error': 'unable to verify user' });
+            });
     },
 
 
@@ -114,29 +133,50 @@ module.exports = {
 
 
 
-    
+
 
 
     selectOnePost: function (req, res) {
-        db.Post.findOne({
-            attributes: ['title', 'img_url', 'description', 'UserId', 'createdAt', 'updatedAt'],
-            where: { 'id': req.params.postId }
+
+        // Getting auth header
+        var headerAuth = req.headers['authorization'];
+        var userId = jwtUtils.getUserId(headerAuth);
+
+        // récupère l'user
+        db.User.findOne({
+            where: { id: userId }
         })
-            .then(function (post) {
-                if (post) {
+            .then(function (userFound) {
+                if (userFound) {
 
-                    res.status(200).json(post);
+                    // récupère le post
+                    db.Post.findOne({
+                        attributes: ['title', 'img_url', 'description', 'UserId', 'createdAt', 'updatedAt'],
+                        where: { 'id': req.params.postId }
+                    })
+                        .then(function (post) {
+                            if (post) {
 
-                    //db.Comment.findAll()
+                                res.status(200).json(post);
+
+                                //db.Comment.findAll()
 
 
+                            } else {
+                                res.status(404).json({ "error": "no post fund" });
+                            }
+                        }).catch(function (err) {
+                            console.log(err);
+                            res.status(500).json({ 'error': 'invalide fields' });
+                        });
                 } else {
-                    res.status(404).json({ "error": "no post fund" });
+                    return res.status(404).json({ 'error': 'user not found' });
                 }
-            }).catch(function (err) {
-                console.log(err);
-                res.status(500).json({ 'error': 'invalide fields' });
+            })
+            .catch(function (err) {
+                return res.status(500).json({ 'error': 'unable to verify user' });
             });
+
     },
 
 
@@ -159,7 +199,7 @@ module.exports = {
         var description = req.body.description;
 
         if (req.file == undefined) {
-            
+
         } else {
             img_url = req.file.path
         }
@@ -232,19 +272,19 @@ module.exports = {
                     })
                         .then(function (postFound) {
                             if (postFound && !undefined) {
-    
+
                                 // on verifie la légitimité
                                 if (postFound.UserId == userFound.id || userFound.isAdmin == true) {
-    
+
 
                                     // on les supprimes les commentaires
                                     db.Comment.destroy({
                                         where: { postId: postId }
                                     })
-                                        .then(function(allCommentsDestroy) {
-                                            res.status(202).json({'message':'All comments from post deleted'})
+                                        .then(function (allCommentsDestroy) {
+                                            res.status(202).json({ 'message': 'All comments from post deleted' })
                                         })
-                                        .catch(function(error){
+                                        .catch(function (error) {
                                             res.status(500).json({ 'error': 'cannot destroy post' });
                                         });
 
@@ -255,13 +295,13 @@ module.exports = {
                                     db.Like.destroy({
                                         where: { postId: postId }
                                     })
-                                        .then(function(allLikesDestroy) {
-                                            res.status(202).json({'message':'All likes from post deleted'})
+                                        .then(function (allLikesDestroy) {
+                                            res.status(202).json({ 'message': 'All likes from post deleted' })
                                         })
-                                        .catch(function(error){
+                                        .catch(function (error) {
                                             res.status(500).json({ 'error': 'cannot destroy post' });
                                         });
-                                    
+
 
 
 
@@ -269,10 +309,10 @@ module.exports = {
                                     db.Image.destroy({
                                         where: { postId: postId }
                                     })
-                                        .then(function(allLikesDestroy) {
-                                            res.status(202).json({'message':'All likes from post deleted'})
+                                        .then(function (allLikesDestroy) {
+                                            res.status(202).json({ 'message': 'All likes from post deleted' })
                                         })
-                                        .catch(function(error){
+                                        .catch(function (error) {
                                             res.status(500).json({ 'error': 'cannot destroy post' });
                                         });
 
@@ -301,12 +341,12 @@ module.exports = {
                                             res.status(500).json({ 'error': 'cannot update user' });
                                         });
 
-                                    
+
 
                                 } else {
                                     return res.status(404).json({ 'error': 'no permission' });
                                 }
-    
+
                             } else {
                                 return res.status(404).json({ 'error': 'post not found' });
                             }
@@ -318,7 +358,7 @@ module.exports = {
                 }
             })
             .catch(function (err) {
-                return res.status(404).json({ 'error':  'unable to verify user' });
+                return res.status(404).json({ 'error': 'unable to verify user' });
             });
 
 
