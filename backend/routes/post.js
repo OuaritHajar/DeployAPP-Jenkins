@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 
+const auth = require('../middleware/auth');
+
 const postsCtrl = require('../controllers/post');
 const commentCtrl = require('../controllers/comment');
 const likesCtrl = require('../controllers/like');
@@ -12,9 +14,9 @@ const fileWorker = require('../controllers/upload.controller.js');
 
 // Posts routes
 router.post('/', upload.single("img_url"), fileWorker.upload, postsCtrl.createPost);
-router.get('/', postsCtrl.listPosts);
-router.get('/:postId', postsCtrl.selectOnePost);
-router.put('/:postId',upload.single("img_url"),  fileWorker.update, postsCtrl.updateOnePost);
+router.get('/', auth,postsCtrl.listPosts);
+router.get('/:postId', auth, postsCtrl.selectOnePost);
+router.put('/:postId', upload.single("img_url"), fileWorker.update, postsCtrl.updateOnePost);
 router.delete('/:postId', postsCtrl.removeOnePost);
 
 // Comment routes

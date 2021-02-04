@@ -1,35 +1,43 @@
+const signup = async function () {
+    try {
+        // évènement click bouton du formulaire
+        document.getElementById("btnSubmit").addEventListener('click', e => {
 
-// Structure du post
-class Post {
-    constructor (id, userId, title, img_url, description, createdOn, updatedOn ) {
-        this.id = id;
-        this.userId = userId;
-    }
-}
+            // Récupère valeur inputs form
+            let inputLastName = document.getElementById('inputLastName').value
+            let inputFirstName = document.getElementById('inputFirstName').value
+            let inputPassword = document.getElementById('inputPassword').value
+            let inputEmail = document.getElementById('inputEmail').value
+            // Post les données attendu à l'API
+            fetch("http://localhost:3000/api/users/signup", {
+                method: "POST",
+                body: JSON.stringify({
 
+                    // objet contact tiré du forulaire
+                    first_name: inputFirstName,
+                    last_name: inputLastName,
+                    email: inputEmail,
+                    password: inputPassword
+                }),
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded"
+                }
+            }, true)
+                .then(response => response.json())
+                .then(function (response) {
 
+                    // on vérifie la réponse
+                    console.log(response);
 
-
-
-const affichePost = async function() {
-    try{
-        let response = await fetch('http://localhost:3000/api/signup')
-        if (response.ok) {
-            let data = await response.json()
-            console.log(data)
-            const articles = document.getElementById('articles')
-
-        
-        }
-
-        else{
-            console.error('Retour du serveur : ', response.status)
-        } 
+                    window.location.href = "login.html";
+                })
+                .catch(function (error) {
+                    console.error(error)
+                });
+        })
     } catch (e) {
         console.error(e)
     }
-    console.log(localStorage)
 }
 
-affichePost()
-
+signup()

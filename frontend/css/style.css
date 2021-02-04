@@ -117,7 +117,7 @@ h5 {
 
 /* Post */
 
-.vrai-post-exemple{
+.post{
   margin-left:auto;
   margin-right:auto;
 
@@ -125,11 +125,11 @@ h5 {
   padding-right:30px
 }
 
-.vrai-post-exemple img{
+.post img{
   width: 100%;
   max-width: 550px;
 }
-.vrai-post-exemple a img{
+.post a img{
   display:flex;
 }
 .author{
@@ -141,7 +141,7 @@ h5 {
 
   text-align: justify;
 }
-.vrai-post-exemple img{
+.post img{
   margin-right:auto;
   margin-left:auto;
 }
@@ -157,7 +157,6 @@ h5 {
 
 
  
-
 
 
 

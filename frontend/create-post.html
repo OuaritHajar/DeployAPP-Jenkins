@@ -64,45 +64,37 @@
 
                     <!-- Foormulaire Post-->
                     <section>
-                        <div class="vrai-post-exemple">
+                        <div class="post">
                             <h2>Créer votre post</h2>
 
-
-
-                            <form method="post" enctype="multipart/form-data" action="index.html" class="form-update-profil" name="image">
+                            <form enctype="multipart/form-data" class="form-update-profil" >
                                 <div class="form-row">
                                     
                                     <!-- Image -->
                                     <div class="col-md-12 mb-3">
-                                        <label for="validationServer04">Titre :</label>
-                                        <input type="text" class="form-control" id="validationServer04"
+                                        <label for="inputTitle">Titre :</label>
+                                        <input type="text" class="form-control" id="inputTitle"
                                             placeholder="Entrer votre titre" required>
                                     </div>
 
                                     <!-- Description -->
                                     <div class="col-md-12 mb-3">
-                                        <label for="validationServer05">Description :</label>
-                                        <textarea class="form-control" id="validationServer05"
+                                        <label for="inputDescription">Description :</label>
+                                        <textarea class="form-control" id="inputDescription"
                                             placeholder="Description" rows="6" required></textarea>
                                     </div>
     
                                     <!-- Image-->
                                     <div class="col-md-12 mb-3">
-                                        <label for="validationServer01">Image :</label>
-                                        <input type="file" class="form-control" id="validationServer01" required>
+                                        <label for="inputImg_url">Image :</label>
+                                        <input type="file" class="form-control" id="inputImg_url">
                                     </div>
                                 </div>
     
                                 
-                                <button class="btn btn-primary" type="submit">Créer</button>
-                                <button class="btn btn-secondary" type="submit">Edit</button>
+                                <button id="btnCreate" class="btn btn-primary" type="submit">Créer</button>
+                                <button id="btnEdit" class="btn btn-secondary" type="submit">Edit</button>
                             </form>
-
-
-
-
-
-
 
 
 
@@ -189,6 +181,6 @@
         </footer>
 </body>
 
-<script src="js/index.js"></script>
+<script src="js/create-post.js"></script>
 
 </html>

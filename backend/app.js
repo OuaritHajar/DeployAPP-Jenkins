@@ -6,12 +6,16 @@ require('dotenv').config();
 const app = express();
 global.__basedir = __dirname;
 const db = require('./config/db.config.js');
+// Body Parser config 
+app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
+app.use(bodyParser.json());
+const helmet = require("helmet");
 
 //const initRoutes = require("./routes/web");
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 
-const helmet = require("helmet");
+
 
 //connect au cluster - base de donnée
 const sequelize = new Sequelize(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASS, {
@@ -44,27 +48,17 @@ app.use((req, res, next) => {
 //securisation des headers
 app.use(helmet());
 
-// Body Parser config 
-app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
-app.use(bodyParser.json());
-
-
 
 
 //Route user
-
-//require('./routes/upload.router.js')(app); //  JE SAIS PAS OU PLACER CELUI LA
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);  
-
 
 
 db.sequelize.sync();
 //db.sequelize.sync({ force: true }).then(() => {
 // console.log("Drop and re-sync db.");
 //});
-
-
 
 
 //exporter cette application pour etre asccessible depuis servernode

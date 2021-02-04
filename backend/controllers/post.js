@@ -123,8 +123,8 @@ module.exports = {
                     db.Post.findAll({
                         order: [(order != null) ? order.split(':') : ['title', 'ASC']],
                         attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
-                        //limit: (!isNaN(limit)) ? limit : null,
-                        //offset: (!isNaN(offset)) ? offset : null,
+                        limit: (!isNaN(limit)) ? limit : null,
+                        offset: (!isNaN(offset)) ? offset : null,
                         
                     }).then(function (posts) {
                         if (posts) {
@@ -133,7 +133,6 @@ module.exports = {
                             res.status(404).json({ "error": "no post fund" });
                         }
                     }).catch(function (err) {
-                        console.log(err);
                         res.status(500).json({ 'error': 'invalide fields' });
                     });
                 } else {
@@ -170,17 +169,24 @@ module.exports = {
 
                     // récupère le post
                     db.Post.findOne({
-                        attributes: ['title', 'img_url', 'description', 'userId', 'createdAt', 'updatedAt'],
+                        attributes: ['title', 'img_url', 'description', 'userId', 'createdAt', 'updatedAt', 'like'],
                         where: { id: req.params.postId }
                     })
                         .then(function (post) {
                             if (post) {
 
-                                res.status(200).json(post);
+                                // récup les commentaires
+                                db.Comment.findAll(
+                                )
+                                    .then(function(commentsFound){
+                                    if(commentsFound) {
 
-                                //db.Comment.findAll()
-
-
+                                
+                                        res.status(200).json({'post':post, 'comments':commentsFound});
+                                    } else {
+                                        res.status(404).json({error: "Comments not found"})
+                                    }
+                                })
                             } else {
                                 res.status(404).json({ "error": "no post fund" });
                             }

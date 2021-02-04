@@ -7,7 +7,6 @@ module.exports = {
     generateTokenForUser: function(userData) {
         return jwt.sign({
             userId: userData.id,
-
         },
         JWT_SIGN_SECRET,
         {
@@ -18,6 +17,7 @@ module.exports = {
     parseAuthorization: function(authorization) {
         return (authorization != null) ? authorization.replace('Bearer ','') : null;
     },
+
     getUserId: function(authorization) {
         var userId = -1;
         var token = module.exports.parseAuthorization(authorization);
@@ -29,6 +29,8 @@ module.exports = {
             } catch(err) {
 
             }
+        } else {
+            console.log("Le token n'est pas défini")
         }
         return userId;
     }
