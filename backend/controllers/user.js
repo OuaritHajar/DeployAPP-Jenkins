@@ -11,13 +11,13 @@ module.exports = {
     try {
       // Params
       console.log(req.body);
-      var firstName = req.body.first_name;
-      var lastName = req.body.last_name;
-      var email = req.body.email;
-      var password = req.body.password;
-      var isAdmin = false;
+      const firstName = req.body.first_name;
+      const lastName = req.body.last_name;
+      const email = req.body.email;
+      const password = req.body.password;
+      const isAdmin = false;
 
-      if (firstName == null || lastName == null || email == null || password == null) {
+      if (firstName === null || lastName === null || email === null || password === null) {
         return res.status(400).json({ 'error': 'missing parameters' });
       }
       if (firstName.length >= 20 || firstName.length <= 2) {
@@ -34,49 +34,44 @@ module.exports = {
       }
 
 
-
-      db.User.findOne({
+      const userFound = await db.User.findOne({
         attributes: ['email'],
         where: { email: email }
       })
-        .then(function (userFound) {
-          if (!userFound) {
-            bcrypt.hash(password, 5, async (error, bcryptedPassword) => {
-              try {
-                const newUser = await db.User.create({
-                  first_name: firstName,
-                  last_name: lastName,
-                  email: email,
-                  password: bcryptedPassword,
-                  isAdmin: isAdmin
-                })
-                  .then(function (newUser) {
-                    console.log(newUser.dataValues);
-                    return res.status(201).json({
-                      'userId': newUser.id,
-                    })
+      if (!userFound) {
+        bcrypt.hash(password, 5, async (error, bcryptedPassword) => {
+          //try {
+            const newUser = await db.User.create({
+              first_name: firstName,
+              last_name: lastName,
+              email: email,
+              password: bcryptedPassword,
+              isAdmin: isAdmin
+            })
+              if (newUser) {
+                //try{
+                  console.log(newUser.dataValues);
+                  return res.status(201).json({
+                    'userId': newUser.id,
                   })
-                  .catch(function (error) {
-                    return res.status(500).json({ 'error': 'cannot add user' });
-                  });
-              } catch (err) {
-                console.error(err)
-              }
-            });
-          } else {
-            return res.status(409).json({ 'error': 'user already exist' })
-          }
-        })
-        .catch(function (error) {
-          return res.status(500).json({ 'error': 'unable to verify user' })
-
+                //} catch(error) {
+                //return res.status(500).json({ 'error': 'cannot add user' });
+                //}
+            }
+          //} catch (err) {
+          //  console.error(err)
+          //}
         });
+      } else {
+        return res.status(409).json({ 'error': 'user already exist' })
+      }
     } catch (err) {
       console.error(err);
     }
   },
 
 
+  
 
 
 
@@ -86,10 +81,10 @@ module.exports = {
     try {
 
       // Params
-      var email = req.body.email;
-      var password = req.body.password;
+      const email = req.body.email;
+      const password = req.body.password;
 
-      if (email == null || password == null) {
+      if (email === null || password === null) {
         return res.status(400).json({ 'error': 'missing parameters' });
       }
 
@@ -131,14 +126,14 @@ module.exports = {
 
   getUserProfile: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers['authorization'];
-    var userId = jwtUtils.getUserId(headerAuth);
+    const headerAuth = req.headers['authorization'];
+    const userId = jwtUtils.getUserId(headerAuth);
 
     if (userId < 0)
       return res.status(400).json({ 'error': 'wrong token' });
 
     db.User.findOne({
-      attributes: ['id', 'first_name', 'last_name', 'email','createdAt'],
+      attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt'],
       where: { id: userId }
     })
       .then(function (user) {
@@ -157,12 +152,12 @@ module.exports = {
 
   updateUserProfile: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers['authorization'];
-    var userId = jwtUtils.getUserId(headerAuth);
+    const headerAuth = req.headers['authorization'];
+    const userId = jwtUtils.getUserId(headerAuth);
 
     //Params
-    var firstName = req.body.first_name;
-    var lastName = req.body.last_name;
+    const firstName = req.body.first_name;
+    const lastName = req.body.last_name;
 
     // on cherche l'utilisateur
     db.User.findOne({
@@ -171,19 +166,19 @@ module.exports = {
     })
       .then(function (userFound) {
         if (userFound) {
-          if (userFound.id == req.params.userId || userFound.isAdmin == true) {
-            
-              // si on le trouve on met a jour la base de donnée
-              userFound.save({
-                first_name: (firstName ? firstName : userFound.first_name),
-                last_name: (lastName ? lastName : userFound.last_name)
+          if (userFound.id == req.params.userId || userFound.isAdmin === true) {
+
+            // si on le trouve on met a jour la base de donnée
+            userFound.update({
+              first_name: (firstName ? firstName : userFound.first_name),
+              last_name: (lastName ? lastName : userFound.last_name)
+            })
+              .then(function () {
+                res.status(201).json(userFound)
               })
-                .then(function () {
-                  res.status(201).json(userFound)
-                })
-                .catch(function (err) {
-                  res.status(500).json({ 'error': 'cannot update user' });
-                });
+              .catch(function (err) {
+                res.status(500).json({ 'error': 'cannot update user' });
+              });
 
           } else {
             return res.status(404).json({ 'error': 'user non trouvé ou autorisé' })
@@ -205,9 +200,9 @@ module.exports = {
 
   deleteUser: function (req, res) {
     // Getting auth header
-    var headerAuth = req.headers['authorization'];
-    var userId = jwtUtils.getUserId(headerAuth);
-    var userParam = JSON.parse(req.params.userId);
+    const headerAuth = req.headers['authorization'];
+    const userId = jwtUtils.getUserId(headerAuth);
+    const userParam = JSON.parse(req.params.userId);
 
     // on cherche l'utilisateur
     db.User.findOne({
@@ -215,7 +210,7 @@ module.exports = {
     })
       .then(function (userFound) {
         if (userFound && userId) {
-          if (userId == req.params.userId || userFound.isAdmin == true) {
+          if (userId === req.params.userId || userFound.isAdmin === true) {
             db.User.destroy({
               where: { id: userParam }
             })
@@ -239,7 +234,7 @@ module.exports = {
           return res.status(404).json({ 'error': 'user not found' });
         }
       }).catch(function (err) {
-        return res.status(500).json({ 'error': 'unable to verify user',err });
+        return res.status(500).json({ 'error': 'unable to verify user', err });
       });
   }
 };

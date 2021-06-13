@@ -66,9 +66,6 @@ module.exports = {
 
 
 
-
-
-
     listPosts: async function (req, res) {
 
         // Getting auth header
@@ -137,8 +134,6 @@ module.exports = {
 
 
 
-
-
     selectOnePost: function (req, res) {
 
         // Getting auth header
@@ -195,7 +190,6 @@ module.exports = {
 
 
 
-
     updateOnePost: function (req, res) {
 
         // Getting auth header
@@ -208,9 +202,8 @@ module.exports = {
         var img_url;
         const description = req.body.description;
 
-        if (req.file == undefined) {
-
-        } else {
+        if (req.file == undefined) { } 
+        else {
             img_url = req.file.path
         }
 
