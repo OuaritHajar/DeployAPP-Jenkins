@@ -1,44 +1,40 @@
 // Imports
 const db = require('../models');
-var jwtUtils = require('../utils/jwt.utils');
+const jwtUtils = require('../utils/jwt.utils');
 
 const upload = require('../config/upload.config.js');
 
 // Routes
 module.exports = {
-    createPost: function (req, res) {
+    createPost: async function (req, res) {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
 
         // Params
-        var title = req.body.title;
-        var description = req.body.description;
+        const title = req.body.title;
+        const description = req.body.description;
         var img_url;
 
-        if (req.file == undefined) {
-        } else {
+        if (req.file === undefined) {} 
+        else {
             img_url = req.file.path
         }
-
-        if (title == null || description == null) {
+        if (title === null || description === null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
         if (title.length <= 2 || description.length <= 4) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
 
-        // récupère l'user
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
-
-                    console.log(userFound);
+        try{
+            // récupère l'user
+            const userFound = await db.User.findOne({ where: { id: userId } });
+            if (userFound) {
+                try{
                     // on créé le post
-                    db.Post.create({
+                    const newPost = await db.Post.create({
                         title, title,
                         img_url: img_url,
                         description: description,
@@ -46,27 +42,24 @@ module.exports = {
                         comments: 0,
                         UserId: userFound.id,
                         first_name: userFound.first_name,
+                    });
 
-                    })
-                        .then(function (newPost) {
-                            if (newPost) {
-
-                                return res.status(201).json(newPost);
-
-                            } else {
-                                return res.status(500).json({ 'error': 'cannot create post' })
-                            }
-                        })
-                        .catch(function (err) {
-                            return res.status(404).json(err)
-                        })
-                } else {
-                    return res.status(404).json({ 'error': 'user not found' });
+                    if (newPost) {
+                        return res.status(201).json(newPost);
+                    } else {
+                        return res.status(500).json({ 'error': 'cannot create post' })
+                    }
                 }
-            })
-            .catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
-            });
+                catch(err) {
+                    return res.status(404).json(err)
+                }
+            } else {
+                return res.status(404).json({ 'error': 'user not found' });
+            }
+        }   
+        catch(err) {
+            return res.status(500).json({ 'error': 'unable to verify user' });
+        }
     },
 
 
@@ -76,78 +69,65 @@ module.exports = {
 
 
 
-    listPosts: function (req, res) {
+    listPosts: async function (req, res) {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
 
         // Params
-        var ITEMS_LIMIT = 10;
-        var fields = req.query.fields;
-        var limit = parseInt(req.query.limit);
-        var offset = parseInt(req.query.offset);
-        var order = req.query.order;
+        const ITEMS_LIMIT = 10;
+        const fields = req.query.fields;
+        const limit = parseInt(req.query.limit);
+        const offset = parseInt(req.query.offset);
+        const order = req.query.order;
 
         if (limit > ITEMS_LIMIT) {
             limit = ITEMS_LIMIT;
         }
 
         // récupère l'user
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
-
-
-                    // récupère les commentaires
-                    db.Comment.findAll()
-                        .then(function (commentFound) {
-                            if (commentFound) {
-
-
-
-                                // récupère tout le sposts
-                                db.Post.findAll({
-                                    order: [(order != null) ? order.split(':') : ['title', 'ASC']],
-                                    attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
-                                    limit: (!isNaN(limit)) ? limit : null,
-                                    offset: (!isNaN(offset)) ? offset : null,
-
-                                }).then(function (posts) {
-                                    if (posts) {
-                                        res.status(200).json({ 'user': userFound, 'post': posts ,'comments': commentFound });
-                                    } else {
-                                        res.status(404).json({ "error": "no post fund" });
-                                    }
-                                }).catch(function (err) {
-                                    res.status(500).json({ 'error': 'invalide fields' });
-                                });
-
-
-
-
-
-
-
-                            } else {
-                                return res.status(404).json({ 'error': 'comment not found' });
-                            }
-                        })
-                        .catch(function (err) {
-                            return res.status(500).json({ 'error': 'unable to verify comment' });
-                        });
-
-
-
-                } else {
-                    return res.status(404).json({ 'error': 'user not found' });
-                }
-            })
-            .catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
+        try{
+            var userFound = await db.User.findOne({
+                where: { id: userId }
             });
+        } catch(err) {
+            return res.status(500).json({ 'error': 'unable to verify user' });
+        };
+
+        // récupère les commentaires
+        try{
+            var commentFound = await db.Comment.findAll();
+        } catch(err) {
+            return res.status(500).json({ 'error': 'unable to verify comment' });
+        };
+
+        // récupère tout les posts
+        try{
+            var allPosts = await db.Post.findAll({
+                order: [(order != null) ? order.split(':') : ['title', 'ASC']],
+                attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                limit: (!isNaN(limit)) ? limit : null,
+                offset: (!isNaN(offset)) ? offset : null,
+            })
+        } catch(err) {
+            res.status(500).json({ 'error': 'invalide fields' });
+        };
+
+
+        if (userFound) {
+            if (commentFound) {                
+                if (allPosts) {
+                    res.status(200).json({ 'user': userFound, 'post': allPosts, 'comments': commentFound });
+                } else {
+                    res.status(404).json({ "error": "no post fund" });
+                }       
+            } else {
+                return res.status(404).json({ 'error': 'comment not found' });
+            }            
+        } else {
+            return res.status(404).json({ 'error': 'user not found' });
+        }
     },
 
 
@@ -162,8 +142,8 @@ module.exports = {
     selectOnePost: function (req, res) {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
 
         // récupère l'user
         db.User.findOne({
@@ -207,7 +187,6 @@ module.exports = {
             .catch(function (err) {
                 return res.status(500).json({ 'error': 'unable to verify user' });
             });
-
     },
 
 
@@ -220,14 +199,14 @@ module.exports = {
     updateOnePost: function (req, res) {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
-        var postId = JSON.parse(req.params.postId);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
+        const postId = JSON.parse(req.params.postId);
 
         //Params
-        var title = req.body.title;
+        const title = req.body.title;
         var img_url;
-        var description = req.body.description;
+        const description = req.body.description;
 
         if (req.file == undefined) {
 
@@ -284,9 +263,9 @@ module.exports = {
     removeOnePost: function (req, res) {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
-        var postId = req.params.postId;
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
+        const postId = req.params.postId;
 
 
 
