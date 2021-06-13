@@ -6,6 +6,7 @@ require('dotenv').config();
 const app = express();
 global.__basedir = __dirname;
 const db = require('./config/db.config.js');
+
 // Body Parser config 
 app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
 app.use(bodyParser.json());

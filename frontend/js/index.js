@@ -1,13 +1,17 @@
 const signup = async function () {
     try {
+
         // évènement click bouton du formulaire
         document.getElementById("btnSubmit").addEventListener('click', e => {
 
             // Récupère valeur inputs form
-            let inputLastName = document.getElementById('inputLastName').value
-            let inputFirstName = document.getElementById('inputFirstName').value
-            let inputPassword = document.getElementById('inputPassword').value
-            let inputEmail = document.getElementById('inputEmail').value
+            
+            let inputFirstName = document.getElementById('inputFirstName').value;
+            let inputLastName = document.getElementById('inputLastName').value;
+            let inputPassword = document.getElementById('inputPassword').value;
+            let inputEmail = document.getElementById('inputEmail').value;
+
+
             // Post les données attendu à l'API
             fetch("http://localhost:3000/api/users/signup", {
                 method: "POST",
@@ -20,16 +24,22 @@ const signup = async function () {
                     password: inputPassword
                 }),
                 headers: {
-                    "Content-type": "application/x-www-form-urlencoded"
+                    "Content-type": "application/json; charset=UTF-8"
                 }
             }, true)
                 .then(response => response.json())
                 .then(function (response) {
 
-                    // on vérifie la réponse
-                    console.log(response);
 
-                    window.location.href = "login.html";
+
+                    if (response != undefined) {
+
+                        console.log(response);
+                        window.location.href = "login.html"
+                    }
+
+
+
                 })
                 .catch(function (error) {
                     console.error(error)
@@ -40,4 +50,5 @@ const signup = async function () {
     }
 }
 
+console.log(localStorage);
 signup()

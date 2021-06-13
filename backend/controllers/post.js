@@ -42,10 +42,11 @@ module.exports = {
                         title, title,
                         img_url: img_url,
                         description: description,
-                        like: 0,
+                        likes: 0,
+                        comments: 0,
                         UserId: userFound.id,
                         first_name: userFound.first_name,
-                        
+
                     })
                         .then(function (newPost) {
                             if (newPost) {
@@ -69,26 +70,6 @@ module.exports = {
     },
 
 
-
- //return Product.create({
- //    title: 'Chair',
- //    user: {
- //      firstName: 'Mick',
- //      lastName: 'Broadstone',
- //      addresses: [{
- //        type: 'home',
- //        line1: '100 Main St.',
- //        city: 'Austin',
- //        state: 'TX',
- //        zip: '78704'
- //      }]
- //    }
- //  }, {
- //    include: [{
- //      association: Product.User,
- //      include: [ User.Addresses ]
- //    }]
- //  });
 
 
 
@@ -119,22 +100,47 @@ module.exports = {
             .then(function (userFound) {
                 if (userFound) {
 
-                    // récupère tout le sposts
-                    db.Post.findAll({
-                        order: [(order != null) ? order.split(':') : ['title', 'ASC']],
-                        attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
-                        limit: (!isNaN(limit)) ? limit : null,
-                        offset: (!isNaN(offset)) ? offset : null,
-                        
-                    }).then(function (posts) {
-                        if (posts) {
-                            res.status(200).json(posts);
-                        } else {
-                            res.status(404).json({ "error": "no post fund" });
-                        }
-                    }).catch(function (err) {
-                        res.status(500).json({ 'error': 'invalide fields' });
-                    });
+
+                    // récupère les commentaires
+                    db.Comment.findAll()
+                        .then(function (commentFound) {
+                            if (commentFound) {
+
+
+
+                                // récupère tout le sposts
+                                db.Post.findAll({
+                                    order: [(order != null) ? order.split(':') : ['title', 'ASC']],
+                                    attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                                    limit: (!isNaN(limit)) ? limit : null,
+                                    offset: (!isNaN(offset)) ? offset : null,
+
+                                }).then(function (posts) {
+                                    if (posts) {
+                                        res.status(200).json({ 'user': userFound, 'post': posts ,'comments': commentFound });
+                                    } else {
+                                        res.status(404).json({ "error": "no post fund" });
+                                    }
+                                }).catch(function (err) {
+                                    res.status(500).json({ 'error': 'invalide fields' });
+                                });
+
+
+
+
+
+
+
+                            } else {
+                                return res.status(404).json({ 'error': 'comment not found' });
+                            }
+                        })
+                        .catch(function (err) {
+                            return res.status(500).json({ 'error': 'unable to verify comment' });
+                        });
+
+
+
                 } else {
                     return res.status(404).json({ 'error': 'user not found' });
                 }
@@ -169,7 +175,7 @@ module.exports = {
 
                     // récupère le post
                     db.Post.findOne({
-                        attributes: ['title', 'img_url', 'description', 'userId', 'createdAt', 'updatedAt', 'like'],
+                        attributes: ['title', 'img_url', 'description', 'userId', 'createdAt', 'updatedAt', 'likes', 'comments'],
                         where: { id: req.params.postId }
                     })
                         .then(function (post) {
@@ -178,15 +184,15 @@ module.exports = {
                                 // récup les commentaires
                                 db.Comment.findAll(
                                 )
-                                    .then(function(commentsFound){
-                                    if(commentsFound) {
+                                    .then(function (commentsFound) {
+                                        if (commentsFound) {
 
-                                
-                                        res.status(200).json({'post':post, 'comments':commentsFound});
-                                    } else {
-                                        res.status(404).json({error: "Comments not found"})
-                                    }
-                                })
+
+                                            res.status(200).json({ 'userPost': userFound, 'post': post, 'comments': commentsFound });
+                                        } else {
+                                            res.status(404).json({ error: "Comments not found" })
+                                        }
+                                    })
                             } else {
                                 res.status(404).json({ "error": "no post fund" });
                             }

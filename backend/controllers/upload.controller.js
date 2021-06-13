@@ -109,10 +109,6 @@ module.exports = {
           } else {
 
 
-
-
-
-
             var type = req.file.mimetype;
             var name = req.file.originalname;
             var data = fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename);
@@ -133,10 +129,6 @@ module.exports = {
                 fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + image.name, image.data);
 
                 next();
-
-
-
-
 
 
               } catch (e) {

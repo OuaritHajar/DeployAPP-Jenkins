@@ -10,6 +10,7 @@ module.exports = {
   signup: async (req, res, next) => {
     try {
       // Params
+      console.log(req.body);
       var firstName = req.body.first_name;
       var lastName = req.body.last_name;
       var email = req.body.email;
@@ -137,7 +138,7 @@ module.exports = {
       return res.status(400).json({ 'error': 'wrong token' });
 
     db.User.findOne({
-      attributes: ['id', 'first_name', 'last_name', 'email'],
+      attributes: ['id', 'first_name', 'last_name', 'email','createdAt'],
       where: { id: userId }
     })
       .then(function (user) {
@@ -173,7 +174,7 @@ module.exports = {
           if (userFound.id == req.params.userId || userFound.isAdmin == true) {
             
               // si on le trouve on met a jour la base de donnée
-              userFound.update({
+              userFound.save({
                 first_name: (firstName ? firstName : userFound.first_name),
                 last_name: (lastName ? lastName : userFound.last_name)
               })

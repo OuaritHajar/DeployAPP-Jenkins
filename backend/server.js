@@ -54,7 +54,7 @@ server.on('listening', () => {
 
 // écoute le port
 server.listen(port), async () => {
-    console.log('Server up on http://localhst:3000')
+    console.log('Server up on http://localhost:3000')
     await sequelize.sync({ force: true })
     console.log('Database synced') 
 }

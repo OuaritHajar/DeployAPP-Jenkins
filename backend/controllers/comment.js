@@ -44,10 +44,21 @@ module.exports = {
                                     .then(function (newComment) {
                                         if (newComment) {
 
+                                            // met a jour le compteur de commentaire
+                                            postFound.comments++;
 
-                                            // renvoie le nouveau commentaire
+                                            postFound.update()
+                                            .then(function(){
+
+                                                // renvoie le nouveau commentaire
                                             return res.status(201).json(newComment);
 
+
+
+
+                                            }).catch(function(err) {
+                                                return res.status(500).json({error: 'cannot update count comment'})
+                                            })
 
                                         } else {
                                             return res.status(500).json({ 'error': 'cannot create comment' })

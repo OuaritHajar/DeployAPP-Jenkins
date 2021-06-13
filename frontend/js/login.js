@@ -22,7 +22,7 @@ const login = async function () {
                 }, true)
                     .then(response => response.json())
                     .then(function (response) {
-
+                        
                         console.log(response.token);
                         localStorage.setItem('token', response.token);
 
@@ -37,5 +37,4 @@ const login = async function () {
         console.error(e)
     }
 }
-
 login()

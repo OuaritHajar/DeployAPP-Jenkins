@@ -20,8 +20,8 @@ router.put('/:postId', upload.single("img_url"), fileWorker.update, postsCtrl.up
 router.delete('/:postId', postsCtrl.removeOnePost);
 
 // Comment routes
-router.post('/:postId/comment', commentCtrl.createComment);
-router.get('/:postId/comments', commentCtrl.listPostComments);
+router.post('/:postId/comment', auth, commentCtrl.createComment);
+router.get('/:postId/comments', auth, commentCtrl.listPostComments);
 router.put('/:postId/comment/:commentId', commentCtrl.updateOneComment);
 router.delete('/:postId/comment/:commentId', commentCtrl.deleteOneComment);
 
