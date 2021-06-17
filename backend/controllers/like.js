@@ -1,7 +1,6 @@
 // Imports
 const db = require('../models');
 const jwtUtils = require('../utils/jwt.utils');
-const { update } = require('./upload.controller');
 
 // Routes
 module.exports = {
