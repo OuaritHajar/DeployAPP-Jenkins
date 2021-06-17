@@ -32,7 +32,7 @@ module.exports = {
             // récupère l'user
             const userFound = await db.User.findOne({ where: { id: userId } });
             if (userFound) {
-                try{
+                
                     // on créé le post
                     const newPost = await db.Post.create({
                         title, title,
@@ -41,7 +41,10 @@ module.exports = {
                         likes: 0,
                         comments: 0,
                         UserId: userFound.id,
-                        first_name: userFound.first_name,
+                        include: [{
+                            model: db.User,
+                            attributes: ['first_name']
+                        }]
                     });
 
                     if (newPost) {
@@ -49,16 +52,13 @@ module.exports = {
                     } else {
                         return res.status(500).json({ 'error': 'cannot create post' })
                     }
-                }
-                catch(err) {
-                    return res.status(404).json(err)
-                }
+                
             } else {
                 return res.status(404).json({ 'error': 'user not found' });
             }
         }   
         catch(err) {
-            return res.status(500).json({ 'error': 'unable to verify user' });
+            console.error(err)
         }
     },
 
@@ -86,10 +86,11 @@ module.exports = {
         // récupère l'user
         try{
             var userFound = await db.User.findOne({
-                where: { id: userId }
+                where: { id: userId },
+                attributes: ['id','first_name','last_name','createdAt','updatedAt' ]
             });
         } catch(err) {
-            return res.status(500).json({ 'error': 'unable to verify user' });
+            return res.status(500).json({ 'error': 'unable to verify user 2' });
         };
 
         // récupère les commentaires
@@ -106,6 +107,10 @@ module.exports = {
                 attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                 limit: (!isNaN(limit)) ? limit : null,
                 offset: (!isNaN(offset)) ? offset : null,
+                include: [{
+                    model: db.User,
+                    attributes: ['first_name']
+                }]
             })
         } catch(err) {
             res.status(500).json({ 'error': 'invalide fields' });
@@ -134,54 +139,45 @@ module.exports = {
 
 
 
-    selectOnePost: function (req, res) {
+    selectOnePost: async (req, res) => {
 
         // Getting auth header
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
 
-        // récupère l'user
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
-
-
-                    // récupère le post
-                    db.Post.findOne({
-                        attributes: ['title', 'img_url', 'description', 'userId', 'createdAt', 'updatedAt', 'likes', 'comments'],
-                        where: { id: req.params.postId }
-                    })
-                        .then(function (post) {
-                            if (post) {
-
-                                // récup les commentaires
-                                db.Comment.findAll(
-                                )
-                                    .then(function (commentsFound) {
-                                        if (commentsFound) {
-
-
-                                            res.status(200).json({ 'userPost': userFound, 'post': post, 'comments': commentsFound });
-                                        } else {
-                                            res.status(404).json({ error: "Comments not found" })
-                                        }
-                                    })
-                            } else {
-                                res.status(404).json({ "error": "no post fund" });
-                            }
-                        }).catch(function (err) {
-                            console.log(err);
-                            res.status(500).json({ 'error': 'invalide fields' });
-                        });
-                } else {
-                    return res.status(404).json({ 'error': 'user not found' });
-                }
+        try {
+            // récupère l'user
+            const userFound = await db.User.findOne({
+                where: { id: userId },
+                attributes:['id','first_name','last_name']
             })
-            .catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
-            });
+            if (userFound) {
+
+                // récupère le post
+                const postFound = await db.Post.findOne({
+                    attributes: ['userId','title', 'description','img_url', 'createdAt', 'updatedAt', 'likes', 'comments'],
+                    where: { id: req.params.postId }
+                })
+                if (postFound) {
+
+                    // récup les commentaires
+                    const commentsFound = await db.Comment.findAll()
+                    if (commentsFound) {
+                        res.status(200).json({'post': postFound, 'comments': commentsFound, 'user': userFound });
+                    } else {
+                        res.status(404).json({ error: "Comments not found" })
+                    }
+
+                } else {
+                    res.status(404).json({ "error": "no post fund" });
+                }
+
+            } else {
+                return res.status(404).json({ 'error': 'user not found' });
+            }
+        } catch (err) {
+            console.error(err)
+        };
     },
 
 
@@ -190,7 +186,7 @@ module.exports = {
 
 
 
-    updateOnePost: function (req, res) {
+    updateOnePost: async (req, res) => {
 
         // Getting auth header
         const headerAuth = req.headers['authorization'];
@@ -202,51 +198,57 @@ module.exports = {
         var img_url;
         const description = req.body.description;
 
-        if (req.file == undefined) { } 
-        else {
-            img_url = req.file.path
-        }
+        if (req.file) { img_url = req.file.path }
 
-        // on cherche l'utilisateur
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
-                    // on cherche le post souhaiter dans la requete
-                    db.Post.findOne({
-                        where: { id: postId }
-                    })
-                        .then(function (postFound) {
+        try {
+            // on cherche l'utilisateur
+            const userFound = await db.User.findOne({
+                where: { id: userId }
+            })
 
-                            // on verifie que la post a été créé par le proprio
-                            if (userId == postFound.UserId || userFound.isAdmin == true) {
+            if (userFound) {
+                // on cherche le post souhaité dans la requete
+                const postFound = await db.Post.findOne({
+                    where: { id: postId }
+                })
 
-                                // update post
-                                postFound.update({
-                                    title: (title ? title : title),
-                                    img_url: (img_url ? img_url : img_url),
-                                    description: (description ? description : description)
-                                })
-                                    .then(function () {
-                                        res.status(201).json(postFound);
-                                    })
-                                    .catch(function (err) {
-                                        res.status(500).json({ 'error': 'cannot update user' });
-                                    });
-                            } else {
-                                return res.status(201).json({ 'error': 'non autorisé' })
-                            }
+                if (postFound) {
+                    // on verifie que la post a été créé par le proprio
+
+                    if (userId == postFound.UserId || userFound.isAdmin == true) {
+                        // update post
+                        const postUpdate = await postFound.update({
+                            title: (title ? title : title),
+                            img_url: (img_url ? img_url : img_url),
+                            description: (description ? description : description)
                         })
-                        .catch(function (err) {
-                            res.status(404).json({ 'error': 'post not found' })
-                        })
+                        if (postUpdate) {
+
+
+
+
+                            // supprime ancienne image
+
+
+
+
+
+                            res.status(201).json(postUpdate);
+                        }
+                    } else {
+                        return res.status(201).json({ 'error': 'non autorisé' })
+                    }
                 } else {
-                    res.status(404).json({ 'error': 'user not found' });
+                    return res.status(201).json({ 'error': 'post not found' })
                 }
-            }).catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify ussssser' });
-            });
+
+            } else {
+                res.status(404).json({ 'error': 'user not found' });
+            }
+
+        } catch (err) {
+            console.error(err)
+        };
     },
 
 
@@ -361,7 +363,7 @@ module.exports = {
                 }
             })
             .catch(function (err) {
-                return res.status(404).json({ 'error': 'unable to verify user' });
+                return res.status(404).json({ 'error': 'unable to verify user 4' });
             });
 
 

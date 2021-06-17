@@ -8,27 +8,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-
-      userId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model:'Users',
-          key:'id'
-        }
-      },
-
       postId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model:'Posts',
-          key:'id'
+          model: 'Posts',
+          key: 'id'
         }
       },
-      like: {
-        allowNull: true,
-        type: Sequelize.INTEGER
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,

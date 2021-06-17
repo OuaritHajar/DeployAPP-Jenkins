@@ -1,99 +1,78 @@
 // Imports
 const db = require('../models');
-var jwtUtils = require('../utils/jwt.utils');
+const jwtUtils = require('../utils/jwt.utils');
+const { update } = require('./upload.controller');
 
 // Routes
 module.exports = {
-    likePost: function (req, res) {
+    likePost: async (req, res) => {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
-        var postId = parseInt(req.params.postId);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
+        const postId = parseInt(req.params.postId);
 
         // condition
         if (postId <= 0) {
             return res.status(400).json({ 'error': 'invalid parameters' });
         }
 
-        // récupère le post
-        db.Post.findOne({
-            where: { id: postId }
-        })
-        .then(function (postFound) {
-            if (postFound && !undefined) {
+        try {
+            // récupère le post
+            const postFound = await db.Post.findOne({
+                where: { id: postId }
+            })
+            if (postFound) {
+
                 // récupère l'utilisateur
-                db.User.findOne({
+                const userFound = await db.User.findOne({
                     where: { id: userId }
                 })
-                .then(function (userFound) {
-                    if (userFound) {
-                        
-                        // vérifie si l'user a déja like
-                        db.Like.findOne({
-                            where: {
-                                userId: userId,
-                                postId: postId
+                if (userFound) {
+
+                    // vérifie si l'user a déja like
+                    const userAlreadyLike = await db.Like.findOne({
+                        where: {
+                            userId: userId,
+                            postId: postId
+                        }
+                    })
+                    if (!userAlreadyLike) {
+
+                        // méthode add sur l'instance 
+                        const addRelation = await postFound.addUser(userFound)
+
+                        if (addRelation) {
+
+                            // update du like
+                            const updatePost = await postFound.update({
+                                likes: postFound.likes + 1,
+                            })
+                            if (updatePost) {
+                                return res.status(201).json(postFound);
                             }
-                        })
-                        .then(function(isUserAlreadyLiked) {
-                            console.log(isUserAlreadyLiked);
-                            if(!isUserAlreadyLiked) {
+                            else {
+                                res.status(500).json({ 'error': 'cannot update post like counter' });
+                            };
 
+                        } else {
+                            res.status(409).json({ 'error': ' unable to set user reaction' });
+                        }
 
-                                console.log(postFound,userFound)
-                                console.log(postFound.addUser(userFound));
-
-
-
-
-
-                                // méthode add sur l'instance 
-                                postFound.addUser(userFound)
-
-
-
-
-
-
-                                .then(function(alreadyLikeFound) {
-                                    console.log(alreadyLikeFound);
-                                    // update du like
-                                    postFound.update({
-                                        like: postFound.like + 1,
-                                    })
-                                    .then(function() {
-                                      return res.status(201).json(postFound);
-                                        
-                                    })
-                                    .catch(function(err) {
-                                         res.status(500).json({'error': 'cannot update post like counter'});
-                                    });
-                                })
-                                .catch(function(err) {
-                                     return res.status(500).json({'error': 'unable to set user reaction'});
-                                });
-                            } else {
-                                res.status(409).json({'error':' le post a déja été liké'});
-                            }                                       
-                        })
-                        .catch(function(err) {
-                             res.status(500).json({'error': 'unable to verify is user already liked'});
-                        });
                     } else {
-                        return res.status(404).json({ 'error': 'user not exist' });
+                        return res.status(404).json({ 'error': 'user already liked' });
                     }
-                })
-                .catch(function (err) {
-                     res.status(500).json({ 'error': 'unable to verify user' });
-                })
-            } else {
+                } else {
+                    return res.status(404).json({ 'error': 'cannot found user' })
+                }
+
+            }else {
                 return res.status(404).json({ 'error': 'cannot found post' })
             }
-        })
-        .catch(function (err) {
-             res.status(404).json(err);
-        });
+        }
+        catch (err) {
+                console.error(err)
+            }
         },
 
 
@@ -101,9 +80,9 @@ module.exports = {
         removeLike: function (req, res) {
 
             // Getting auth header
-            var headerAuth = req.headers['authorization'];
-            var userId = jwtUtils.getUserId(headerAuth);
-            var postId = parseInt(req.params.postId);
+            const headerAuth = req.headers['authorization'];
+            const userId = jwtUtils.getUserId(headerAuth);
+            const postId = parseInt(req.params.postId);
     
             // condition
             if (postId <= 0) {

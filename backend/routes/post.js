@@ -16,7 +16,7 @@ const fileWorker = require('../controllers/upload.controller.js');
 router.post('/', upload.single("img_url"), fileWorker.upload, postsCtrl.createPost);
 router.get('/', auth,postsCtrl.listPosts);
 router.get('/:postId', auth, postsCtrl.selectOnePost);
-router.put('/:postId', upload.single("img_url"), fileWorker.update, postsCtrl.updateOnePost);
+router.put('/:postId', upload.single("img_url"), fileWorker.upload, postsCtrl.updateOnePost);
 router.delete('/:postId', postsCtrl.removeOnePost);
 
 // Comment routes

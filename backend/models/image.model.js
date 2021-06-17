@@ -11,27 +11,27 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             
-            models.User.belongsToMany(models.Post, {
-                through: models.Image,
-                foreignKey: 'userId',
-                otherKey: 'postId'
-            });
-
-            models.Post.belongsToMany(models.User, {
-                through: models.Image,
-                foreignKey: 'postId',
-                otherKey: 'userId'
-            });
-
-            models.Image.belongsTo(models.User, {
-                foreignKey: 'userId',
-                as: 'user'
-            });
-
-            models.Image.belongsTo(models.Post, {
-                foreignKey: 'postId',
-                as: 'post'
-            });
+            //models.User.belongsToMany(models.Post, {
+            //    through: models.Image,
+            //    foreignKey: 'userId',
+            //    otherKey: 'postId'
+            //});
+//
+            //models.Post.belongsToMany(models.User, {
+            //    through: models.Image,
+            //    foreignKey: 'postId',
+            //    otherKey: 'userId'
+            //});
+//
+            //models.Image.belongsTo(models.User, {
+            //    foreignKey: 'userId',
+            //    as: 'user'
+            //});
+//
+            //models.Image.belongsTo(models.Post, {
+            //    foreignKey: 'postId',
+            //    as: 'post'
+            //});
         }
 
     };

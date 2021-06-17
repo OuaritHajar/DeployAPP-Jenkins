@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
 
-      models.Post.hasMany(models.Comment),
-      models.Post.hasMany(models.Like),
-      models.Post.hasMany(models.Image)
+      //models.Post.hasMany(models.Comment),
+      //models.Post.hasMany(models.Like),
+      //models.Post.hasMany(models.Image)
 
 
       models.Post.belongsTo(models.User, {
@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false
         }
       })
-  
     }
   };
   Post.init({

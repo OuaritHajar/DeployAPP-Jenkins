@@ -1,6 +1,7 @@
 'use strict';
-const { Model } = require('sequelize');
-
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Like extends Model {
     /**
@@ -9,47 +10,49 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-
-      models.User.belongsToMany(models.Post, { 
+      // define association here
+      models.User.belongsToMany(models.Post, {
         through: models.Like,
-        foreignKey:'userId',
-        otherKey:'postId'
+        foreignKey: 'userId',
+        otherKey: 'postId',
       });
 
-      models.Post.belongsToMany(models.User, { 
+      models.Post.belongsToMany(models.User, {
         through: models.Like,
         foreignKey: 'postId',
-        otherKey: 'userId'
-      });
-
-      models.Like.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as:'user',
+        otherKey: 'userId',
       });
 
       models.Like.belongsTo(models.Post, {
         foreignKey: 'postId',
-        as:'post',
+        as: 'post',
+      });
+      
+      models.Like.belongsTo(models.User, {
+        foreignKey: 'userId',
+        as: 'user',
       });
     }
   };
-  
   Like.init({
-    like: DataTypes.INTEGER,
     postId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED.ZEROFILL,
       references: {
         model:'Post',
         key:'id'
       }
     },
+    
+  
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED.ZEROFILL,
       references: {
         model:'User',
         key:'id'
       }
     }
+    
+
 
   }, {
     sequelize,

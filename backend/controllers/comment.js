@@ -4,7 +4,7 @@ var jwtUtils = require('../utils/jwt.utils');
 
 // Routes
 module.exports = {
-    createComment: function (req, res) {
+    createComment: async (req, res) => {
 
         // Getting auth header
         var headerAuth = req.headers['authorization'];
@@ -21,72 +21,49 @@ module.exports = {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
 
-        // récupère l'user
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
-
-                    // récupère le post
-                    db.Post.findOne({
-                        where: { id: req.params.postId }
-                    })
-                        .then(function (postFound) {
-                            if (postFound) {
-
-                                // créer le commentaire
-                                db.Comment.create({
-                                    description: description,
-                                    PostId: postFound.id,
-                                    UserId: userFound.id,
-                                })
-                                    .then(function (newComment) {
-                                        if (newComment) {
-
-                                            // met a jour le compteur de commentaire
-                                            postFound.comments++;
-
-                                            postFound.update()
-                                            .then(function(){
-
-                                                // renvoie le nouveau commentaire
-                                            return res.status(201).json(newComment);
-
-
-
-
-                                            }).catch(function(err) {
-                                                return res.status(500).json({error: 'cannot update count comment'})
-                                            })
-
-                                        } else {
-                                            return res.status(500).json({ 'error': 'cannot create comment' })
-                                        }
-                                    })
-                                    .catch(function (err) {
-                                        return res.status(404).json(err)
-                                    })
-                            } else {
-                                return res.status(500).json({ 'error': 'cannot found post' })
-                            }
-                        })
-                        .catch(function (err) {
-                            return res.status(404).json(err)
-                        })
-                } else {
-                    res.status(404).json({ 'error': 'user not found' });
-                }
+        try {
+            // récupère l'user
+            const userFound = await db.User.findOne({
+                where: { id: userId }
             })
-            .catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
-            });
+            if (userFound) {
+
+                // récupère le post
+                const postFound = await db.Post.findOne({
+                    where: { id: req.params.postId }
+                })
+                if (postFound) {
+
+                    // créer le commentaire
+                    const createComment = await db.Comment.create({
+                        description: description,
+                        PostId: postFound.id,
+                        UserId: userFound.id,
+                    })
+                    if (createComment) {
+
+                            // renvoie le nouveau commentaire
+                            return res.status(201).json(createComment);
+
+                    } else {
+                        return res.status(500).json({ 'error': 'cannot create comment' })
+                    }
+                } else {
+                    return res.status(500).json({ 'error': 'cannot found post' })
+                }
+            } else {
+                res.status(404).json({ 'error': 'user not found' });
+            }
+        }
+        catch (err) {
+            console.error(err)
+        };
     },
 
 
 
 
-    listPostComments: function (req, res) {
+    listPostComments: async (req, res) => {
 
         // Getting auth header
         var headerAuth = req.headers['authorization'];
@@ -103,58 +80,42 @@ module.exports = {
             limit = ITEMS_LIMIT;
         }
 
-        // récupère l'user
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
-
-                    // récupère le post
-                    db.Post.findOne({
-                        where: { id: req.params.postId }
-                    })
-                        .then(function (postFound) {
-                            if (postFound) {
-
-                                // récupère les commentaires
-                                db.Comment.findAll()
-                                    .then(function (postComments) {
-                                        if (postComments) {
-
-
-
-
-
-                                            // renvoie tout les commentaires d'un 
-                                            return res.status(201).json(postComments);
-
-                                            // pagination
-
-
-
-
-                                        } else {
-                                            return res.status(500).json({ 'error': 'cannot find all comments' })
-                                        }
-                                    })
-                                    .catch(function (err) {
-                                        return res.status(404).json(err)
-                                    })
-                            } else {
-                                return res.status(500).json({ 'error': 'cannot found post' })
-                            }
-                        })
-                        .catch(function (err) {
-                            return res.status(404).json(err)
-                        })
-                } else {
-                    res.status(404).json({ 'error': 'user not found' });
-                }
+        try {
+            // récupère l'user
+            const userFound = await db.User.findOne({
+                where: { id: userId }
             })
-            .catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
-            });
+            if (userFound) {
+
+                // récupère le post
+                const postFound = await db.Post.findOne({
+                    where: { id: req.params.postId }
+                })
+                if (postFound) {
+
+                    // récupère les commentaires
+                    const AllCommentsOfPost = await db.Comment.findAll()
+                    if (AllCommentsOfPost) {
+
+
+                        // renvoie tout les commentaires d'un 
+                        return res.status(201).json(AllCommentsOfPost);
+
+                        // pagination
+
+                    } else {
+                        return res.status(500).json({ 'error': 'cannot find all comments' })
+                    }
+                } else {
+                    return res.status(500).json({ 'error': 'cannot found post' })
+                }
+            } else {
+                res.status(404).json({ 'error': 'user not found' });
+            }
+        }
+        catch (err) {
+            console.error(err)
+        };
     },
 
 
@@ -163,7 +124,7 @@ module.exports = {
 
 
 
-    updateOneComment: function (req, res) {
+    updateOneComment: async (req, res) => {
 
         // Getting auth header
         var headerAuth = req.headers['authorization'];
@@ -174,67 +135,57 @@ module.exports = {
         //Params
         var description = req.body.description;
 
-        // on cherche l'utilisateur
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
+        try {
+            // on cherche l'utilisateur
+            const userFound = await db.User.findOne({
+                where: { id: userId }
+            })
+            if (userFound) {
 
-                    // on cherche le post souhaiter dans la requete
-                    db.Post.findOne({
-                        where: { id: postId }
+                // on cherche le post souhaiter dans la requete
+                const postFound = await db.Post.findOne({
+                    where: { id: postId }
+                })
+                if (postFound) {
+
+                    // on cherche le comment souhaiter dans la requete
+                    const commentFound = await db.Comment.findOne({
+                        where: { id: commentId }
                     })
-                        .then(function (postFound) {
-                            if (postFound) {
+                    if (commentFound) {
 
-                                // on cherche le comment souhaiter dans la requete
-                                db.Comment.findOne({
-                                    where: { id: commentId }
-                                })
-                                    .then(function (commentFound) {
-                                        if (commentFound) {
+                        // on verifie que la comment a été créé par le proprio ou que l'user est admin
+                        if (commentFound.UserId == userFound.id || userFound.isAdmin == true) {
 
-                                            // on verifie que la comment a été créé par le proprio ou que l'user est admin
-                                            if (commentFound.UserId == userFound.id || userFound.isAdmin == true) {
-
-                                                //update
-                                                commentFound.update({
-                                                    description: (description ? description : description)
-                                                })
-                                                    .then(function () {
-                                                        res.status(201).json(commentFound);
-                                                    })
-                                                    .catch(function (err) {
-                                                        res.status(500).json({ 'error': 'cannot update commentaire' });
-                                                    });
-                                            } else {
-                                                return res.status(201).json({ 'error': 'non autorisé' })
-                                            }
-                                        } else {
-                                            return res.status(404).json({ 'error': 'comment not found' })
-                                        }
-                                    })
-                                    .catch(function (err) {
-                                        res.status(404).json({ 'error': 'comment not found' })
-                                    })
-                            } else {
-                                return res.status(404).json({ 'error': 'post not found' })
+                            //update
+                            const commentUpdate = await commentFound.update({
+                                description: (description ? description : description)
+                            })
+                            if (commentUpdate) {
+                                res.status(201).json(commentUpdate);
                             }
-                        })
-                        .catch(function (err) {
-                            res.status(404).json({ 'error': 'post not found' })
-                        })
+                            else {
+                                res.status(500).json({ 'error': 'cannot update commentaire' });
+                            };
+                        } else {
+                            return res.status(201).json({ 'error': 'non autorisé' })
+                        }
+                    } else {
+                        return res.status(404).json({ 'error': 'comment not found' })
+                    }
                 } else {
-                    res.status(404).json({ 'error': 'user not found' });
+                    return res.status(404).json({ 'error': 'post not found' })
                 }
-            }).catch(function (err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
-            });
+            } else {
+                res.status(404).json({ 'error': 'user not found' });
+            }
+        } catch (err) {
+            console.error(err)
+        }
     },
 
 
-    deleteOneComment: function (req, res) {
+    deleteOneComment: async (req, res) => {
 
         // Getting auth header
         var headerAuth = req.headers['authorization'];
@@ -242,66 +193,55 @@ module.exports = {
         var postId = req.params.postId
         var commentId = req.params.commentId;
 
-
-
-
-        // on cherche l'utilisateur
-        db.User.findOne({
-            where: { id: userId }
-        })
-            .then(function (userFound) {
-                if (userFound) {
-
-                    // on cherche le post
-                    db.Post.findOne({
-                        where: { id: postId }
-                    })
-                        .then(function (postFound) {
-                            if (postFound) {
-
-                                // on cherche le commentaire
-                                db.Comment.findOne({
-                                    where: { id: commentId }
-                                })
-                                    .then(function (commentFound) {
-                                        if (commentFound) {
-
-                                            // on vverifie que le commentaire appartient à l'user
-                                            if (commentFound.UserId == userFound.id || userFound.isAdmin == true) {
-
-                                                //delete
-                                                db.Comment.destroy({
-                                                    where: { id: commentId }
-                                                })
-                                                    .then(function () {
-                                                        res.status(201).json({ 'message': 'commentaire deleted' })
-                                                    })
-                                                    .catch(function (err) {
-                                                        res.status(500).json({ 'error': 'cannot update user' });
-                                                    });
-                                            } else {
-                                                return res.status(404).json({ 'error': 'no permission' });
-                                            }
-                                        } else {
-                                            res.status(404).json({ 'error': 'comment not found' })
-                                        }
-                                    }).catch(function(error) {
-                                        return res.status(404),json({'error': 'cannot found comment'})
-                                    });
-                                 } else {
-                                return res.status(404).json({ 'error': 'post not found' });
-                            }
-                        }).catch(function (err) {
-                            return res.status(500).json({ 'error': 'unable to verify post' });
-                        });
-                } else {
-                    return res.status(404).json({ 'error': 'user not found' })
-                }
+        try {
+            // on cherche l'utilisateur
+            const userFound = await db.User.findOne({
+                where: { id: userId }
             })
-            .catch(function (err) {
-                return res.status(404).json({ 'error': 'unable to verify user' });
+            if (userFound) {
+
+                // on cherche le post
+                const postFound = await db.Post.findOne({
+                    where: { id: postId }
+                })
+                if (postFound) {
+
+                    // on cherche le commentaire
+                    const commentFound = await db.Comment.findOne({
+                        where: { id: commentId }
+                    })
+                    if (commentFound) {
+
+                        // on vverifie que le commentaire appartient à l'user
+                        if (commentFound.UserId == userFound.id || userFound.isAdmin == true) {
+
+                            //delete
+                            const destroyComment = await db.Comment.destroy({
+                                where: { id: commentId }
+                            })
+                            if (destroyComment) {
+                                res.status(201).json({ 'message': 'commentaire deleted' })
+                            }
+                            else {
+                                res.status(500).json({ 'error': 'cannot update user' });
+                            };
+                        } else {
+                            return res.status(404).json({ 'error': 'no permission' });
+                        }
+                    } else {
+                        res.status(404).json({ 'error': 'comment not found' })
+                    }
+                } else {
+                    return res.status(404).json({ 'error': 'post not found' });
+                }
+            } else {
+                return res.status(404).json({ 'error': 'user not found' })
             }
-        );
+
+        }
+        catch (err) {
+            console.error(err)
+        }
     }
 
 

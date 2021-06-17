@@ -6,75 +6,47 @@ var jwtUtils = require('../utils/jwt.utils');
 
 // Upload a Multipart-File then saving it to MySQL database
 module.exports = {
-  upload: function (req, res, next) {
+  upload: async (req, res, next) => {
 
     // Getting auth header
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
 
-    // récupère l'user
-    models.User.findOne({
-      where: { id: userId }
-    })
-      .then(function (userFound) {
-        if (userFound) {
-
-          // on vérifie s'il y a une image
-          if (req.file == undefined) {
-            console.log("pas d'image dans la requete");
-            next();
-
-          } else {
-
-            // créé l'image dans la bdd
-            Image.create({
-              type: req.file.mimetype,
-              name: req.file.originalname,
-              data: fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename)
-
-            }).then(image => {
-
-              try {
-
-                fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + image.name, image.data);
-
-                //models.Image.findOne({
-                //  where: { id: image.id }
-                //})
-                //  .then(function (imageFound) {
-                //    if(imageFound) console.log('youpi');
-                //    // update image
-                //    imageFound.update({
-                //      UserId: (userId ? userId : userId),
-                //      PostId: (postId ? postId : postId)
-                //    })
-                //      .then(function () {
-                //        res.status(201).json(imageFound);
-                //      })
-                //      .catch(function (err) {
-                //        res.status(500).json({ 'error': 'cannot update image' });
-                //      });
-                //
-                //
-                //  }).catch(function (err) {
-                //    res.status(404).json({ 'error': 'Image not found' })
-                //  })
-
-                next();
-
-              } catch (e) {
-                console.log(e);
-                res.json({ 'err': e });
-              }
-            })
-          }
-        } else {
-          return res.status(404).json({ 'error': 'user not found' });
-        }
+    try {
+      // récupère l'user
+      const userFound = await models.User.findOne({
+        where: { id: userId }
       })
-      .catch(function (err) {
-        return res.status(500).json({ 'error': 'unable to verify user' });
-      });
+      if (userFound) {
+
+        // on vérifie s'il y a une image
+        if (req.file == undefined) {
+          console.log("pas d'image dans la requete");
+          next();
+
+        } else {
+
+          // créé l'image dans la bdd
+          const createImage = await Image.create({
+            type: req.file.mimetype,
+            name: req.file.originalname,
+            data: fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename)
+          })
+
+          if (createImage) {
+
+            fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + createImage.name, createImage.data);
+
+            next();
+          }
+        }
+      } else {
+        return res.status(404).json({ 'error': 'user not found' });
+      }
+     
+    } catch (err) {
+      console.error(err)
+    };
   },
 
 
@@ -86,73 +58,51 @@ module.exports = {
 
 
 
-  update: function (req, res, next) {
+  update: async (req, res, next) => {
 
     // Getting auth header
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
 
-
-
-    // récupère l'user
-    models.User.findOne({
-      where: { id: userId }
-    })
-      .then(function (userFound) {
-        if (userFound) {
-
-          // on vérifie s'il y a une image
-          if (req.file == undefined) {
-            console.log("pas d'image dans la requete");
-            next();
-
-          } else {
-
-
-            var type = req.file.mimetype;
-            var name = req.file.originalname;
-            var data = fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename);
-
-            // update l'image dans la bdd
-            Image.upload({
-
-              type: (type ? type : type),
-              name: (name ? name : name),
-              data: (data ? data : data)
-
-
-
-            }).then(image => {
-
-              try {
-
-                fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + image.name, image.data);
-
-                next();
-
-
-              } catch (e) {
-                console.log(e);
-                res.json({ 'err': e });
-              }
-            })
-          }
-        } else {
-          return res.status(404).json({ 'error': 'user not found' });
-        }
+    try {
+      // récupère l'user
+      const userFound = await models.User.findOne({
+        where: { id: userId }
       })
-      .catch(function (err) {
-        return res.status(500).json({ 'error': 'unable to verify user' });
-      });
+      if (userFound) {
+
+        // on vérifie s'il y a une image
+        if (req.file == undefined) {
+          console.log("pas d'image dans la requete");
+          next();
+
+        } else {
+
+          // supprime ancienne image
+          // récupère l'ancienne image
+          console.log(req.file)
+
+          // upload l'image dans la bdd
+          const updateImage = await Image.update({
+            type: req.file.mimetype,
+            name: req.file.originalname,
+            data: fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename)
+          })
+
+          if (updateImage)
+          
+            fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + updateImage.name, updateImage.data);
+
+          next();
 
 
+        }
+      } else {
+        return res.status(404).json({ 'error': 'user not found' });
+      }
+    }
+    catch (err) {
+      console.error(err)
+    }
   }
-
-
-
-
-
-
-
-
 }
