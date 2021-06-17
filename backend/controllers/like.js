@@ -48,16 +48,15 @@ module.exports = {
                                 likes: postFound.likes + 1,
                             })
                             if (updatePost) {
+                                
                                 return res.status(201).json(postFound);
                             }
                             else {
                                 res.status(500).json({ 'error': 'cannot update post like counter' });
                             };
-
                         } else {
                             res.status(409).json({ 'error': ' unable to set user reaction' });
                         }
-
                     } else {
                         return res.status(404).json({ 'error': 'user already liked' });
                     }

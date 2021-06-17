@@ -1,17 +1,17 @@
 // Imports
 const db = require('../models');
-var jwtUtils = require('../utils/jwt.utils');
+const jwtUtils = require('../utils/jwt.utils');
 
 // Routes
 module.exports = {
     createComment: async (req, res) => {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
 
         // Params
-        var description = req.body.description;
+        const description = req.body.description;
 
         // condition
         if (description == null) {
@@ -66,15 +66,15 @@ module.exports = {
     listPostComments: async (req, res) => {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
 
         // Params
-        var ITEMS_LIMIT = 10;
-        var fields = req.query.fields;
-        var limit = parseInt(req.query.limit);
-        var offset = parseInt(req.query.offset);
-        var order = req.query.order;
+        const ITEMS_LIMIT = 10;
+        const fields = req.query.fields;
+        const limit = parseInt(req.query.limit);
+        const offset = parseInt(req.query.offset);
+        const order = req.query.order;
 
         if (limit > ITEMS_LIMIT) {
             limit = ITEMS_LIMIT;
@@ -92,16 +92,16 @@ module.exports = {
                     where: { id: req.params.postId }
                 })
                 if (postFound) {
-
-                    // récupère les commentaires
-                    const AllCommentsOfPost = await db.Comment.findAll()
+                    
+                    // récupère les commentaires du post
+                    const AllCommentsOfPost = await db.Comment.findAll({
+                        where: { postId: req.params.postId }
+                    })
                     if (AllCommentsOfPost) {
 
-
-                        // renvoie tout les commentaires d'un 
+                        // renvoie tout les commentaires 
                         return res.status(201).json(AllCommentsOfPost);
 
-                        // pagination
 
                     } else {
                         return res.status(500).json({ 'error': 'cannot find all comments' })
@@ -127,13 +127,13 @@ module.exports = {
     updateOneComment: async (req, res) => {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
-        var postId = JSON.parse(req.params.postId);
-        var commentId = JSON.parse(req.params.commentId);
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
+        const postId = JSON.parse(req.params.postId);
+        const commentId = JSON.parse(req.params.commentId);
 
         //Params
-        var description = req.body.description;
+        const description = req.body.description;
 
         try {
             // on cherche l'utilisateur
@@ -188,10 +188,10 @@ module.exports = {
     deleteOneComment: async (req, res) => {
 
         // Getting auth header
-        var headerAuth = req.headers['authorization'];
-        var userId = jwtUtils.getUserId(headerAuth);
-        var postId = req.params.postId
-        var commentId = req.params.commentId;
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
+        const postId = req.params.postId
+        const commentId = req.params.commentId;
 
         try {
             // on cherche l'utilisateur
