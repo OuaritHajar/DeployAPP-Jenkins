@@ -10,7 +10,7 @@ const likesCtrl = require('../controllers/like');
 
 // Multer
 const upload = require('../config/upload.config.js');
-const fileWorker = require('../controllers/upload.controller.js');
+const fileWorker = require('../controllers/image.js');
 
 // Posts routes
 router.post('/', upload.single("img_url"), fileWorker.upload, postsCtrl.createPost);

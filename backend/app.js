@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const app = express();
 global.__basedir = __dirname;
-const db = require('./config/db.config.js');
+//const db = require('./config/db.config.js');
 
 // Body Parser config 
 app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
@@ -56,8 +56,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);  
 
 
-db.sequelize.sync();
-//db.sequelize.sync({ force: true }).then(() => {
+//db.sequelize.sync();
+//db.sequelize.sync({ alter: true }).then(() => {
 // console.log("Drop and re-sync db.");
 //});
 

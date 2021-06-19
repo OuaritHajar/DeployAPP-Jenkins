@@ -2,8 +2,6 @@
 const db = require('../models');
 const jwtUtils = require('../utils/jwt.utils');
 
-const upload = require('../config/upload.config.js');
-
 // Routes
 module.exports = {
     createPost: async function (req, res) {
@@ -15,12 +13,10 @@ module.exports = {
         // Params
         const title = req.body.title;
         const description = req.body.description;
-        var img_url;
+        let img_url;
 
-        if (req.file === undefined) { }
-        else {
-            img_url = req.file.path
-        }
+        if (req.file) { img_url = req.file.path } 
+
         if (title === null || description === null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
@@ -198,7 +194,7 @@ module.exports = {
 
         //Params
         const title = req.body.title;
-        var img_url;
+        let img_url;
         const description = req.body.description;
 
         if (req.file) { img_url = req.file.path }
@@ -227,16 +223,7 @@ module.exports = {
                         })
                         if (postUpdate) {
 
-
-
-
-                            // supprime ancienne image
-
-
-
-
-
-                            res.status(201).json(postUpdate);
+                            return res.status(201).json(postUpdate);
                         }
                     } else {
                         return res.status(201).json({ 'error': 'non autorisé' })
@@ -264,8 +251,6 @@ module.exports = {
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
         const postId = req.params.postId;
-
-
 
         try {
 
@@ -310,7 +295,7 @@ module.exports = {
                             where: { id: postId }
                         })
 
-                        
+
                         //// on les supprimes l'image'
                         //const destroyImage = await db.Image.destroy({
                         //    where: { postId: postId }

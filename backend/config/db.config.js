@@ -19,6 +19,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
  
-db.images = require('../models/image.model.js')(sequelize, Sequelize);
+db.images = require('../models/image.js')(sequelize, Sequelize);
  
 module.exports = db;

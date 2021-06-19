@@ -36,23 +36,20 @@ module.exports = (sequelize, DataTypes) => {
   };
   Like.init({
     postId: {
-      type: DataTypes.INTEGER.UNSIGNED.ZEROFILL,
+      type: DataTypes.INTEGER,
       references: {
         model:'Post',
         key:'id'
       }
     },
     
-  
     userId: {
-      type: DataTypes.INTEGER.UNSIGNED.ZEROFILL,
+      type: DataTypes.INTEGER,
       references: {
         model:'User',
         key:'id'
       }
     }
-    
-
 
   }, {
     sequelize,
