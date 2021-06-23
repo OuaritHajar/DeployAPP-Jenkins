@@ -60,9 +60,6 @@ module.exports = {
 
 
 
-
-
-
   //update: async (req, res, next) => {
 //
   //  // Getting auth header
