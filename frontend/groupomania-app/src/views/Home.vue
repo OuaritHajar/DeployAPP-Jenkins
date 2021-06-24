@@ -40,10 +40,10 @@
 
 
 
-
-
-
 <script>
+
+
+
 </script>
 
 
@@ -82,6 +82,4 @@ body{
 .collapse ul a {
   font-size: 1.5rem;
 }
-
-
 </style>

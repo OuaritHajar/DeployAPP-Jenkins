@@ -1,5 +1,6 @@
 <template>
-    <form enctype="multipart/form-data" action="login.html" class="form-login">
+    <div id="app">
+        <form enctype="multipart/form-data" action="login.html" class="form-login">
         <fieldset>
             <legend>Inscription</legend>
             <p>Rentrer les informations pour créer un compte utilisateur</p>
@@ -8,12 +9,12 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="inputFirstName">Nom : </label>
-                    <input type="text" class="form-control" placeholder="Nom" name="nom"
-                        id="inputFirstName" required>
+                    <input v-model="firstName" type="text" class="form-control" placeholder="Nom"
+                        required>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputLastName">Prénom :</label>
-                    <input type="text" class="form-control" placeholder="Prénom" id="inputLastName"
+                    <input v-model="lastName" type="text" class="form-control" placeholder="Prénom"
                         required>
                 </div>
             </div>
@@ -22,14 +23,14 @@
                 <!-- Email-->
                 <div class="form-group col-md-6">
                     <label for="inputEmail">Email</label>
-                    <input type="email" class="form-control" id="inputEmail" required
+                    <input v-model="email" type="email" class="form-control" required
                         placeholder="exemple@messagerie.fr">
                 </div>
 
-                <!-- Ville -->
+                <!-- Mot de passe -->
                 <div class="form-group col-md-6">
                     <label for="inputPassword">Mot de passe</label>
-                    <input type="password" class="form-control" id="inputPassword" required>
+                    <input v-model="password" type="password" class="form-control" required>
                 </div>
             </div>
 
@@ -46,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- sauvegarde donné-->
             <div class="form-group">
                 <div class="form-check">
@@ -56,12 +57,59 @@
                     </label>
                 </div>
             </div>
-            <button id="btnSubmit" type="button" class="btn btn-primary">
+            <button @click="newUser" type="button" class="btn btn-primary">
                 S'enregistrer
             </button>
         </fieldset>
     </form>
+    </div> 
 </template>
+
+
+
+<script>
+import axios from 'axios';
+
+export default {
+    name:"app",
+    data() {
+        return {
+            firstName:'',
+            lastName:'',
+            email: '',
+            password: ''
+        }
+    },
+    methods: {
+        newUser(e) {
+            e.preventDefault()
+            try{
+                console.log(this.dataSignup)
+
+                axios.post("http://localhost:3000/api/users/signup", {
+                    first_name:this.firstName,
+                    last_name:this.lastName,
+                    email:this.email,
+                    password:this.password
+                })
+                .then(function(response){
+                    console.log(response.data)
+                })
+                .catch(function(error){
+                    console.log(error)
+                })
+            }
+            catch(err) {
+                console.error(err)
+            }
+        }
+    }
+}
+
+
+</script>
+
+
 
 
 

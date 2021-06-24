@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div id="rien">
     <section>
       <h1>Connexion</h1>
       <form class="form-login">
@@ -8,14 +8,14 @@
               <!-- Email-->
               <div class="form-group col-md-6">
                   <label for="inputEmail">Email :</label>
-                  <input type="email" class="form-control" id="inputEmail" required
+                  <input v-model="email" type="email" class="form-control" id="inputEmail" required
                       placeholder="exemple@messagerie.fr">
               </div>
 
               <!-- Ville -->
               <div class="form-group col-md-6">
                   <label for="inputPassword">Mot de passe :</label>
-                  <input type="password" class="form-control" id="inputPassword" required>
+                  <input v-model="password" type="password" class="form-control" id="inputPassword" required>
               </div>
           </div>
 
@@ -28,16 +28,55 @@
                   </label>
               </div>
           </div>
-          
-          <button id="btnSubmit" type="button" class="btn btn-primary">
+
+          <button @click="userLogin" type="button" class="btn btn-primary">
               Entrer
           </button>
+
+          <p> userId: {{ $store.state.userId }} </p>
       </form>
     </section>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
+export default{
+  name:'rien',
+  data() {
+    return{
+      email:'',
+      password:''
+    }
+  },
+  methods:{
+    userLogin(){
+      try{
+        axios.post("http://localhost:3000/api/users/login", {
+          email:this.email,
+          password:this.password
+        })
+        .then(function(response){
+            console.log("response :",response.data)
+
+            //JWT in localStorage
+            localStorage.setItem('token', response.data.token)
+            
+            // UserId in vueX
+            this.$store.dispatch("updateUserId", response.data.userId)
+
+        })
+        .catch(function(error){
+            console.log(error)
+        })
+      }
+      catch(err) {
+        console.error(err)
+      }
+    }  
+  },
+}
 
 </script>
 
