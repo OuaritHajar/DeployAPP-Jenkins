@@ -20,28 +20,32 @@ module.exports = {
       })
       if (userFound) {
 
-        // on vérifie s'il y a une image
+        //on vérifie s'il y a une image
         if (req.file == undefined) {
-          console.log("pas d'image dans la requete");
-          next();
-
+          const createImageVide = await db.Image.create({
+            type: '',
+            name: 'post sans image',
+            data: '',
+            url:'',
+            UserId: userFound.id,
+            // PostId: 
+          })
+          if(createImageVide) {
+            next();
+          }
         } else {
-
-          console.log('là ca marche')
-          
-          // créé l'image dans la bdd
+        // créé l'image dans la bdd
           const createImage = await db.Image.create({
             type: req.file.mimetype,
             name: req.file.originalname,
             data: fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename),
+            url: req.file.path,
             UserId: userFound.id,
             // PostId: 
           })
-
           if (createImage) {
-            console.log(createImage);
             fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + createImage.name, createImage.data);
-
+  
             next();
           }
         }
@@ -60,50 +64,72 @@ module.exports = {
 
 
 
-  //update: async (req, res, next) => {
-//
-  //  // Getting auth header
-  //  var headerAuth = req.headers['authorization'];
-  //  var userId = jwtUtils.getUserId(headerAuth);
-//
-  //  try {
-  //    // récupère l'user
-  //    const userFound = await db.User.findOne({
-  //      where: { id: userId }
-  //    })
-  //    if (userFound) {
-//
-  //      // on vérifie s'il y a une image
-  //      if (req.file == undefined) {
-  //        console.log("pas d'image dans la requete");
-  //        next();
-//
-  //      } else {
-//
-  //        // supprime ancienne image
-  //        // récupère l'ancienne image
-  //        console.log(req.file)
-//
-  //        // upload l'image dans la bdd
-  //        const updateImage = await db.Image.update({
-  //          type: req.file.mimetype? type : type,
-  //          name: req.file.originalname? req.file.originalname: req.file.originalname,
-  //          data: fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename),
-  //        })
-//
-  //        if (updateImage)
-  //        
-  //          fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + updateImage.name, updateImage.data);
-//
-  //        next();
-//
-  //      }
-  //    } else {
-  //      return res.status(404).json({ 'error': 'user not found' });
-  //    }
-  //  }
-  //  catch (err) {
-  //    console.error(err)
-  //  }
-  //}
+  update: async (req, res, next) => {
+
+    // Getting auth header
+    var headerAuth = req.headers['authorization'];
+    var userId = jwtUtils.getUserId(headerAuth);
+    const postId = JSON.parse(req.params.postId);
+
+    try {
+      // récupère l'user
+      const userFound = await db.User.findOne({
+        where: { id: userId }
+      })
+      if (userFound) {
+
+        // récupère le post
+        const postFound = await db.Post.findOne({
+          where: { id: postId }
+        })
+        if (postFound) {
+
+          // récupère image
+          const imageFound = await db.images.findOne({
+            where: {id: postId}
+          })
+          if(imageFound) {
+            // on vérifie s'il y a une image dans la requete
+            console.log("ancienne image", imageFound)
+            if (req.file == undefined) {
+              console.log("pas d'image dans la requete");
+              next();
+
+            } else {
+              // supprime ancienne image
+              fs.unlink(imageFound.url,(err) =>{
+                if (err) {
+                  console.error(err)
+                } else {
+                  console.log('image supprimé')
+                }
+              })
+
+              // créé l'image dans la bdd
+              console.log("nouvelle image",req.file)
+              const updateImage = await imageFound.update({              
+                type: (req.file.mimetype? req.file.mimetype : req.file.mimetype) ,
+                name: (req.file.originalname? req.file.originalname : req.file.originalname) ,
+                data: (fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename)? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename)),
+                url: (req.file.path? req.file.path : req.file.path),
+                UserId: userFound.id,
+                // PostId: 
+              })
+
+              if (updateImage) {
+                next()
+              }
+            }
+          }
+        } else {
+          return res.status(404).json({ 'error': 'post not found' });
+        }
+      } else {
+        return res.status(404).json({ 'error': 'user not found' });
+      }
+    }
+    catch (err) {
+      console.error(err)
+    }
+  }
 }

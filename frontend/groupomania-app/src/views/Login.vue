@@ -1,5 +1,5 @@
 <template>
-  <div id="rien">
+  <div id="app">
     <section>
       <h1>Connexion</h1>
       <form class="form-login">
@@ -33,7 +33,6 @@
               Entrer
           </button>
 
-          <p> userId: {{ $store.state.userId }} </p>
       </form>
     </section>
   </div>
@@ -43,7 +42,7 @@
 import axios from 'axios'
 
 export default{
-  name:'rien',
+  name:'App',
   data() {
     return{
       email:'',
@@ -60,15 +59,22 @@ export default{
         .then(function(response){
             console.log("response :",response.data)
 
-            //JWT in localStorage
-            localStorage.setItem('token', response.data.token)
-            
-            // UserId in vueX
-            this.$store.dispatch("updateUserId", response.data.userId)
+            if (response.data.token) {
+              localStorage.setItem('token', response.data.token)
 
+              // UserId in vueX
+            //this.$store.dispatch("updateUserId", response.data.userId)
+
+
+            }
+            
+          
+            
+
+            window.location = "http://localhost:8080/index.html#/Mur"
         })
         .catch(function(error){
-            console.log(error)
+            console.error(error)
         })
       }
       catch(err) {

@@ -14,7 +14,7 @@
         </button>
       </router-link>
 
-
+      <!-- v-if userId="undefind on cache" -->
       <!-- navbar items -->
       <div class="collapse navbar-collapse justify-content-end" id="navbarToggler2">
           <ul class="navbar-nav">
