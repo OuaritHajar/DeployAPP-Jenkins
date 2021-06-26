@@ -1,9 +1,13 @@
 import { createStore } from 'vuex'
 
-
 export default createStore({
   state: {
     userId:''
+  },
+  getters: {
+    user_id(state){
+      return `${state.userId}`
+    }
   },
   mutations: {
     USER_ID(state, payload){

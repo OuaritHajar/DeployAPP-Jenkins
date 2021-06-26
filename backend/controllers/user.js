@@ -29,9 +29,9 @@ module.exports = {
     if (!EMAIL_REGEX.test(email)) {
       return res.status(400).json({ 'error': 'email is not valid' });
     }
-    //if (!PASSWORD_REGEX.test(password)) {
-    //  return res.status(400).json({ 'error': 'password is not valid : length 4-8 include number' });
-    //}
+    if (!PASSWORD_REGEX.test(password)) {
+      return res.status(400).json({ 'error': 'password is not valid : length 4-8 include number' });
+    }
 
     try {
       const userFound = await db.User.findOne({

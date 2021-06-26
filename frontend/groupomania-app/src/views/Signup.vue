@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="signup">
         <form enctype="multipart/form-data" action="login.html" class="form-login">
         <fieldset>
             <legend>Inscription</legend>
@@ -71,7 +71,7 @@
 import axios from 'axios';
 
 export default {
-    name:"app",
+    name:"signup",
     data() {
         return {
             firstName:'',
@@ -84,8 +84,6 @@ export default {
         newUser(e) {
             e.preventDefault()
             try{
-                console.log(this.dataSignup)
-
                 axios.post("http://localhost:3000/api/users/signup", {
                     first_name:this.firstName,
                     last_name:this.lastName,

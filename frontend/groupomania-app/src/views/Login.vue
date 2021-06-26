@@ -1,22 +1,22 @@
 <template>
-  <div id="app">
+  <div id="login">
     <section>
       <h1>Connexion</h1>
       <form class="form-login">
           <div class="form-row">
 
-              <!-- Email-->
-              <div class="form-group col-md-6">
-                  <label for="inputEmail">Email :</label>
-                  <input v-model="email" type="email" class="form-control" id="inputEmail" required
-                      placeholder="exemple@messagerie.fr">
-              </div>
+            <!-- Email-->
+            <div class="form-group col-md-6">
+                <label for="inputEmail">Email :</label>
+                <input v-model="email" type="email" class="form-control" id="inputEmail" required
+                    placeholder="exemple@messagerie.fr">
+            </div>
 
-              <!-- Ville -->
-              <div class="form-group col-md-6">
-                  <label for="inputPassword">Mot de passe :</label>
-                  <input v-model="password" type="password" class="form-control" id="inputPassword" required>
-              </div>
+            <!-- Ville -->
+            <div class="form-group col-md-6">
+                <label for="inputPassword">Mot de passe :</label>
+                <input v-model="password" type="password" class="form-control" id="inputPassword" required>
+            </div>
           </div>
 
           <!-- sauvegarde donné-->
@@ -29,10 +29,10 @@
               </div>
           </div>
 
-          <button @click="userLogin" type="button" class="btn btn-primary">
+          <button @click="userLogin" class="btn btn-primary">
               Entrer
           </button>
-
+          <p> userId: {{ $store.getters.user_id }}</p>
       </form>
     </section>
   </div>
@@ -40,13 +40,19 @@
 
 <script>
 import axios from 'axios'
+// import { mapGetters } from 'vuex'
 
 export default{
-  name:'App',
+  name:'login',
   data() {
     return{
       email:'',
       password:''
+    }
+  },
+  computed:{
+    recupUserId() {
+      return this.$store.getters.user_id
     }
   },
   methods:{
@@ -63,15 +69,9 @@ export default{
               localStorage.setItem('token', response.data.token)
 
               // UserId in vueX
-            //this.$store.dispatch("updateUserId", response.data.userId)
-
-
+              this.$store.dispatch('updateUserId', response.data.userId)
             }
-            
-          
-            
-
-            window.location = "http://localhost:8080/index.html#/Mur"
+            //window.location = "http://localhost:8080/index.html#/Mur"
         })
         .catch(function(error){
             console.error(error)
@@ -80,7 +80,7 @@ export default{
       catch(err) {
         console.error(err)
       }
-    }  
+    },
   },
 }
 
