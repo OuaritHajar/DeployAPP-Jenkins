@@ -14,8 +14,6 @@ export default {
     Home
   },
 }
-
-console.log(localStorage)
 </script>
 
 
@@ -24,29 +22,5 @@ console.log(localStorage)
 <style>
 body{
   margin-top:100px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-
-.navbar-brand{
-  display:flex;
-}
-.navbar-brand img{
-  max-height: 60px;
-  margin-right:20px;
-}
-.navbar p{
-  margin-top:13px;
-}
-
-.collapse ul a {
-  font-size: 1.5rem;
 }
 </style>

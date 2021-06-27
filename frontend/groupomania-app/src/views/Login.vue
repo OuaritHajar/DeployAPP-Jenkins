@@ -1,46 +1,49 @@
 <template>
   <div id="login">
     <section>
-      <h1>Connexion</h1>
-      <form class="form-login">
-          <div class="form-row">
+        <form>
+            <fieldset>
+                <legend>Connection</legend>
+                <hr>
+                <div class="form-row">
 
-            <!-- Email-->
-            <div class="form-group col-md-6">
-                <label for="inputEmail">Email :</label>
-                <input v-model="email" type="email" class="form-control" id="inputEmail" required
-                    placeholder="exemple@messagerie.fr">
-            </div>
+                    <!-- Email-->
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail">Email :</label>
+                        <input v-model="email" type="email" class="form-control" id="inputEmail" required
+                            placeholder="exemple@messagerie.fr">
+                    </div>
 
-            <!-- Ville -->
-            <div class="form-group col-md-6">
-                <label for="inputPassword">Mot de passe :</label>
-                <input v-model="password" type="password" class="form-control" id="inputPassword" required>
-            </div>
-          </div>
+                    <!-- Ville -->
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword">Mot de passe :</label>
+                        <input v-model="password" type="password" class="form-control" id="inputPassword" required>
+                    </div>
+                </div>
 
-          <!-- sauvegarde donné-->
-          <div class="form-group">
-              <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="gridCheck">
-                  <label class="form-check-label" for="gridCheck">
-                      Sauvegardez les informations
-                  </label>
-              </div>
-          </div>
+                <!-- sauvegarde donné-->
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gridCheck">
+                        <label class="form-check-label" for="gridCheck">
+                            Sauvegardez les informations
+                        </label>
+                    </div>
+                </div>
 
-          <button @click="userLogin" class="btn btn-primary">
-              Entrer
-          </button>
-          <p> userId: {{ $store.getters.user_id }}</p>
-      </form>
+                <button @click="userLogin" class="btn btn-primary">
+                    Entrer
+                </button>
+                <p> userId: {{ user_id }}</p>
+            </fieldset>
+        </form>
     </section>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default{
   name:'login',
@@ -51,12 +54,11 @@ export default{
     }
   },
   computed:{
-    recupUserId() {
-      return this.$store.getters.user_id
-    }
+      ...mapGetters(["user_id"])
   },
   methods:{
-    userLogin(){
+    userLogin(e){
+        e.preventDefault()
       try{
         axios.post("http://localhost:3000/api/users/login", {
           email:this.email,
@@ -66,12 +68,14 @@ export default{
             console.log("response :",response.data)
 
             if (response.data.token) {
-              localStorage.setItem('token', response.data.token)
+                localStorage.setItem('token', response.data.token)
 
-              // UserId in vueX
-              this.$store.dispatch('updateUserId', response.data.userId)
+                // UserId in vueX ou pas...
+                sessionStorage.setItem('userId', response.data.userId)
+                console.log(localStorage)
+                console.log(sessionStorage)
             }
-            //window.location = "http://localhost:8080/index.html#/Mur"
+            window.location = "http://localhost:8080/index.html#/mur"
         })
         .catch(function(error){
             console.error(error)
@@ -88,21 +92,15 @@ export default{
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+form{
+  border:solid rgb(151, 151, 151) 1px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px 2px #757575;
+
+  margin:20px 20px;
+  padding:20px 20px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-.hello{
-  border: black solid 2px
+hr{
+    margin-top:0;
 }
 </style>

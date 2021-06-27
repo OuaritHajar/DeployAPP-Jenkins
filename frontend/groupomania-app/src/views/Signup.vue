@@ -1,9 +1,10 @@
 <template>
     <div id="signup">
-        <form enctype="multipart/form-data" action="login.html" class="form-login">
+        <form enctype="multipart/form-data">
         <fieldset>
             <legend>Inscription</legend>
-            <p>Rentrer les informations pour créer un compte utilisateur</p>
+            <hr />
+            <p>Saisissez vos informations pour créer un compte utilisateur.</p>
 
             <!-- Nom / Prenom -->
             <div class="form-row">
@@ -37,7 +38,7 @@
             <!-- Accepter les conditions -->
             <div class="form-group">
                 <div class="form-check">
-                    <input class="form-check-input is-invalid" type="checkbox" value=""
+                    <input class="form-check-input" type="checkbox" value=""
                         id="invalidCheck30" required>
                     <label class="form-check-label" for="invalidCheck30">
                         Agree to terms and conditions
@@ -48,15 +49,6 @@
                 </div>
             </div>
 
-            <!-- sauvegarde donné-->
-            <div class="form-group">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                    <label class="form-check-label" for="gridCheck">
-                        Sauvegardez les informations
-                    </label>
-                </div>
-            </div>
             <button @click="newUser" type="button" class="btn btn-primary">
                 S'enregistrer
             </button>
@@ -71,7 +63,6 @@
 import axios from 'axios';
 
 export default {
-    name:"signup",
     data() {
         return {
             firstName:'',
@@ -92,6 +83,7 @@ export default {
                 })
                 .then(function(response){
                     console.log(response.data)
+                    window.location = "http://localhost:8080/index.html#/login"
                 })
                 .catch(function(error){
                     console.log(error)
@@ -112,16 +104,16 @@ export default {
 
 
 <style scoped>
-.form-login{
-  width:80%;
+form{
   border:solid rgb(151, 151, 151) 1px;
   border-radius: 5px;
   box-shadow: 2px 2px 2px 2px #757575;
 
-  margin-top:20px;
-  margin-bottom:30px;
-  padding:20px;
+  margin:20px 20px;
+  padding:20px 20px;
 }
-
+hr{
+    margin-top:0;
+}
 
 </style>
