@@ -15,10 +15,33 @@
 
     <!-- navbar items -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarToggler">
-      
+      <div v-if="isAlreadyConnect(isConnected)">
         <ul class="navbar-nav">
 
-          <li class="nav-item">
+            <li class="nav-item">
+              <router-link to="/mur" class="nav-link">
+                Mur
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link to="/login" class="nav-link">
+                Profil
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link to="/login" class="nav-link">
+                Se déconnecter
+              </router-link>
+            </li>
+
+        </ul>
+      </div>
+
+      <div v-else>
+        <ul class="navbar-nav">
+            <li class="nav-item">
             <router-link to="/login" class="nav-link">
               Se connecter
             </router-link>
@@ -26,11 +49,12 @@
 
           <li class="nav-item" >
             <router-link to="/signup" class="nav-link">
-              S'enregistrer
+              S'enregistrer 
             </router-link>
           </li>
-
+        
         </ul>
+      </div>
     </div>
   </nav>
 
@@ -49,6 +73,24 @@
 
 
 <script>
+export default {
+      data() {
+        return {
+          isConnected: false
+        }
+      },
+      methods: {
+        isAlreadyConnect() {
+
+          if(sessionStorage.userId > 0 && sessionStorage.userId != undefined) {
+            return this.isConnected = true
+          }
+        }
+      }
+    }
+
+console.log(sessionStorage)
+  
 </script>
 
 
