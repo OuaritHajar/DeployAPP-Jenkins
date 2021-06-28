@@ -21,6 +21,6 @@ export default {
 
 <style>
 body{
-  margin-top:100px;
+  margin-top:110px;
 }
 </style>

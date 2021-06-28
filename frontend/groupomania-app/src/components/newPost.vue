@@ -1,0 +1,94 @@
+<template>
+<section>
+    <div class="new-post">
+        <form enctype="multipart/form-data">
+        <fieldset>
+            <legend> Créer un nouveau post</legend>
+            <hr/>
+            <div class="form-row">
+                
+                <!-- Titre -->
+                <div class="col-md-12 mb-3">
+                    <label for="inputTitle">Titre :</label>
+                    <input v-model="title" type="text" class="form-control" id="inputTitle" placeholder="Entrer votre titre" required>
+                </div>
+
+                <!-- Description -->
+                <div class="col-md-12 mb-3">
+                    <label for="inputDescription">Description :</label>
+                    <textarea v-model="description" class="form-control" id="inputDescription" placeholder="Ajouter une description" rows="6" required></textarea>
+                </div>
+
+                <!-- Image-->
+                <div class="col-md-12 mb-3">
+                    <label for="inputImg_url">Image :</label>
+                    <input type="file" class="form-control" id="inputImg_url">
+                </div>
+            </div>
+            
+            <button @click="creatNewPost" class="btn btn-primary">Créer</button>
+            <span class="spacer"></span>
+            <button class="btn btn-secondary">Edit</button>
+        </fieldset>  
+        </form>
+    </div>
+</section>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default{
+    data() {
+        return{
+            title: "",
+            description: "",
+            img_url:""
+        }
+    },
+    methods: {
+        creatNewPost(e) {
+            e.preventDefault()
+            try{
+                axios.post("http://localhost:3000/api/posts/",{
+                    title:this.title,
+                    description:this.description,
+                    img_url:this.img_url
+                }, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.token
+                    }
+                })
+                .then(function(response){
+                    console.log(response.data)
+                    //window.location = "http://localhost:8080/index.html#/login"
+                })
+                .catch(function(error){
+                    console.log(error)
+                })
+            }
+            catch(err) {
+                console.error(err)
+            }
+        }
+    }
+}
+</script>
+
+
+<style scoped>
+.new-post{
+    margin: 20px 20px;
+    padding: 20px 20px;
+
+    border: #a1a1a1 solid 1px;
+    background-color:#e0e0e0;
+    border-radius: 5px;
+}
+hr{
+    margin-top:0;
+}
+.spacer{
+    margin: 0 10px 0 10px
+}
+</style>

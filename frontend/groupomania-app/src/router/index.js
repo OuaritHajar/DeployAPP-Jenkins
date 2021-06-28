@@ -4,6 +4,7 @@ import Signup from '../views/Signup.vue'
 import Mur from '../views/Mur'
 import Profil from '../views/Profil'
 import Post from '../views/Post'
+import NewPost from '../components/newPost'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/post/:postId',
     name: 'Post',
     component: Post
+  },
+  {
+    path: '/newPost',
+    name: 'NewPost',
+    component: NewPost
   },
 ]
 

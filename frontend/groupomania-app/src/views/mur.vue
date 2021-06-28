@@ -1,7 +1,15 @@
 <template>
-<div>
+<section>
+  <!-- Button new post -->
+  <div class="text-center">
+    <router-link to="/newPost" class="nav-link">
+      <button class="btn btn-primary">Ajouter un post</button>
+    </router-link>
+  </div>
+
+  <!-- Affiche post -->
   <div v-for="(post, index) in allPosts" :key="index">
-    <div id="post" class="post">
+    <div class="post">
         
       <router-link :to="{name: 'Post', params: {postId: post.id}}">
         <h2>  {{ post.title }} </h2>
@@ -10,18 +18,23 @@
         <p class="description"> {{ post.description }} </p>
       </router-link>
 
-        <p class="author">posté par :  </p>
         <div class="row interaction-post">
-            <p> Likes : {{ post.likes }} - </p>
+            <p> Likes : {{ post.likes }} </p>
+            <p class="spacer">-</p>
             <p> Commentaire : {{ post.comments }}</p>
         </div>
-        <p>Cree le : {{ post.createdAt }} </p>
-        <p>Modifier le : {{ post.updatedAt }} </p>
+        
+        
+        <div class="row interaction-post informationPost">
+          <p>posté par : quelqu'un </p> <span class="spacer"></span>
+          
+          <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
+          <p v-else>modifié le : {{ post.updatedAt }} </p>
+        </div>
         <div class="seperate"></div>
     </div>
   </div>
-
-</div>
+</section>
     
 </template>
 
@@ -32,21 +45,12 @@
 import axios from 'axios'
 
 export default {
-  
-  //components: {
-  //  Post
-  //},
   data() {
     return{
       allPosts: [],
     }
   },
-  methods: {
-    
-  },
-  
   mounted(){
-    
     axios.get("http://localhost:3000/api/posts?limit=10", {
       headers: {
         Authorization: "Bearer " + localStorage.token
@@ -72,15 +76,13 @@ export default {
 
 
 
-
-
-
 <style scoped>
 .post{
-  margin-left:auto;
-  margin-right:auto;
-
-  background-color:#c5c5c5;
+  margin: 20px 20px;
+  padding:20px 23px;
+  background-color:#e0e0e0;
+  border: solid 1px #a1a1a1;
+  border-radius: 10px;
 
   padding-left:30px;
   padding-right:30px
@@ -90,10 +92,7 @@ export default {
   width: 100%;
   max-width: 550px;
 }
-.post a img{
-  display:flex;
-}
-.author{
+.informationPost{
   font-size:0.8rem;
   color:#808080;
 }
@@ -109,6 +108,9 @@ export default {
 .interaction-post{
   margin-left:auto;
   margin-right:auto;
+}
+.spacer{
+  margin:0 10px 0 10px
 }
 
 .btn-ajouter-post{

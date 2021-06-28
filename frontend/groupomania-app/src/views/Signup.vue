@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <button @click="newUser" type="button" class="btn btn-primary">
+            <button @click="newUser" class="btn btn-primary">
                 S'enregistrer
             </button>
         </fieldset>

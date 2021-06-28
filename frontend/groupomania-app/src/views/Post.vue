@@ -1,24 +1,34 @@
 <template>
-    <div class="post">
-            <p class="author">posté par </p>
-            <h2>{{ post.title }}</h2>
+    <div>
+        <!-- Post -->
+        <div id="post" class="post">
+        
+
+            <span>postId : {{ $route.params.postId }}</span>
 
 
-            <p> post numero: {{ $route.params.postId }} </p>
+            <h2>  {{ post.title }} </h2>
+            <img :src="post.img_url" alt="premier post photo" class="image-post">
+            <p> {{post.img_url}} </p> 
+            <p class="description"> {{ post.description }} </p>
 
-
-            <p class="description">${response.post.description}</p>
-            <a href="post.html"><img src="img/image-post.jpg" alt="premier post poto"
-                    class="image-post"></a>
+            <p class="author">posté par :  </p>
             <div class="row interaction-post">
-                <p><a href="*" class="like">Likes</a>: ${response.post.likes} </p>
-                <p class="spacer">-</p>
-                <p><a href="*" class="commentaire"> Commentaire </a>: ${response.comments.length}</p>
+                <p> Likes : {{ post.likes }} - </p>
+                <p> Commentaire : {{ post.comments }}</p>
             </div>
-            <p>Cree le : ${response.post.createdAt} </p>
-            <p>Modifier le : ${response.post.updatedAt} </p>
+            <p>Cree le : {{ post.createdAt }} </p>
+            <p>Modifier le : {{ post.updatedAt }} </p>
             <div class="seperate"></div>
+        </div>
+
+        <!-- Comments -->
+        <div class="comments">
+            <div v-for="(comment, index) in allComments" :key="index">
+                <p> {{comment.description}} </p>
             </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -28,11 +38,13 @@ export default {
     data(){
         return{
             post:{},
-            comments:[]
+            allComments:[]
         }
     },
     mounted(){
     
+    //let postId = $route.params.postId
+    //console.log(postId)
     
     axios.get("http://localhost:3000/api/posts/`${route.params.postId}`", {
       headers: {
@@ -42,6 +54,7 @@ export default {
     .then(response => {
       console.log(response)
         this.post = response.data.post
+        this.allComments = response.data.comments
     })
     .catch(error => {
     console.log(error); 
