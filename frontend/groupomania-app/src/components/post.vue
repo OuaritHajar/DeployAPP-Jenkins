@@ -1,5 +1,5 @@
 <template>
-    <div class="post">
+    <div id="post" class="post">
         <p class="author">posté par : <a href="profil.html?userId=${response.userPost.id}"> 
             ${response.userPost.first_name} ${response.userPost.last_name}</a>
         </p>
@@ -18,7 +18,23 @@
     </div>
 </template>
 
-<script> </script>
+
+
+<script>
+
+
+export default{
+  name:'post',
+  data() {
+    return{
+
+    }
+  },
+
+}
+</script>
+
+
 
 <style scoped>
 .post{

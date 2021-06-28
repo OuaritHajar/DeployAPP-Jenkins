@@ -71,7 +71,7 @@ export default{
                 localStorage.setItem('token', response.data.token)
 
                 // UserId in vueX ou pas...
-                sessionStorage.setItem('userId', JSON.parse(response.data.userId))
+                sessionStorage.setItem('userId', parseInt(response.data.userId,10))
                 console.log(sessionStorage)
             }
             window.location = "http://localhost:8080/index.html#/mur"
