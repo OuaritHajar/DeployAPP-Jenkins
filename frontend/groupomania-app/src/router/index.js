@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../views/Login.vue'
+import Logout from '../views/Logout.vue'
 import Signup from '../views/Signup.vue'
 import Mur from '../views/Mur'
 import Profil from '../views/Profil'
@@ -29,7 +30,7 @@ const routes = [
   {
     path: '/logout',
     name: 'Logout',
-    component: Login
+    component: Logout
   },
   {
     path: '/mur',

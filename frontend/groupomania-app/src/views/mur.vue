@@ -1,7 +1,7 @@
 <template>
 <section>
   <!-- Button new post -->
-  <div class="text-center">
+  <div v-if="$store.state.userId != 0" class="text-center">
     <router-link to="/newPost" class="nav-link">
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
