@@ -5,7 +5,8 @@
     <router-link to="/newPost" class="nav-link">
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
-    <p> userId: {{ $store.state.userId }}</p>
+    <p> {{ $store.state.userId }} </p>
+    
   </div>
 
   <!-- Affiche post -->

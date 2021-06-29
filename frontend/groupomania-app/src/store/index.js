@@ -1,8 +1,9 @@
 import { createStore } from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 
 const store = createStore({
   state: {
-    userId:'10',
+    userId:0,
     title: "vueX store",
     notes: []
   },
@@ -29,7 +30,8 @@ const store = createStore({
     saveNote({commit}, title) {
       commit('SAVE_NOTE', title)
     }
-  }
+  },
+  plugins: [createPersistedState()],
 });
 
 export default store;

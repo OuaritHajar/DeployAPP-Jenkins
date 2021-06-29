@@ -25,7 +25,7 @@
             </li>
 
             <li class="nav-item">
-              <router-link to="/profil" class="nav-link">
+              <router-link :to="{name: 'Profil', params: {userId: $store.state.userId}}" class="nav-link">
                 Profil
               </router-link>
             </li>
@@ -69,7 +69,7 @@
           alt="logo groupomania">
       </div>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus nam eos hic nobis blanditiis pariatur natus a harum, quos consectetur aperiam dolore ratione libero deleniti nemo numquam soluta dicta porro.</p>
-
+      
     </div>
   </main>
 </div>
@@ -87,12 +87,10 @@ export default {
       },
       methods: {
         isAlreadyConnect() {
-          const userId = useStore().state.userId
-          console.log("userId via vueX est :",userId)
-
-
-          if(userId > 0 && userId != undefined) {
+          if(useStore().state.userId > 0 ) {
             return this.isConnected = true
+          } else {
+            return this.isConnected = false
           }
         },
 

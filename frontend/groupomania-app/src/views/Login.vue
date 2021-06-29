@@ -34,6 +34,7 @@
                 <button @click="userLogin" class="btn btn-primary">
                     Entrer
                 </button>
+                <p> user ID: {{ user_id }} </p>
             </fieldset>
         </form>
     </section>
@@ -42,7 +43,7 @@
 
 <script>
 
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useStore } from 'vuex'
 import axios from 'axios'
 
@@ -53,10 +54,10 @@ export default{
 
       const email = ref('')
       const password = ref('')
-      const userId = ref('')
+      const userId = computed(() => store.state.userId)
+      const user_id= computed(() => store.getters.user_id)
 
-      function userLogin(e) {
-        e.preventDefault()
+      function userLogin() {
         try{
           axios.post("http://localhost:3000/api/users/login", {
             email:email.value,
@@ -65,14 +66,14 @@ export default{
           .then(function(response){
               console.log("response :",response.data)
   
-              if (response.data.token) {
-                  // save token in localStorage
-                  localStorage.setItem('token', response.data.token)
-  
-                  // save userId in vuex 
-                  store.dispatch('updateUserId', response.data.userId)
-              }
+              // save token in localStorage
+              localStorage.setItem('token', response.data.token)
+              // save userId in vuex 
+              store.dispatch('updateUserId', response.data.userId)
+              
               window.location = "http://localhost:8080/index.html#/mur"
+              
+              
           })
           .catch(function(error){
               console.error(error)
@@ -85,17 +86,11 @@ export default{
 
       return {
         userId,
+        user_id,
         password,
         email,
         userLogin
       }
-  },
-  mounted() {
-    const store = useStore()
-
-    // vide token et userId
-    localStorage.clear()
-    store.dispatch('updateUserId', 0)
   }
 }
 

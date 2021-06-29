@@ -7,19 +7,11 @@ import Post from '../views/Post'
 import NewPost from '../components/newPost'
 
 const routes = [
+
+  // nav before connection
   {
     path: '/',
     name: '/',
-    component: Mur
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/mur',
-    name: 'Mur',
     component: Mur
   },
   {
@@ -28,20 +20,36 @@ const routes = [
     component: Signup
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+
+  // nav after connection
+  {
     path: '/logout',
     name: 'Logout',
     component: Login
   },
   {
-    path: '/profil',
+    path: '/mur',
+    name: 'Mur',
+    component: Mur
+  },
+  {
+    path: '/user/:userId',
     name: 'Profil',
     component: Profil
   },
+
+  // post
   {
     path: '/post/:postId',
     name: 'Post',
     component: Post
   },
+
+  // Components
   {
     path: '/newPost',
     name: 'NewPost',
