@@ -12,26 +12,28 @@
   <div v-for="(post, index) in allPosts" :key="index">
     <div class="post">
         
+      <!-- Titre / Description -->
       <router-link :to="{name: 'Post', params: {postId: post.id}}">
         <h2>  {{ post.title }} </h2>
         <img v-if="post.img_url != null" :src="post.img_url" alt="premier post photo">
         <p class="description"> {{ post.description }} </p>
       </router-link>
-        <p>postId : {{ post.id }}</p> 
-        <div class="row interaction-post">
-            <p><button @click="addLike(post.postId)" class="nostyle">Like : </button> {{ post.likes }} </p>
-            <p class="spacer">-</p>
-            <p> Commentaire : {{ post.comments }}</p>
-        </div>
-        
-        
-        <div class="row interaction-post informationPost">
-          <p>posté par : quelqu'un </p> <span class="spacer"></span>
-          
-          <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
-          <p v-else>modifié le : {{ post.updatedAt }} </p>
-        </div>
-        <div class="seperate"></div>
+
+      <!-- Likes / Commentaires -->
+      <div class="row interaction-post">
+          <p><button @click="addLike(post.id)" class="nostyle">Like : </button> {{ post.likes }} </p>
+          <p class="spacer">-</p>
+          <p> Commentaire : {{ post.comments }}</p>
+      </div>
+      
+      <!-- info supplémentaire -->
+      <div class="row interaction-post informationPost">
+        <p>posté par : quelqu'un </p> <span class="spacer"></span>
+        <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
+        <p v-else>modifié le : {{ post.updatedAt }} </p>
+      </div>
+
+      <div class="seperate"></div>
     </div>
   </div>
 </section>
@@ -51,21 +53,23 @@ export default {
     }
   },
   methods:{
-    addLike() {
-      console.log(this.$route.params.postId)
 
-      axios.post("http://localhost:3000/api/posts/" + this.$route.params.post + "/like", {
-      headers: {
-        Authorization: "Bearer " + localStorage.token
-      }
-    })
-    .then(response => {
-      console.log(response)
-        this.allPosts = response.data.post
-    })
-    .catch(error => {
-    console.log(error); 
-    });
+    addLike(payload) {
+      console.log(localStorage)
+
+      axios.post("http://localhost:3000/api/posts/" + payload + "/like", "" , {
+        headers: {
+          Authorization: "Bearer " + localStorage.token
+        }
+      })
+      .then(response => {
+        console.log(response)
+        // reload like 
+
+      })
+      .catch(error => {
+      console.log(error); 
+      });
     }
   },
   mounted(){
