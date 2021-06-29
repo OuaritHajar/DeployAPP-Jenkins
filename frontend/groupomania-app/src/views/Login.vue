@@ -34,7 +34,6 @@
                 <button @click="userLogin" class="btn btn-primary">
                     Entrer
                 </button>
-                <p> userId: {{ user_id }}</p>
             </fieldset>
         </form>
     </section>
@@ -42,49 +41,62 @@
 </template>
 
 <script>
+
+import { ref } from "vue"
+import { useStore } from 'vuex'
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+
 
 export default{
-  name:'login',
-  data() {
-    return{
-      email:'',
-      password:''
-    }
-  },
-  computed:{
-      ...mapGetters(["user_id"])
-  },
-  methods:{
-    userLogin(e){
+  setup() {
+      const store = useStore()
+
+      const email = ref('')
+      const password = ref('')
+      const userId = ref('')
+
+      function userLogin(e) {
         e.preventDefault()
-      try{
-        axios.post("http://localhost:3000/api/users/login", {
-          email:this.email,
-          password:this.password
-        })
-        .then(function(response){
-            console.log("response :",response.data)
-
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token)
-
-                // UserId in vueX ou pas...
-                sessionStorage.setItem('userId', parseInt(response.data.userId,10))
-                console.log(sessionStorage)
-            }
-            window.location = "http://localhost:8080/index.html#/mur"
-        })
-        .catch(function(error){
-            console.error(error)
-        })
+        try{
+          axios.post("http://localhost:3000/api/users/login", {
+            email:email.value,
+            password:password.value
+          })
+          .then(function(response){
+              console.log("response :",response.data)
+  
+              if (response.data.token) {
+                  // save token in localStorage
+                  localStorage.setItem('token', response.data.token)
+  
+                  // save userId in vuex 
+                  store.dispatch('updateUserId', response.data.userId)
+              }
+              window.location = "http://localhost:8080/index.html#/mur"
+          })
+          .catch(function(error){
+              console.error(error)
+          })
+        }
+        catch(err) {
+          console.error(err)
+        }
       }
-      catch(err) {
-        console.error(err)
+
+      return {
+        userId,
+        password,
+        email,
+        userLogin
       }
-    },
   },
+  mounted() {
+    const store = useStore()
+
+    // vide token et userId
+    localStorage.clear()
+    store.dispatch('updateUserId', 0)
+  }
 }
 
 </script>

@@ -27,8 +27,6 @@
             </div>
             
             <button @click="creatNewPost" class="btn btn-primary">Créer</button>
-            <span class="spacer"></span>
-            <button class="btn btn-secondary">Edit</button>
         </fieldset>  
         </form>
     </div>

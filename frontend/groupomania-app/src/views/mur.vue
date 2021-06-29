@@ -5,6 +5,7 @@
     <router-link to="/newPost" class="nav-link">
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
+    <p> userId: {{ $store.state.userId }}</p>
   </div>
 
   <!-- Affiche post -->
@@ -13,13 +14,12 @@
         
       <router-link :to="{name: 'Post', params: {postId: post.id}}">
         <h2>  {{ post.title }} </h2>
-        <img :src="post.img_url" alt="premier post photo" class="image-post">
-        <p> {{post.img_url}} </p> 
+        <img v-if="post.img_url != null" :src="post.img_url" alt="premier post photo">
         <p class="description"> {{ post.description }} </p>
       </router-link>
-
+        <p>postId : {{ post.id }}</p> 
         <div class="row interaction-post">
-            <p> Likes : {{ post.likes }} </p>
+            <p><button @click="addLike(post.postId)" class="nostyle">Like : </button> {{ post.likes }} </p>
             <p class="spacer">-</p>
             <p> Commentaire : {{ post.comments }}</p>
         </div>
@@ -50,6 +50,24 @@ export default {
       allPosts: [],
     }
   },
+  methods:{
+    addLike() {
+      console.log(this.$route.params.postId)
+
+      axios.post("http://localhost:3000/api/posts/" + this.$route.params.post + "/like", {
+      headers: {
+        Authorization: "Bearer " + localStorage.token
+      }
+    })
+    .then(response => {
+      console.log(response)
+        this.allPosts = response.data.post
+    })
+    .catch(error => {
+    console.log(error); 
+    });
+    }
+  },
   mounted(){
     axios.get("http://localhost:3000/api/posts?limit=10", {
       headers: {
@@ -57,7 +75,6 @@ export default {
       }
     })
     .then(response => {
-      console.log(response)
         this.allPosts = response.data.post
     })
     .catch(error => {
@@ -111,6 +128,10 @@ export default {
 }
 .spacer{
   margin:0 10px 0 10px
+}
+.nostyle{
+  border:none;
+  background-color: #e0e0e0;
 }
 
 .btn-ajouter-post{

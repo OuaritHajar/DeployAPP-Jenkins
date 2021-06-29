@@ -8,6 +8,11 @@ import NewPost from '../components/newPost'
 
 const routes = [
   {
+    path: '/',
+    name: '/',
+    component: Mur
+  },
+  {
     path: '/login',
     name: 'Login',
     component: Login
@@ -21,6 +26,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Login
   },
   {
     path: '/profil',

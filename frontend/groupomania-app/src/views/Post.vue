@@ -45,8 +45,8 @@ export default {
     
     //let postId = $route.params.postId
     //console.log(postId)
-    
-    axios.get("http://localhost:3000/api/posts/`${route.params.postId}`", {
+    console.log(this.$route)
+    axios.get("http://localhost:3000/api/posts/" + this.$route.params.postId, {
       headers: {
         Authorization: "Bearer " + localStorage.token
       }
