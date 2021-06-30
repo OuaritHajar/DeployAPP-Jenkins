@@ -5,7 +5,8 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const app = express();
 global.__basedir = __dirname;
-//const db = require('./config/db.config.js');
+const db = require('./config/db.config.js');
+const path = require('path')
 
 // Body Parser config 
 app.use(bodyParser.urlencoded({ extended: true }));  //force le parse dans les objet imbriqué
@@ -49,14 +50,16 @@ app.use((req, res, next) => {
 //securisation des headers
 app.use(helmet());
 
-
+console.log("message",  express.static(path.join(__dirname,'resources/statsssssic/assets/uploads/')))
+//Image
+app.use('/images', express.static('resources'));
 
 //Route user
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);  
 
 
-//db.sequelize.sync();
+db.sequelize.sync();
 //db.sequelize.sync({ alter: true }).then(() => {
 // console.log("Drop and re-sync db.");
 //});

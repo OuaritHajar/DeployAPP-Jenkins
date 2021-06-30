@@ -55,22 +55,27 @@ export default {
                     Authorization: "Bearer " + localStorage.token
                 }
             })
-        },
-        addLike() {
-            axios.post("http://localhost:3000/api/posts/" + this.$route.params.postId + "/like", "" , {
-              headers: {
-                Authorization: "Bearer " + localStorage.token
-              }
-            })
             .then(response => {
-              console.log(response)
-              // reload like 
-
+                console.log(response.data)
             })
             .catch(error => {
-            console.log(error); 
+                console.log(error); 
             });
-        }
+        },
+
+        deleteUser() {
+            axios.delete("http://localhost:3000/api/users/"+ this.$route.params.userId,{
+                headers: {
+                    Authorization: "Bearer " + localStorage.token
+                }
+            })
+            .then( () => {
+                window.location = "http://localhost:8080/index.html#/logout"
+            })
+            .catch(error => {
+                console.log(error); 
+            });
+        },
     },
     mounted(){
         axios.get("http://localhost:3000/api/users/" + this.$route.params.userId, {

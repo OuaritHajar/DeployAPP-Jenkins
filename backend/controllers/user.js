@@ -10,7 +10,6 @@ module.exports = {
   signup: async (req, res, next) => {
 
     // Params
-    console.log(req.body);
     const firstName = req.body.first_name;
     const lastName = req.body.last_name;
     const email = req.body.email;
@@ -198,19 +197,64 @@ module.exports = {
       where: { id: req.params.userId }
     })
         if (userTargetFound) {
-
+          
           if (userId === userTargetFound.id ) {
 
+            // on cherche les likes
+            const likesFound = await db.Like.findAll({
+              where: { userId : userTargetFound.id}
+            })
+
+            if(likesFound) {
+              const destroyLikes = await db.Like.destroy({
+                where: { userId : userTargetFound.id }
+              })
+              if (destroyLikes) {
+                  
+              }
+            }
+
+
+
+            // on cherche les comments
+            const commentsFound = await db.Comment.findAll({
+              where: { userId : userTargetFound.id}
+            })
+
+            if(commentsFound) {
+              const destroyComments = await db.Comment.destroy({
+                where: { userId : userTargetFound.id }
+              })
+              if (destroyComments) {
+                  
+              }
+            }
+
+
+
+            // on cherche les posts
+            const postsFound = await db.Post.findAll({
+              where: { userId : userTargetFound.id}
+            })
+
+            if(postsFound) {
+              const destroyPosts = await db.Post.destroy({
+                where: { userId : userTargetFound.id }
+              })
+              if (destroyPosts) {
+                  
+              }
+            }
+
+
+
+            // on supprimer l'user
             const deleteUserTarget = await db.User.destroy({
               where: { id: userTargetFound.id }
             })
 
             if (deleteUserTarget)
-                res.status(201).json({ 'message': 'User ' + req.params.userId + ' deleted' })
-
-
-                // suprimer contenu
-
+                res.status(201).json({ 'message': 'User deleted' })
                 
           } else {
             return res.status(404).json({ 'error': 'no permission' })

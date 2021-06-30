@@ -13,15 +13,17 @@
             </div>
             
             <div class="row interaction-post information-post">
-                <p>posté par : quelqu'un </p> <span class="spacer"></span>
+                <router-link :to="{name: 'ProfilUser', params: {userId: post.userId }}">
+                    <p>post de {{ post.userId }} </p> 
+                </router-link>
+                <span class="spacer"></span>
                 <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
                 <p v-else>modifié le : {{ post.updatedAt }} </p>
             </div>
             
-            <hr>
-
             <!-- Edit post -->
             <div v-if="post.userId == $store.state.userId">
+                <hr>
                 <form enctype="multipart/form-data">
                     <fieldset>
                         <legend>Modifier votre post</legend>
@@ -217,6 +219,7 @@ export default {
             })
             .then(response => {
                 console.log(response)
+
 
             })
             .catch(error => {

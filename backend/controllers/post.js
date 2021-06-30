@@ -32,15 +32,12 @@ module.exports = {
                 // on créé le post
                 const newPost = await db.Post.create({
                     title, title,
-                    img_url: img_url,
+                    img_url: `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}`,
                     description: description,
                     likes: 0,
                     comments: 0,
                     UserId: userFound.id,
-                    include: [{
-                        model: db.User,
-                        attributes: ['first_name']
-                    }]
+                    
                 });
 
                 if (newPost) {
@@ -99,14 +96,11 @@ module.exports = {
         // récupère tout les posts
         try {
             var allPosts = await db.Post.findAll({
-                order: [(order != null) ? order.split(':') : ['title', 'ASC']],
+                order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
                 attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                 limit: (!isNaN(limit)) ? limit : null,
                 offset: (!isNaN(offset)) ? offset : null,
-                include: [{
-                    model: db.User,
-                    attributes: ['first_name']
-                }]
+                
             })
         } catch (err) {
             res.status(500).json({ 'error': 'invalide fields' });
@@ -156,7 +150,6 @@ module.exports = {
                 })
                 if (postFound) {
 
-                    console.log(postFound)
                     // récup les commentaires
                     const commentsFound = await db.Comment.findAll({
                         where: { postId: req.params.postId }
@@ -327,8 +320,6 @@ module.exports = {
                         //})
 
                         
-
-
                         //if (destroyImage) {
                         //    res.status(202).json({ 'message': ' Image from post deleted' })
                         //}

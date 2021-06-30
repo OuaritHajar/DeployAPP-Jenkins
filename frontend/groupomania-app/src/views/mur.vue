@@ -5,11 +5,10 @@
     <router-link to="/newPost" class="nav-link">
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
-    <p> {{ $store.state.userId }} </p>
   </div>
-  
+  <img src="http://localhost:3000/images/static/assets/uploads/logo.png">
 
-  <!-- Affiche post -->
+  <!-- Affiche tout les posts -->
   <div v-for="(post, index) in allPosts" :key="index">
     <div class="post">
       
@@ -17,12 +16,11 @@
       <!-- Titre / Description -->
       <router-link :to="{name: 'Post', params: {postId: post.id}}">
         <h2>  {{ post.title }} </h2>
-        <img v-if="post.img_url != null" :src="post.img_url" alt="premier post photo">
+        <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
 
         <p>
           {{ post.img_url }}
         </p> 
-
 
         <p class="description"> {{ post.description }} </p>
       </router-link>
@@ -36,7 +34,12 @@
       
       <!-- info supplémentaire -->
       <div class="row interaction-post informationPost">
-        <p>posté par : quelqu'un </p> <span class="spacer"></span>
+        <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
+            <p>post de {{ post.UserId }} </p> 
+        </router-link>
+        
+
+        <span class="spacer"></span>
         <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
         <p v-else>modifié le : {{ post.updatedAt }} </p>
       </div>
@@ -82,8 +85,6 @@ export default {
   },
 
   mounted(){
-
-    console.log(localStorage)
     axios.get("http://localhost:3000/api/posts?limit=10", {
       headers: {
         Authorization: "Bearer " + localStorage.token
