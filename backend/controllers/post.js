@@ -279,25 +279,46 @@ module.exports = {
                         const commentsFound = await db.Comment.findAll({
                             where: { postId: postId }
                         })
-                        // on supprimes les commentaires
-                        const destroyComments = await db.Comment.destroy({
-                            where: { postId: postId }
-                        })
+
+                        if (commentsFound) {
+                            // on supprimes les commentaires
+                            const destroyComments = await db.Comment.destroy({
+                                where: { postId: postId }
+                            })
+                            if (destroyComments) {
+                                res.status(202).json({ 'message': 'Comments removed' })
+                            } 
+                        }
+                        
                         
 
                         //on cherche les likes
                         const likesFound = await db.Like.findAll({
                             where: { postId : postId}
                         })
-                        // on supprimes les like
-                        const destroyLikes = await db.Like.destroy({
-                            where: { postId: postId }
-                        })
+                        
+                        if (likesFound) {
+                            // on supprimes les like
+                            const destroyLikes = await db.Like.destroy({
+                                where: { postId: postId }
+                            })
+                            if (destroyLikes) {
+                                res.status(202).json({ 'message': 'Likes removed' })
+                            } 
+                        }
+
+                        
 
                         // Supprime le post
                         const destroyPost = await db.Post.destroy({
                             where: { id: postId }
                         })
+                        if (destroyPost) {
+                            res.status(202).json({ 'message': 'Post deleted' })
+                        }
+                        else {
+                            res.status(500).json({ 'error': 'cannot update post' });
+                        };
 
 
                         //// on les supprimes l'image'
@@ -305,22 +326,7 @@ module.exports = {
                         //    where: { postId: postId }
                         //})
 
-                        if (destroyPost) {
-                            if (commentsFound && destroyComments) {
-                                if (likesFound && destroyLikes) {
-                                    res.status(202).json({ 'message': 'Post, messages and likes removed' })
-                                }
-                                else {
-                                    res.status(500).json({ 'error': 'cannot find or removed likes' });
-                                };
-                            }
-                            else {
-                                res.status(500).json({ 'error': 'cannot find or destroy comments' });
-                            };
-                        }
-                        else {
-                            res.status(500).json({ 'error': 'cannot update post' });
-                        };
+                        
 
 
                         //if (destroyImage) {

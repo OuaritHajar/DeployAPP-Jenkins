@@ -18,8 +18,9 @@
                 <p v-else>modifié le : {{ post.updatedAt }} </p>
             </div>
             
-                        <hr>
+            <hr>
 
+            <!-- Edit post -->
             <div v-if="post.userId == $store.state.userId">
                 <form enctype="multipart/form-data">
                     <fieldset>
@@ -81,6 +82,21 @@
             <div v-for="(comment, index) in allComments" :key="index" class="comment">
                 <p> {{ comment.UserId }} </p>
                 <p> {{ comment.description }} </p>
+
+                <!-- Edit comment -->
+                <div v-if="comment.UserId == $store.state.userId" >
+                    <form>
+                        <textarea v-model="editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
+                        
+                        <button @click="editComment(comment.id)" class="btn btn-primary">
+                            Modifier
+                        </button>
+                        <span class="spacer"></span>
+                        <button @click="deleteComment(comment.id)" class="btn btn-danger">
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -97,19 +113,11 @@ export default {
             allComments:[],
             descriptionComment: "",
             titlePost:"",
-            descriptionPost:''
+            descriptionPost:'',
+            editDescriptionComment:""
         }
     },
     methods: {
-        newComment() {
-            axios.post("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment", {
-                description: this.descriptionComment
-            },{
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
-            })
-        },
         editPost() {
             axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId, {
                 title: this.titlePost,
@@ -119,9 +127,88 @@ export default {
                     Authorization: "Bearer " + localStorage.token
                 }
             })
-        },
-        addLike() {
+            .then(response => {
+              console.log(response)
+              window.location = "http://localhost:8080/index.html#/mur"
 
+            })
+            .catch(error => {
+            console.log(error); 
+            });
+        },
+
+
+
+        deletePost() {
+            axios.delete("http://localhost:3000/api/posts/"+ this.$route.params.postId,{
+                headers: {
+                    Authorization: "Bearer " + localStorage.token
+                }
+            })
+            .then( ()=> {
+              window.location = "http://localhost:8080/index.html#/"
+
+            })
+            .catch(error => {
+            console.log(error); 
+            });
+        
+        },
+
+
+        newComment() {
+            axios.post("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment", {
+                description: this.descriptionComment
+            },{
+                headers: {
+                    Authorization: "Bearer " + localStorage.token
+                }
+            })
+            .then((response)=> {
+                console.log(response)
+            })
+            .catch(error => {
+            console.log(error); 
+            });
+        },
+
+
+        editComment(commentId){
+            axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment/" + commentId, {
+                description: this.editDescriptionComment
+            },{
+                headers: {
+                    Authorization: "Bearer " + localStorage.token
+                }
+            })
+            .then((response)=> {
+                console.log(response)
+            })
+            .catch(error => {
+            console.log(error); 
+            });
+        },
+
+
+
+        deleteComment(commentId){
+            axios.delete("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment/" + commentId, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.token
+                }
+            })
+            .then((response)=> {
+                console.log(response)
+                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
+            })
+            .catch(error => {
+            console.log(error); 
+            });
+        },
+
+        
+
+        addLike() {
             axios.post("http://localhost:3000/api/posts/" + this.$route.params.postId + "/like", "" , {
               headers: {
                 Authorization: "Bearer " + localStorage.token
