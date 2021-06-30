@@ -14,10 +14,10 @@ module.exports = {
         const description = req.body.description;
 
         // condition
-        if (description == null) {
+        if (description === null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
-        if (description.length <= 4) {
+        if (description.length <= 3) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
 
@@ -144,6 +144,10 @@ module.exports = {
         //Params
         const description = req.body.description;
 
+        if (description.length <= 3) {
+            return res.status(400).json({ 'error': 'titre ou description trop cour' });
+        }
+
         try {
             // on cherche l'utilisateur
             const userFound = await db.User.findOne({
@@ -168,7 +172,7 @@ module.exports = {
 
                             //update
                             const commentUpdate = await commentFound.update({
-                                description: (description ? description : description)
+                                description: (description ? description : commentFound.description)
                             })
                             if (commentUpdate) {
                                 res.status(201).json(commentUpdate);

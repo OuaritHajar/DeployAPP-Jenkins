@@ -183,6 +183,7 @@ export default {
             })
             .then((response)=> {
                 console.log(response)
+                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
             })
             .catch(error => {
             console.log(error); 
@@ -215,8 +216,7 @@ export default {
               }
             })
             .then(response => {
-              console.log(response)
-              // reload like 
+                console.log(response)
 
             })
             .catch(error => {
