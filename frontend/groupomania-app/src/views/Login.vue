@@ -65,13 +65,13 @@ export default{
           })
           .then(function(response){
               console.log("response :",response.data)
-  
+              localStorage.clear()
               // save token in localStorage
               localStorage.setItem('token', response.data.token)
               // save userId in vuex 
               store.dispatch('updateUserId', response.data.userId)
               
-              window.location = "http://localhost:8080/index.html#/mur"
+              window.location = "http://localhost:8080/index.html#/"
               
               
           })

@@ -197,6 +197,10 @@ module.exports = {
         let img_url;
         const description = req.body.description;
 
+        if (title === null || description === null) {
+            return res.status(400).json({ 'error': 'missing parameters' });
+        }
+
         if (req.file) { img_url = req.file.path }
 
         try {
@@ -217,9 +221,9 @@ module.exports = {
                     if (userId == postFound.UserId || userFound.isAdmin == true) {
                         // update post
                         const postUpdate = await postFound.update({
-                            title: (title ? title : title),
-                            img_url: (img_url ? img_url : img_url),
-                            description: (description ? description : description)
+                            title: (title ? title : postFound.title),
+                            img_url: (img_url ? img_url : postFound.img_url),
+                            description: (description ? description : postFound.description)
                         })
                         if (postUpdate) {
 

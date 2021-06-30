@@ -17,6 +17,47 @@
                 <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
                 <p v-else>modifié le : {{ post.updatedAt }} </p>
             </div>
+            
+                        <hr>
+
+            <div v-if="post.userId == $store.state.userId">
+                <form enctype="multipart/form-data">
+                    <fieldset>
+                        <legend>Modifier votre post</legend>
+                        <hr>
+                        <div >
+                        
+                            <!-- Titre-->
+                            <div class="form-group ">
+                                <label for="inputTitle">Titre :</label>
+                                <input v-model="titlePost" type="text" class="form-control" id="inputTitle">
+                            </div>
+
+                            <!-- Message -->
+                            <div class="form-group">
+                                <label for="inputMessage">Message:</label>
+                                <textarea v-model="descriptionPost" type="text" class="form-control" rows="6" id="inputMessage"></textarea>
+                            </div>
+
+                            <!-- Image-->
+                            <div class="form-group">
+                                <label for="inputImg_url">Image :</label>
+                                <input type="file" class="form-control" id="inputImg_url">
+                            </div>
+                        </div>
+
+                        <button @click="editPost" class="btn btn-primary">
+                            Modifier
+                        </button>
+                        
+                        <span class="spacer"></span>
+                        <button @click="deletePost" class="btn btn-danger">
+                            Supprimer
+                        </button>
+
+                    </fieldset>
+                </form>
+            </div>
         </div>
 
         <!-- Ajouter un commentaire -->
@@ -24,7 +65,7 @@
             <form class="form-inline" enctype="multipart/form-data">  
 
                 <div class="col-sm-9">
-                    <textarea v-model="description" class="form-control" placeholder="Ajouter un commentaire" rows="3"></textarea>
+                    <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="3"></textarea>
                 </div>
                 <div class="col-sm-3">
                     <button @click="newComment" class="btn btn-primary">
@@ -54,13 +95,25 @@ export default {
         return{
             post:{},
             allComments:[],
-            description: ""
+            descriptionComment: "",
+            titlePost:"",
+            descriptionPost:''
         }
     },
     methods: {
         newComment() {
             axios.post("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment", {
-                description: this.description
+                description: this.descriptionComment
+            },{
+                headers: {
+                    Authorization: "Bearer " + localStorage.token
+                }
+            })
+        },
+        editPost() {
+            axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId, {
+                title: this.titlePost,
+                description: this.descriptionPost
             },{
                 headers: {
                     Authorization: "Bearer " + localStorage.token
@@ -164,6 +217,10 @@ export default {
 }
 textarea.form-control{
     width:100%;
+}
+
+hr{
+    margin: 5px 0 5px 0;
 }
 
 </style>

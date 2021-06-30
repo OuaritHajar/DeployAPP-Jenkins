@@ -6,17 +6,24 @@
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
     <p> {{ $store.state.userId }} </p>
-    
   </div>
+  
 
   <!-- Affiche post -->
   <div v-for="(post, index) in allPosts" :key="index">
     <div class="post">
+      
         
       <!-- Titre / Description -->
       <router-link :to="{name: 'Post', params: {postId: post.id}}">
         <h2>  {{ post.title }} </h2>
         <img v-if="post.img_url != null" :src="post.img_url" alt="premier post photo">
+
+        <p>
+          {{ post.img_url }}
+        </p> 
+
+
         <p class="description"> {{ post.description }} </p>
       </router-link>
 
@@ -73,7 +80,10 @@ export default {
       });
     }
   },
+
   mounted(){
+
+    console.log(localStorage)
     axios.get("http://localhost:3000/api/posts?limit=10", {
       headers: {
         Authorization: "Bearer " + localStorage.token
@@ -81,6 +91,7 @@ export default {
     })
     .then(response => {
         this.allPosts = response.data.post
+        console.log(response.data.post)
     })
     .catch(error => {
     console.log(error); 

@@ -1,6 +1,6 @@
 <template>
     <section>
-        <form enctype="multipart/form-data" class="form">
+        <form class="form">
         <fieldset>
             <legend>Votre profil utilisateur</legend>
             <hr />

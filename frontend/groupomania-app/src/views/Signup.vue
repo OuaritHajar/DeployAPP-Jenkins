@@ -1,6 +1,6 @@
 <template>
     <div id="signup">
-        <form enctype="multipart/form-data">
+        <form>
         <fieldset>
             <legend>Inscription</legend>
             <hr />

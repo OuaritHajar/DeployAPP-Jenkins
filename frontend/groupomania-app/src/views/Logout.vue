@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <section>
-        <p>Vous etes déconnecté</p>
+        <p class="text-center deconnection">Vous êtes déconnecté</p>
         <form>
             <fieldset>
                 <legend>Connection</legend>
@@ -114,5 +114,8 @@ form{
 }
 hr{
     margin-top:0;
+}
+.deconnection{
+    font-size:1.5rem;
 }
 </style>
