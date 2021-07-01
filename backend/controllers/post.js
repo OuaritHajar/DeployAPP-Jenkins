@@ -193,7 +193,7 @@ module.exports = {
         if (title === null || description === null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
-
+        console.log('requete file du controler post',req.file)
         if (req.file) { img_url = req.file.path }
 
         try {
@@ -215,7 +215,7 @@ module.exports = {
                         // update post
                         const postUpdate = await postFound.update({
                             title: (title ? title : postFound.title),
-                            img_url: (img_url ? img_url : postFound.img_url),
+                            img_url: req.file ? `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}` : postFound.img_url,
                             description: (description ? description : postFound.description)
                         })
                         if (postUpdate) {

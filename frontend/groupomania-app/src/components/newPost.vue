@@ -41,6 +41,7 @@ export default{
         return{
             title: "",
             description: "",
+            img_url:"",
             file: null
         }
     },
@@ -48,14 +49,13 @@ export default{
         uploadImage(event) {
             this.file = event.target.files[0]
         },
-
-
         creatNewPost() {
             let data = new FormData();
+
             data.append('title', this.title);
             data.append('description', this.description);
             data.append('img_url', this.file); 
-
+            //data.append('img_url', this.file, this.file.name); 
             let config = {
                 headers : {
                   'Content-Type' : 'application/x-www-form-urlencoded',
@@ -64,14 +64,10 @@ export default{
             }
             const URL = 'http://localhost:3000/api/posts/'; 
             axios.post( URL,  data, config
-            ).then(
-                response => {
-                    console.log(response)
-                    window.location = "http://localhost:8080/index.html#/mur"
-                }
-            ).catch(error => {
-            console.log(error); 
-            });
+            ).then(response => {
+                console.log(response)
+                //window.location = "http://localhost:8080/index.html#/mur"
+            })
         }
     }
 }

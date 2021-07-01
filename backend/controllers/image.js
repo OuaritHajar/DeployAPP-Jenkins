@@ -70,7 +70,7 @@ module.exports = {
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
     const postId = JSON.parse(req.params.postId);
-
+    
     try {
       // récupère l'user
       const userFound = await db.User.findOne({
@@ -108,10 +108,10 @@ module.exports = {
               // créé l'image dans la bdd
               console.log("nouvelle image",req.file)
               const updateImage = await imageFound.update({              
-                type: (req.file.mimetype? req.file.mimetype : req.file.mimetype) ,
-                name: (req.file.originalname? req.file.originalname : req.file.originalname) ,
-                data: (fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename)? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename)),
-                url: (req.file.path? req.file.path : req.file.path),
+                type: (req.file.mimetype? req.file.mimetype : imageFound.mimetype) ,
+                name: (req.file.originalname? req.file.originalname : imageFound.originalname) ,
+                data: (data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
+                url: (req.file.path? req.file.path : imageFound.path),
                 UserId: userFound.id,
                 // PostId: 
               })

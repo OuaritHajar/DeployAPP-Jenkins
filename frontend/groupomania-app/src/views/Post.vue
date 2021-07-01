@@ -45,7 +45,7 @@
                             <!-- Image-->
                             <div class="form-group">
                                 <label for="inputImg_url">Image :</label>
-                                <input type="file" class="form-control" id="inputImg_url">
+                                <input type="file" @change="uploadImage($event)" id="file-input">
                             </div>
                         </div>
 
@@ -116,23 +116,34 @@ export default {
             descriptionComment: "",
             titlePost:"",
             descriptionPost:'',
+            file: null,
             editDescriptionComment:""
         }
     },
     methods: {
+        uploadImage(event) {
+            this.file = event.target.files[0]
+            console.log(this.file)
+        },
+
+
         editPost() {
+            let data = new FormData();
+            data.append('title', this.title);
+            data.append('description', this.description);
+            data.append('img_url', this.file); 
+
             axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId, {
-                title: this.titlePost,
-                description: this.descriptionPost
+                data
             },{
                 headers: {
-                    Authorization: "Bearer " + localStorage.token
+                    'Content-Type' : 'application/x-www-form-urlencoded',
+                    'Authorization': "Bearer " + localStorage.token
                 }
             })
             .then(response => {
               console.log(response)
-              window.location = "http://localhost:8080/index.html#/mur"
-
+              //window.location = "http://localhost:8080/index.html#/mur"
             })
             .catch(error => {
             console.log(error); 
