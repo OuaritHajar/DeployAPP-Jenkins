@@ -310,18 +310,20 @@ module.exports = {
                             const destroyImage = await db.Image.destroy({
                                 where: { id: req.params.postId }
                             })
-
                             if (destroyImage) {
 
-                                // supprime l'image
-                                fs.unlink(imageFound.url,(err) =>{
-                                  if (err) {
-                                    console.error(err)
-                                  } else {
-                                    console.log('image supprimé')
-                                  }
-                                })
-                                //res.status(202).json({ 'message': ' Image from post deleted' })
+
+                                if(imageFound.url != null) {
+                                    // supprime l'image
+                                    fs.unlink(imageFound.url,(err) =>{
+                                        if (err) {
+                                          console.error(err)
+                                        } else {
+                                          console.log('image supprimé')
+                                        }
+                                    })
+                                    //res.status(202).json({ 'message': ' Image from post deleted' })
+                                }
                             }
                         }
 
