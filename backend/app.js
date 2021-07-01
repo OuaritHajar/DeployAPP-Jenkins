@@ -50,7 +50,6 @@ app.use((req, res, next) => {
 //securisation des headers
 app.use(helmet());
 
-console.log("message",  express.static(path.join(__dirname,'resources/statsssssic/assets/uploads/')))
 //Image
 app.use('/images', express.static('resources'));
 

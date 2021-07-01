@@ -72,8 +72,6 @@ export default{
               store.dispatch('updateUserId', response.data.userId)
               
               window.location = "http://localhost:8080/index.html#/"
-              
-              
           })
           .catch(function(error){
               console.error(error)

@@ -39,7 +39,7 @@
                             <!-- Message -->
                             <div class="form-group">
                                 <label for="inputMessage">Message:</label>
-                                <textarea v-model="descriptionPost" type="text" class="form-control" rows="6" id="inputMessage"></textarea>
+                                <textarea v-model="descriptionPost" type="text" class="form-control" rows="2" id="inputMessage"></textarea>
                             </div>
 
                             <!-- Image-->

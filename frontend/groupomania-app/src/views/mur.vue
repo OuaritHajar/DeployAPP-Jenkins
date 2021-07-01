@@ -6,7 +6,6 @@
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
   </div>
-  <img src="http://localhost:3000/images/static/assets/uploads/logo.png">
 
   <!-- Affiche tout les posts -->
   <div v-for="(post, index) in allPosts" :key="index">
@@ -16,13 +15,8 @@
       <!-- Titre / Description -->
       <router-link :to="{name: 'Post', params: {postId: post.id}}">
         <h2>  {{ post.title }} </h2>
-        <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
-
-        <p>
-          {{ post.img_url }}
-        </p> 
-
         <p class="description"> {{ post.description }} </p>
+        <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
       </router-link>
 
       <!-- Likes / Commentaires -->
@@ -33,13 +27,13 @@
       </div>
       
       <!-- info supplémentaire -->
-      <div class="row interaction-post informationPost">
+      <div class="row interaction-post information-post">
         <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
             <p>post de {{ post.UserId }} </p> 
         </router-link>
         
-
         <span class="spacer"></span>
+
         <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
         <p v-else>modifié le : {{ post.updatedAt }} </p>
       </div>
@@ -111,38 +105,34 @@ export default {
 
 
 <style scoped>
+
+
 .post{
   margin: 20px 20px;
-  padding:20px 23px;
+  padding:30px 40px;
   background-color:#e0e0e0;
   border: solid 1px #a1a1a1;
   border-radius: 10px;
-
-  padding-left:30px;
-  padding-right:30px
 }
 
 .post img{
-  width: 100%;
-  max-width: 550px;
+  max-width: 400px;
+  width:100%;
 }
-.informationPost{
+.information-post{
   font-size:0.8rem;
   color:#808080;
 }
+.interaction-post{
+  margin-left: 10px;
+}
 .description{
-  margin-bottom:20px;
+  margin:10px auto 20px auto;
 
   text-align: justify;
 }
-.post img{
-  margin-right:auto;
-  margin-left:auto;
-}
-.interaction-post{
-  margin-left:auto;
-  margin-right:auto;
-}
+
+
 .spacer{
   margin:0 10px 0 10px
 }
@@ -150,10 +140,11 @@ export default {
   border:none;
   background-color: #e0e0e0;
 }
+.nostyle:hover{
+  border-radius: 5px;
+  background-color: #d4d4d4;
 
-.btn-ajouter-post{
-  display: flex;
-  justify-content: center;
 }
+
 
 </style>

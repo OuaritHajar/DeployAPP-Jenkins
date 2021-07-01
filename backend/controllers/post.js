@@ -32,7 +32,7 @@ module.exports = {
                 // on créé le post
                 const newPost = await db.Post.create({
                     title, title,
-                    img_url: `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}`,
+                    img_url: req.file ? `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}` : null,
                     description: description,
                     likes: 0,
                     comments: 0,

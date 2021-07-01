@@ -22,7 +22,7 @@
                 <!-- Image-->
                 <div class="col-md-12 mb-3">
                     <label for="inputImg_url">Image :</label>
-                    <input type="file" class="form-control" id="inputImg_url">
+                    <input type="file" @change="uploadImage($event)" id="file-input">
                 </div>
             </div>
             
@@ -41,33 +41,37 @@ export default{
         return{
             title: "",
             description: "",
-            img_url:""
+            file: null
         }
     },
     methods: {
-        creatNewPost(e) {
-            e.preventDefault()
-            try{
-                axios.post("http://localhost:3000/api/posts/",{
-                    title:this.title,
-                    description:this.description,
-                    img_url:this.img_url
-                }, {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.token
-                    }
-                })
-                .then(function(response){
-                    console.log(response.data)
-                    window.location = "http://localhost:8080/index.html#/"
-                })
-                .catch(function(error){
-                    console.log(error)
-                })
+        uploadImage(event) {
+            this.file = event.target.files[0]
+        },
+
+
+        creatNewPost() {
+            let data = new FormData();
+            data.append('title', this.title);
+            data.append('description', this.description);
+            data.append('img_url', this.file); 
+
+            let config = {
+                headers : {
+                  'Content-Type' : 'application/x-www-form-urlencoded',
+                  'Authorization': "Bearer " + localStorage.token,
+                }
             }
-            catch(err) {
-                console.error(err)
-            }
+            const URL = 'http://localhost:3000/api/posts/'; 
+            axios.post( URL,  data, config
+            ).then(
+                response => {
+                    console.log(response)
+                    window.location = "http://localhost:8080/index.html#/mur"
+                }
+            ).catch(error => {
+            console.log(error); 
+            });
         }
     }
 }
