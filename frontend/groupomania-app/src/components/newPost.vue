@@ -84,10 +84,14 @@ export default{
     background-color:#e0e0e0;
     border-radius: 5px;
 }
+#file-input{
+    margin-left:10px;
+}
 hr{
     margin-top:0;
 }
 .spacer{
     margin: 0 10px 0 10px
 }
+
 </style>

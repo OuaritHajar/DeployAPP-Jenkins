@@ -8,7 +8,7 @@
   </div>
 
   <!-- Affiche tout les posts -->
-  <div v-for="(post, index) in allPosts" :key="index">
+  <div v-for="(post, index) in displayedPosts" :key="index">
     <div class="post">
       
         
@@ -41,6 +41,24 @@
       <div class="seperate"></div>
     </div>
   </div>
+
+  <!-- pagination -->
+  <div class="offset">
+    <nav aria-label="Page navigation example">
+			<ul class="pagination">
+				<li class="page-item">
+					<button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
+				</li>
+				<li class="page-item">
+					<button type="button" class="page-link" v-for="(pageNumber, index) in pages.slice(page-1, page+5)" :key="index" @click="page = pageNumber"> {{pageNumber}} </button>
+				</li>
+				<li class="page-item">
+					<button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
+				</li>
+			</ul>
+		</nav>	
+  </div>
+  
 </section>
     
 </template>
@@ -54,10 +72,43 @@ import axios from 'axios'
 export default {
   data() {
     return{
-      allPosts: [],
+      posts : [''],
+			page: 1,
+			perPage: 10,
+			pages: [],
     }
   },
   methods:{
+    getPosts () {	
+      for(let i = 0; i < 50; i++){
+        this.posts.push({
+               suffix:'#' + i});
+      }  
+		},
+		setPages () {
+			let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+      console.log(numberOfPages)
+			for (let index = 1; index <= numberOfPages; index++) {
+				this.pages.push(index);
+			}
+		},
+		paginate (posts) {
+			let page = this.page;
+			let perPage = this.perPage;
+			let from = (page * perPage) - perPage;
+			let to = (page * perPage);
+			return  posts.slice(from, to);
+		},
+
+
+
+
+
+
+
+
+
+
 
     addLike(payload) {
       console.log(localStorage)
@@ -79,19 +130,37 @@ export default {
   },
 
   mounted(){
-    axios.get("http://localhost:3000/api/posts?limit=10", {
+    axios.get("http://localhost:3000/api/posts", {
       headers: {
         Authorization: "Bearer " + localStorage.token
       }
     })
     .then(response => {
-        this.allPosts = response.data.post
-        console.log(response.data.post)
+        this.posts = response.data.post
     })
     .catch(error => {
     console.log(error); 
     });
-  }
+  },
+
+
+
+
+  computed: {
+		displayedPosts () {
+			return this.paginate(this.posts);
+		}
+	},
+	watch: {
+		posts () {
+			this.setPages();
+		}
+	},
+	filters: {
+		trimWords(value){
+			return value.split(" ").splice(0,20).join(" ") + '...';
+		}
+	}
 }
 </script>
 
@@ -105,6 +174,24 @@ export default {
 
 
 <style scoped lang="scss">
+button.page-link {
+	display: inline-block;
+}
+button.page-link {
+    font-size: 20px;
+    color: #29b3ed;
+    font-weight: 500;
+}
+.offset{
+  width: 500px !important;
+  margin: 20px auto;  
+}
+
+
+
+
+
+
 
 
 .post{
