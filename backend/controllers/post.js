@@ -37,7 +37,6 @@ module.exports = {
                     likes: 0,
                     comments: 0,
                     UserId: userFound.id,
-                    
                 });
 
                 if (newPost) {
@@ -193,7 +192,7 @@ module.exports = {
         //if (title === null && description === null) {
         //    return res.status(400).json({ 'error': 'missing parameters' });
         //}
-        console.log('requete file du controler post',req.file)
+
         if (req.file) { img_url = req.file.path }
 
         try {
@@ -212,8 +211,6 @@ module.exports = {
                     // on verifie que la post a été créé par le proprio
                     if (userId == postFound.UserId || userFound.isAdmin == true) {
 
-                        console.log('je te vois')
-                        console.log(req.file, req.body)
                         // update post
                         const postUpdate = await postFound.update({
                             title: (req.body.title ? req.body.title : postFound.title),
@@ -221,7 +218,6 @@ module.exports = {
                             description: (description ? description : postFound.description)
                         })
                         if (postUpdate) {
-                            console.log("fin")
                             return res.status(201).json(postUpdate);
                         }
                     } else {
@@ -230,11 +226,9 @@ module.exports = {
                 } else {
                     return res.status(201).json({ 'error': 'post not found' })
                 }
-
             } else {
                 res.status(404).json({ 'error': 'user not found' });
             }
-
         } catch (err) {
             console.error(err)
         };

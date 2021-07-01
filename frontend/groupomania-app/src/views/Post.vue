@@ -2,16 +2,20 @@
     <div>
         <!-- Post -->
         <div id="post" class="post">
-            <h2>  {{ post.title }} </h2>
-            <img v-if="post.img_url != null" :src="post.img_url" alt="premier post photo">
-            <p class="description"> {{ post.description }} </p>
 
+            <!-- Titre / Description -->
+            <h2>  {{ post.title }} </h2>
+            <p class="description"> {{ post.description }} </p>
+            <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
+
+            <!-- Likes / Commentaires -->
             <div class="row interaction-post">
                 <p><button @click="addLike" class="nostyle">Like : </button> {{ post.likes }} </p>
                 <p class="spacer">-</p>
                 <p> Commentaire : {{ post.comments }}</p>
             </div>
             
+            <!-- info supplémentaire -->
             <div class="row interaction-post information-post">
                 <router-link :to="{name: 'ProfilUser', params: {userId: post.userId }}">
                     <p>post de {{ post.userId }} </p> 
@@ -33,18 +37,18 @@
                             <!-- Titre-->
                             <div class="form-group ">
                                 <label for="inputTitle">Titre :</label>
-                                <input v-model="titlePost" type="text" class="form-control" id="inputTitlePost">
+                                <input v-model="titlePost" type="text" class="form-control gray" id="inputTitlePost" > 
                             </div>
 
                             <!-- Message -->
                             <div class="form-group">
                                 <label for="inputMessage">Message:</label>
-                                <textarea v-model="descriptionPost" type="text" class="form-control" rows="2" id="inputMessage"></textarea>
+                                <textarea v-model="descriptionPost" type="text" class="form-control gray" rows="2" id="inputMessage">  </textarea>
                             </div>
 
                             <!-- Image-->
                             <div class="form-group">
-                                <label for="inputImg_url">Image :</label>
+                                <label for="inputImg_url">Image : </label>
                                 <input type="file" @change="uploadImage($event)" id="file-input">
                             </div>
                         </div>
@@ -114,7 +118,7 @@ export default {
             post:{},
             allComments:[],
             descriptionComment: "",
-            titlePost:"",
+            titlePost: '',
             descriptionPost:'',
             file: null,
             editDescriptionComment:""
@@ -133,9 +137,6 @@ export default {
             data.append('title', this.titlePost);
             data.append('description', this.descriptionPost);
             data.append('img_url', this.file); 
-            console.log("this.title +description:", this.titlePost, this.descriptionPost, this.file)
-            console.log("data :", data)
-
 
             let config = {
                 headers : {
@@ -144,14 +145,13 @@ export default {
                 }
             }
 
-
             axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId, 
-                data ,
+                data,
                 config
             )
             .then(response => {
-              console.log("response", response)
-              //window.location = "http://localhost:8080/index.html#/mur"
+                console.log("response", response)
+                window.location = "http://localhost:8080/index.html#/mur"
             })
             .catch(error => {
             console.log(error); 
@@ -246,6 +246,7 @@ export default {
         }
     },
     mounted(){
+
         axios.get("http://localhost:3000/api/posts/" + this.$route.params.postId, {
           headers: {
             Authorization: "Bearer " + localStorage.token
@@ -255,6 +256,8 @@ export default {
           console.log(response)
             this.post = response.data.post
             this.allComments = response.data.comments
+            this.titlePost = response.data.post.title
+            this.descriptionPost = response.data.post.description
         })
         .catch(error => {
         console.log(error); 
@@ -264,39 +267,47 @@ export default {
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
+
+
+
 .post{
   margin: 20px 20px;
-  padding:20px 23px;
+  padding:30px 40px;
   background-color:#e0e0e0;
   border: solid 1px #a1a1a1;
   border-radius: 10px;
+  
+  img{
+    max-width: 400px;
+    width:100%;
 
-  padding-left:30px;
-  padding-right:30px
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
+#file-input{
+    margin-left:10px;
+}
+.gray{
+    color:gray
 }
 
-.post img{
-  width: 100%;
-  max-width: 550px;
+
+.description{
+  margin:10px auto 20px auto;
+  text-align: justify;
 }
 .information-post{
   font-size:0.8rem;
   color:#808080;
 }
-.description{
-  margin-bottom:20px;
-
-  text-align: justify;
-}
-.post img{
-  margin-right:auto;
-  margin-left:auto;
-}
 .interaction-post{
-  margin-left:auto;
-  margin-right:auto;
+  margin-left: 10px;
 }
+
+
+
 .spacer{
   margin:0 10px 0 10px
 }
@@ -304,11 +315,12 @@ export default {
   border:none;
   background-color: #e0e0e0;
 }
+.nostyle:hover{
+  border-radius: 5px;
+  background-color: #d4d4d4;
 
-.btn-ajouter-post{
-  display: flex;
-  justify-content: center;
 }
+
 
 .comments{
     margin:20px 20px
@@ -326,7 +338,6 @@ export default {
 textarea.form-control{
     width:100%;
 }
-
 hr{
     margin: 5px 0 5px 0;
 }

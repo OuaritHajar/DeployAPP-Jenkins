@@ -104,7 +104,7 @@ export default {
 
 
 
-<style scoped>
+<style scoped lang="scss">
 
 
 .post{
@@ -113,11 +113,33 @@ export default {
   background-color:#e0e0e0;
   border: solid 1px #a1a1a1;
   border-radius: 10px;
+  
+  img{
+    max-width: 400px;
+    width:100%;
+
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  a{
+    text-decoration: none;
+    
+    & h2, .description{
+      color:black;
+    }
+  }
+
+  h2:hover, .description:hover{
+    color:rgb(68, 68, 68)
+  }
 }
 
-.post img{
-  max-width: 400px;
-  width:100%;
+
+
+.description{
+  margin:10px auto 20px auto;
+  text-align: justify;
 }
 .information-post{
   font-size:0.8rem;
@@ -126,11 +148,7 @@ export default {
 .interaction-post{
   margin-left: 10px;
 }
-.description{
-  margin:10px auto 20px auto;
 
-  text-align: justify;
-}
 
 
 .spacer{
