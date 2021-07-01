@@ -65,9 +65,8 @@ export default{
             }
             const URL = 'http://localhost:3000/api/posts/'; 
             axios.post( URL,  data, config
-            ).then(response => {
-                console.log(response)
-                //window.location = "http://localhost:8080/index.html#/mur"
+            ).then( () => {
+                window.location = "http://localhost:8080/index.html#/"
             })
         }
     }

@@ -225,7 +225,7 @@ module.exports = {
                     })
                     if (commentFound) {
 
-                        // on vverifie que le commentaire appartient à l'user
+                        // on verifie que le commentaire appartient à l'user
                         if (commentFound.UserId == userFound.id || userFound.isAdmin == true) {
 
                             //delete
@@ -233,7 +233,14 @@ module.exports = {
                                 where: { id: commentId }
                             })
                             if (destroyComment) {
-                                res.status(201).json({ 'message': 'commentaire deleted' })
+
+                                // update database
+                                const updatePost = await postFound.update({
+                                    comments: postFound.comments - 1,
+                                })
+                                if (updatePost) {
+                                    res.status(201).json({ 'message': 'commentaire deleted' })
+                                }
                             }
                             else {
                                 res.status(500).json({ 'error': 'cannot update user' });

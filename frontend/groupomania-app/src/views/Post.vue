@@ -151,7 +151,7 @@ export default {
             )
             .then(response => {
                 console.log("response", response)
-                window.location = "http://localhost:8080/index.html#/mur"
+                window.location = "http://localhost:8080/index.html#/mur"+ this.$route.params.postId
             })
             .catch(error => {
             console.log(error); 
@@ -184,8 +184,8 @@ export default {
                     Authorization: "Bearer " + localStorage.token
                 }
             })
-            .then((response)=> {
-                console.log(response)
+            .then(( )=> {
+                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
             })
             .catch(error => {
             console.log(error); 
@@ -201,8 +201,7 @@ export default {
                     Authorization: "Bearer " + localStorage.token
                 }
             })
-            .then((response)=> {
-                console.log(response)
+            .then(( )=> {
                 window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
             })
             .catch(error => {
@@ -218,8 +217,7 @@ export default {
                     Authorization: "Bearer " + localStorage.token
                 }
             })
-            .then((response)=> {
-                console.log(response)
+            .then( ()=> {
                 window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
             })
             .catch(error => {
@@ -235,10 +233,8 @@ export default {
                 Authorization: "Bearer " + localStorage.token
               }
             })
-            .then(response => {
-                console.log(response)
-
-
+            .then( () => {
+                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
             })
             .catch(error => {
             console.log(error); 
@@ -253,7 +249,6 @@ export default {
           }
         })
         .then(response => {
-          console.log(response)
             this.post = response.data.post
             this.allComments = response.data.comments
             this.titlePost = response.data.post.title

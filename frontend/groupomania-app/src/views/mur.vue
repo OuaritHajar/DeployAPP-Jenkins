@@ -117,7 +117,7 @@ export default {
       })
       .then(response => {
         console.log(response)
-        // reload like 
+        window.location = "http://localhost:8080/index.html#" 
 
       })
       .catch(error => {

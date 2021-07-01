@@ -1,6 +1,7 @@
 // Imports
 const db = require('../models');
 const jwtUtils = require('../utils/jwt.utils');
+const fs = require('fs');
 
 // Routes
 module.exports = {
@@ -252,17 +253,17 @@ module.exports = {
                 where: { id: userId }
             })
             if (userFound) {
+                
 
                 // on cherche le post
                 const postFound = await db.Post.findOne({
-                    where: { id: req.params.postId }
+                    where: { id: postId }
                 })
-                if (postFound && !undefined) {
+                if (postFound) {
 
                     // on verifie la légitimité
                     if (postFound.UserId == userFound.id) {
 
-                        
 
                         // on cherche les commentaires
                         const commentsFound = await db.Comment.findAll({
@@ -275,7 +276,7 @@ module.exports = {
                                 where: { postId: postId }
                             })
                             if (destroyComments) {
-                                res.status(202).json({ 'message': 'Comments removed' })
+                                //res.status(202).json({ 'message': 'Comments removed' })
                             } 
                         }
                         
@@ -292,11 +293,39 @@ module.exports = {
                                 where: { postId: postId }
                             })
                             if (destroyLikes) {
-                                res.status(202).json({ 'message': 'Likes removed' })
+                                //res.status(202).json({ 'message': 'Likes removed' })
+                                
                             } 
                         }
 
-                        
+                    
+
+                        //on cherche l'image
+                        const imageFound = await db.Image.findOne({
+                            where: { id : req.params.postId}
+                        })
+                        if(imageFound) {
+
+                            // on supprime l'image de la database
+                            const destroyImage = await db.Image.destroy({
+                                where: { id: req.params.postId }
+                            })
+
+                            if (destroyImage) {
+
+                                // supprime l'image
+                                fs.unlink(imageFound.url,(err) =>{
+                                  if (err) {
+                                    console.error(err)
+                                  } else {
+                                    console.log('image supprimé')
+                                  }
+                                })
+                                //res.status(202).json({ 'message': ' Image from post deleted' })
+                            }
+                        }
+
+
 
                         // Supprime le post
                         const destroyPost = await db.Post.destroy({
@@ -306,28 +335,15 @@ module.exports = {
                             res.status(202).json({ 'message': 'Post deleted' })
                         }
                         else {
-                            res.status(500).json({ 'error': 'cannot update post' });
+                            res.status(500).json({ 'error': 'cannot destroy post' });
                         };
 
 
-                        //// on les supprimes l'image'
-                        //const destroyImage = await db.Image.destroy({
-                        //    where: { postId: postId }
-                        //})
-
-                        
-                        //if (destroyImage) {
-                        //    res.status(202).json({ 'message': ' Image from post deleted' })
-                        //}
-                        //else {
-                        //    res.status(500).json({ 'error': 'cannot destroy Image' });
-                        //};
 
 
                     } else {
                         res.status(404).json({ 'error': 'no permission' });
                     }
-
                 } else {
                     res.status(404).json({ 'error': 'post not found' });
                 }
@@ -339,9 +355,6 @@ module.exports = {
             console.error(err)
         };
     }
-
-
-
 
 }
 
