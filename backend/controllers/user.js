@@ -1,6 +1,7 @@
 const db = require('../models');
 const bcrypt = require('bcrypt');
 const jwtUtils = require('../utils/jwt.utils');
+const fs = require('fs');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
@@ -149,10 +150,6 @@ module.exports = {
         where: { id: req.params.userId }
       })
 
-      //const UserPrivilege = await db.User.findOne({
-      //  where: { id: userId }
-      //})
-
       if (userCible) {
 
         //son propre profil 
@@ -173,7 +170,6 @@ module.exports = {
       } else {
         res.status(404).json({ 'error': 'user not found' });
       }
-
     }
     catch (err) {
       console.error(err)
@@ -245,6 +241,136 @@ module.exports = {
                   
               }
             }
+
+
+
+            // on cherche les images
+            const imageFound = await db.Image.findAll({
+              where: { userId : userId}
+            })
+            if(imageFound) {
+
+                // on supprime l'image de la database
+                const destroyImage = await db.Image.destroy({
+                    where: { userId: userId }
+                })
+                if (destroyImage) {
+
+                    // supprime les images
+                    for( const image in imageFound) {
+                      if(`${imageFound[image].url}` != null) {
+                        fs.unlink(`${imageFound[image].url}`, (err) =>{
+                          if (err) {
+                            console.error(err)
+                          } else {
+                            console.log('image supprimé')
+                          }
+                        })
+                      }
+                    }
+                    //res.status(202).json({ 'message': ' Image from post deleted' })
+                      
+                }
+            }
+            
+
+              //[
+              //  Image {
+              //    dataValues: {
+              //      id: 46,
+              //      type: 'image/jpeg',
+              //      name: '652a7adb1b_98148_01-intro-773.jpg',
+              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
+              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163881325-652a7adb1b_98148_01-intro-773.jpg',
+              //      createdAt: 2021-07-01T18:24:41.000Z,
+              //      updatedAt: 2021-07-01T18:24:41.000Z,
+              //      UserId: 10
+              //    },
+              //    _previousDataValues: {
+              //      id: 46,
+              //      type: 'image/jpeg',
+              //      name: '652a7adb1b_98148_01-intro-773.jpg',
+              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
+              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163881325-652a7adb1b_98148_01-intro-773.jpg',
+              //      createdAt: 2021-07-01T18:24:41.000Z,
+              //      updatedAt: 2021-07-01T18:24:41.000Z,
+              //      UserId: 10
+              //    },
+              //    _changed: Set(0) {},
+              //    _options: {
+              //      isNewRecord: false,
+              //      _schema: null,
+              //      _schemaDelimiter: '',
+              //      raw: true,
+              //      attributes: [Array]
+              //    },
+              //    isNewRecord: false
+              //  },
+              //  Image {
+              //    dataValues: {
+              //      id: 47,
+              //      type: 'image/jpeg',
+              //      name: '652a7adb1b_98148_01-intro-773.jpg',
+              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
+              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163891928-652a7adb1b_98148_01-intro-773.jpg',
+              //      createdAt: 2021-07-01T18:24:51.000Z,
+              //      updatedAt: 2021-07-01T18:24:51.000Z,
+              //      UserId: 10
+              //    },
+              //    _previousDataValues: {
+              //      id: 47,
+              //      type: 'image/jpeg',
+              //      name: '652a7adb1b_98148_01-intro-773.jpg',
+              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
+              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163891928-652a7adb1b_98148_01-intro-773.jpg',
+              //      createdAt: 2021-07-01T18:24:51.000Z,
+              //      updatedAt: 2021-07-01T18:24:51.000Z,
+              //      UserId: 10
+              //    },
+              //    _changed: Set(0) {},
+              //    _options: {
+              //      isNewRecord: false,
+              //      _schema: null,
+              //      _schemaDelimiter: '',
+              //      raw: true,
+              //      attributes: [Array]
+              //    },
+              //    isNewRecord: false
+              //  },
+              //  Image {
+              //    dataValues: {
+              //      id: 48,
+              //      type: 'image/jpeg',
+              //      name: '652a7adb1b_98148_01-intro-773.jpg',
+              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
+              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163909422-652a7adb1b_98148_01-intro-773.jpg',
+              //      createdAt: 2021-07-01T18:25:09.000Z,
+              //      updatedAt: 2021-07-01T18:25:09.000Z,
+              //      UserId: 10
+              //    },
+              //    _previousDataValues: {
+              //      id: 48,
+              //      type: 'image/jpeg',
+              //      name: '652a7adb1b_98148_01-intro-773.jpg',
+              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
+              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163909422-652a7adb1b_98148_01-intro-773.jpg',
+              //      createdAt: 2021-07-01T18:25:09.000Z,
+              //      updatedAt: 2021-07-01T18:25:09.000Z,
+              //      UserId: 10
+              //    },
+              //    _changed: Set(0) {},
+              //    _options: {
+              //      isNewRecord: false,
+              //      _schema: null,
+              //      _schemaDelimiter: '',
+              //      raw: true,
+              //      attributes: [Array]
+              //    },
+              //    isNewRecord: false
+              //  }
+              //]
+
+
 
 
 

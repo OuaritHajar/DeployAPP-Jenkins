@@ -92,7 +92,6 @@ export default {
   methods:{
 		setPages () {
 			let numberOfPages = Math.ceil(this.posts.length / this.perPage);
-      console.log(numberOfPages)
 			for (let index = 1; index <= numberOfPages; index++) {
 				this.pages.push(index);
 			}
@@ -108,17 +107,13 @@ export default {
 
 
     addLike(payload) {
-      console.log(localStorage)
-
       axios.post("http://localhost:3000/api/posts/" + payload + "/like", "" , {
         headers: {
           Authorization: "Bearer " + localStorage.token
         }
       })
-      .then(response => {
-        console.log(response)
-        window.location = "http://localhost:8080/index.html#" 
-
+      .then(() => {
+        window.location = "http://localhost:8080/index.html" 
       })
       .catch(error => {
       console.log(error); 
