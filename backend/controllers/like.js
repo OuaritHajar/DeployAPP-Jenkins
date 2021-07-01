@@ -11,7 +11,6 @@ module.exports = {
         const userId = jwtUtils.getUserId(headerAuth);
         const postId = parseInt(req.params.postId);
 
-        // condition
         if (postId <= 0) {
             return res.status(400).json({ 'error': 'invalid parameters' });
         }

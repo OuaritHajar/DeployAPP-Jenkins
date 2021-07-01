@@ -1,5 +1,6 @@
 <template>
-<section>
+<div>
+  <section>
   <!-- Button new post -->
   <div v-if="$store.state.userId != 0" class="text-center">
     <router-link to="/newPost" class="nav-link">
@@ -41,16 +42,18 @@
       <div class="seperate"></div>
     </div>
   </div>
+  </section> 
+
 
   <!-- pagination -->
-  <div class="offset">
+    <div class="offset">
     <nav aria-label="Page navigation example">
 			<ul class="pagination">
 				<li class="page-item">
 					<button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
 				</li>
 				<li class="page-item">
-					<button type="button" class="page-link" v-for="(pageNumber, index) in pages.slice(page-1, page+5)" :key="index" @click="page = pageNumber"> {{pageNumber}} </button>
+					<button type="button" class="page-link" v-for="(pageNumber, index) in pages.slice(page-1, page+10)" :key="index" @click="page = pageNumber"> {{pageNumber}} </button>
 				</li>
 				<li class="page-item">
 					<button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
@@ -58,9 +61,9 @@
 			</ul>
 		</nav>	
   </div>
-  
-</section>
-    
+
+
+</div>
 </template>
 
 
@@ -78,13 +81,15 @@ export default {
 			pages: [],
     }
   },
+  
+  computed: {
+		displayedPosts () {
+			return this.paginate(this.posts);
+		}
+	},
+
+
   methods:{
-    getPosts () {	
-      for(let i = 0; i < 50; i++){
-        this.posts.push({
-               suffix:'#' + i});
-      }  
-		},
 		setPages () {
 			let numberOfPages = Math.ceil(this.posts.length / this.perPage);
       console.log(numberOfPages)
@@ -99,14 +104,6 @@ export default {
 			let to = (page * perPage);
 			return  posts.slice(from, to);
 		},
-
-
-
-
-
-
-
-
 
 
 
@@ -129,6 +126,15 @@ export default {
     }
   },
 
+  
+
+	watch: {
+		posts () {
+			this.setPages();
+		}
+	},
+  
+
   mounted(){
     axios.get("http://localhost:3000/api/posts", {
       headers: {
@@ -137,30 +143,12 @@ export default {
     })
     .then(response => {
         this.posts = response.data.post
+        
     })
     .catch(error => {
     console.log(error); 
     });
   },
-
-
-
-
-  computed: {
-		displayedPosts () {
-			return this.paginate(this.posts);
-		}
-	},
-	watch: {
-		posts () {
-			this.setPages();
-		}
-	},
-	filters: {
-		trimWords(value){
-			return value.split(" ").splice(0,20).join(" ") + '...';
-		}
-	}
 }
 </script>
 
@@ -183,8 +171,11 @@ button.page-link {
     font-weight: 500;
 }
 .offset{
-  width: 500px !important;
   margin: 20px auto;  
+  
+}
+.pagination{
+  justify-content: center;
 }
 
 

@@ -86,47 +86,61 @@ module.exports = {
           where: { id: postId }
         })
         if (postFound) {
-
-          // récupère image
-          const imageFound = await db.images.findOne({
-            where: {id: postId}
-          })
-          if(imageFound) {
             
-            console.log('requete body',req.body)
             // on vérifie s'il y a une image dans la requete
             if (req.file == undefined) {
               console.log("pas d'image dans la requete");
               next();
 
+
+
+            // image dans la requete
             } else {
-              console.log("image dans la requete");
-              console.log("ancienne image", imageFound)
-              // supprime ancienne image
-              fs.unlink(imageFound.url,(err) =>{
-                if (err) {
-                  console.error(err)
-                } else {
-                  console.log('image supprimé')
+              // vérifie si il y a déjà une image
+              const imageFound = await db.images.findOne({
+                where: {id: postId}
+              })
+              if(imageFound.url != null) {
+
+                  // supprime ancienne image
+                  fs.unlink(imageFound.url,(err) =>{
+                    if (err) {
+                      console.error(err)
+                    } else {
+                      console.log('image supprimé')
+                    }
+                  })
+
+                  // update image dans la bdd
+                  const updateImage = await imageFound.update({              
+                    type: (req.file.mimetype? req.file.mimetype : imageFound.mimetype) ,
+                    name: (req.file.originalname? req.file.originalname : imageFound.originalname) ,
+                    data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
+                    url: (req.file.path? req.file.path : imageFound.path),
+                    UserId: userFound.id,
+                    // PostId: 
+                  })
+                  if (updateImage) {
+                    next()
+                  }
+
+              } else {
+                console.log('Created new image')
+                // update image dans la bdd
+                const updateImage = await imageFound.update({              
+                  type: (req.file.mimetype? req.file.mimetype : imageFound.mimetype) ,
+                  name: (req.file.originalname? req.file.originalname : imageFound.originalname) ,
+                  data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
+                  url: (req.file.path? req.file.path : imageFound.path),
+                  UserId: userFound.id,
+                  // PostId: 
+                })
+
+                if (updateImage) {
+                  next()
                 }
-              })
-
-              // créé l'image dans la bdd
-              console.log("nouvelle image",req.file)
-              const updateImage = await imageFound.update({              
-                type: (req.file.mimetype? req.file.mimetype : imageFound.mimetype) ,
-                name: (req.file.originalname? req.file.originalname : imageFound.originalname) ,
-                data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
-                url: (req.file.path? req.file.path : imageFound.path),
-                UserId: userFound.id,
-                // PostId: 
-              })
-
-              if (updateImage) {
-                next()
               }
             }
-          }
         } else {
           return res.status(404).json({ 'error': 'post not found' });
         }
