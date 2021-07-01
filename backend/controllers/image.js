@@ -22,18 +22,21 @@ module.exports = {
 
         //on vérifie s'il y a une image
         if (req.file == undefined) {
+          console.log("pas d'image dans la requete")
           const createImageVide = await db.Image.create({
             type: '',
-            name: 'post sans image',
+            name: 'no image',
             data: '',
-            url:'',
+            url: null,
             UserId: userFound.id,
             // PostId: 
+
           })
           if(createImageVide) {
             next();
           }
         } else {
+          console.log("image dans la requete")
         // créé l'image dans la bdd
           const createImage = await db.Image.create({
             type: req.file.mimetype,
@@ -89,13 +92,16 @@ module.exports = {
             where: {id: postId}
           })
           if(imageFound) {
+            
+            console.log('requete body',req.body)
             // on vérifie s'il y a une image dans la requete
-            console.log("ancienne image", imageFound)
             if (req.file == undefined) {
               console.log("pas d'image dans la requete");
               next();
 
             } else {
+              console.log("image dans la requete");
+              console.log("ancienne image", imageFound)
               // supprime ancienne image
               fs.unlink(imageFound.url,(err) =>{
                 if (err) {
@@ -110,7 +116,7 @@ module.exports = {
               const updateImage = await imageFound.update({              
                 type: (req.file.mimetype? req.file.mimetype : imageFound.mimetype) ,
                 name: (req.file.originalname? req.file.originalname : imageFound.originalname) ,
-                data: (data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
+                data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
                 url: (req.file.path? req.file.path : imageFound.path),
                 UserId: userFound.id,
                 // PostId: 

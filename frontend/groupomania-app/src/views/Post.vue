@@ -33,7 +33,7 @@
                             <!-- Titre-->
                             <div class="form-group ">
                                 <label for="inputTitle">Titre :</label>
-                                <input v-model="titlePost" type="text" class="form-control" id="inputTitle">
+                                <input v-model="titlePost" type="text" class="form-control" id="inputTitlePost">
                             </div>
 
                             <!-- Message -->
@@ -129,20 +129,28 @@ export default {
 
         editPost() {
             let data = new FormData();
-            data.append('title', this.title);
-            data.append('description', this.description);
-            data.append('img_url', this.file); 
 
-            axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId, {
-                data
-            },{
-                headers: {
-                    'Content-Type' : 'application/x-www-form-urlencoded',
-                    'Authorization': "Bearer " + localStorage.token
+            data.append('title', this.titlePost);
+            data.append('description', this.descriptionPost);
+            data.append('img_url', this.file); 
+            console.log("this.title +description:", this.titlePost, this.descriptionPost, this.file)
+            console.log("data :", data)
+
+
+            let config = {
+                headers : {
+                  'Content-Type' : 'application/x-www-form-urlencoded',
+                  'Authorization': "Bearer " + localStorage.token,
                 }
-            })
+            }
+
+
+            axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId, 
+                data ,
+                config
+            )
             .then(response => {
-              console.log(response)
+              console.log("response", response)
               //window.location = "http://localhost:8080/index.html#/mur"
             })
             .catch(error => {
@@ -165,7 +173,6 @@ export default {
             .catch(error => {
             console.log(error); 
             });
-        
         },
 
 

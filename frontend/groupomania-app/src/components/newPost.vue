@@ -55,6 +55,7 @@ export default{
             data.append('title', this.title);
             data.append('description', this.description);
             data.append('img_url', this.file); 
+            console.log(data)
             //data.append('img_url', this.file, this.file.name); 
             let config = {
                 headers : {

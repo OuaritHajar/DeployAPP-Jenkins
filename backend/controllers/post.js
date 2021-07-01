@@ -20,7 +20,7 @@ module.exports = {
         if (title === null || description === null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
-        if (title.length <= 2 || description.length <= 4) {
+        if (title.length <= 2 || description.length <= 2) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
 
@@ -28,7 +28,7 @@ module.exports = {
             // récupère l'user
             const userFound = await db.User.findOne({ where: { id: userId } });
             if (userFound) {
-
+                console.log("requete body :",req.body,"requete file :", req.file)
                 // on créé le post
                 const newPost = await db.Post.create({
                     title, title,
@@ -190,9 +190,9 @@ module.exports = {
         let img_url;
         const description = req.body.description;
 
-        if (title === null || description === null) {
-            return res.status(400).json({ 'error': 'missing parameters' });
-        }
+        //if (title === null && description === null) {
+        //    return res.status(400).json({ 'error': 'missing parameters' });
+        //}
         console.log('requete file du controler post',req.file)
         if (req.file) { img_url = req.file.path }
 
@@ -207,19 +207,21 @@ module.exports = {
                 const postFound = await db.Post.findOne({
                     where: { id: postId }
                 })
-
                 if (postFound) {
-                    // on verifie que la post a été créé par le proprio
 
+                    // on verifie que la post a été créé par le proprio
                     if (userId == postFound.UserId || userFound.isAdmin == true) {
+
+                        console.log('je te vois')
+                        console.log(req.file, req.body)
                         // update post
                         const postUpdate = await postFound.update({
-                            title: (title ? title : postFound.title),
-                            img_url: req.file ? `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}` : postFound.img_url,
+                            title: (req.body.title ? req.body.title : postFound.title),
+                            img_url: img_url ? `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}` : postFound.img_url,
                             description: (description ? description : postFound.description)
                         })
                         if (postUpdate) {
-
+                            console.log("fin")
                             return res.status(201).json(postUpdate);
                         }
                     } else {
