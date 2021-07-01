@@ -30,7 +30,7 @@
       <!-- info supplémentaire -->
       <div class="row interaction-post information-post">
         <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
-            <p>post de {{ post.UserId }} </p> 
+            <p>post de {{ post.User.first_name }} {{ post.User.last_name }} </p> 
         </router-link>
         
         <span class="spacer"></span>
@@ -137,6 +137,7 @@ export default {
       }
     })
     .then(response => {
+      console.log(response)
         this.posts = response.data.post
         
     })

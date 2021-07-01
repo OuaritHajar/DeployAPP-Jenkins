@@ -206,9 +206,10 @@ module.exports = {
                 where: { userId : userTargetFound.id }
               })
               if (destroyLikes) {
-                  
+                  console.log("destroyLikes",destroyLikes)
               }
             }
+
 
 
 
@@ -227,6 +228,10 @@ module.exports = {
             }
 
 
+            // suppprimer les commentaires appatenant au post de l'user delete
+
+
+
 
             // on cherche les posts
             const postsFound = await db.Post.findAll({
@@ -234,6 +239,25 @@ module.exports = {
             })
 
             if(postsFound) {
+
+              //console.log("postFound", postsFound)
+//
+              //postsFound.forEach(post => {
+              //  console.log("post",post)
+              //  console.log("post.id",post.id)
+              //  
+              //  const commentsOtherUserOnPost = await db.Comment.findAll({
+              //    where: { postId : post.id}
+              //  })
+              //  console.log("commentothertruc", commentsOtherUserOnPost)
+              //});
+//
+              //
+              //
+              //if(commentsOtherUserOnPost) {
+//
+              //}
+
               const destroyPosts = await db.Post.destroy({
                 where: { userId : userTargetFound.id }
               })
@@ -242,6 +266,18 @@ module.exports = {
               }
             }
 
+            console.log("likesFound : ",likesFound)
+
+            //for(const like in likeFound) {
+            //    console.log("chaque like",like)
+            //    await postsFound.update({
+            //    likes: postFound.likes - 1
+            //  })
+            //}
+
+
+            
+            
 
 
             // on cherche les images
