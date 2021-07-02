@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <!-- Post -->
         <div id="post" class="post">
 
@@ -117,13 +118,27 @@ export default {
         return{
             post:{},
             allComments:[],
-            descriptionComment: "",
             titlePost: '',
             descriptionPost:'',
             file: null,
+            descriptionComment: "",
             editDescriptionComment:""
         }
     },
+
+
+    mounted(){
+        this.$store.dispatch('getOnePost', this.$route.params.postId )
+
+        this.post = this.$store.state.post.post
+        this.allComments = this.$store.state.post.comments
+        this.titlePost = this.$store.state.post.title
+        this.descriptionPost = this.$store.state.post.description
+        
+    },
+
+
+
     methods: {
         uploadImage(event) {
             this.file = event.target.files[0]
@@ -241,23 +256,7 @@ export default {
             });
         }
     },
-    mounted(){
-
-        axios.get("http://localhost:3000/api/posts/" + this.$route.params.postId, {
-          headers: {
-            Authorization: "Bearer " + localStorage.token
-          }
-        })
-        .then(response => {
-            this.post = response.data.post
-            this.allComments = response.data.comments
-            this.titlePost = response.data.post.title
-            this.descriptionPost = response.data.post.description
-        })
-        .catch(error => {
-        console.log(error); 
-        });
-    }
+    
 }
 </script>
 

@@ -15,7 +15,7 @@
 
     <!-- navbar items -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarToggler">
-      <div v-if="isAlreadyConnect(isConnected)">
+      <div v-if="$store.state.user.userId > -1 ">
         <ul class="navbar-nav">
 
             <li class="nav-item">
@@ -61,7 +61,7 @@
   <router-view/>
 
   <main>
-    <div v-if="isAlreadyConnect(isConnected) != true" class="presentation">
+    <div v-if="$store.state.user.userId < 1 " class="presentation">
       <div class="text-center">
         <h1>Bienvenue sur le réseau social de groupomania</h1>
 

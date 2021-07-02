@@ -1,19 +1,17 @@
 <template>
-<div>
+<div v-if="$store.state.user.userId != -1">
   <section>
   <!-- Button new post -->
-  <div v-if="$store.state.userId != -1" class="text-center">
-    <router-link to="/newPost" class="nav-link">
+  <div>
+    <router-link to="/newPost" class="nav-link text-center">
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
   </div>
-  <p> userId : {{ $store.state.userId }} </p>
-  <p>userInfos : {{ $store.state.userInfos }} </p>
+    <p> userId : {{ $store.state.user.userId }} </p>
 
   <!-- Affiche tout les posts -->
   <div v-for="(post, index) in displayedPosts" :key="index">
     <div class="post">
-      
         
       <!-- Titre / Description -->
       <router-link :to="{name: 'Post', params: {postId: post.id}}">
@@ -22,9 +20,10 @@
         <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
       </router-link>
 
-      <!-- Likes / Commentaires -->
+
+        <!-- Likes / Commentaires -->
       <div class="row interaction-post">
-          <p><button @click="addLike(post.id)" class="nostyle">Like : </button> {{ post.likes }} </p>
+          <p><button @click="addLike()" class="nostyle">Like : </button> {{ post.likes }} </p>
           <p class="spacer">-</p>
           <p> Commentaire : {{ post.comments }}</p>
       </div>
@@ -32,7 +31,7 @@
       <!-- info supplémentaire -->
       <div class="row interaction-post information-post">
         <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
-            <p>post de <!-- {{ post.User.first_name }} --></p> 
+            <p>post de  {{ post.User.first_name }} {{ post.User.last_name }} </p> 
         </router-link>
         
         <span class="spacer"></span>
@@ -40,6 +39,8 @@
         <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
         <p v-else>modifié le : {{ post.updatedAt }} </p>
       </div>
+
+
 
       <div class="seperate"></div>
     </div>
@@ -73,80 +74,73 @@
 <script>
 //import Post from '../components/post'
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
-  data() {
-    return{
-      posts : [''],
-			page: 1,
-			perPage: 10,
-			pages: [],
-    }
-  },
-  
-  computed: {
+    data() {
+        return{
+        page: 1,
+        perPage: 10,
+        pages: [],
+        }
+    },
+
+    mounted(){
+        
+        this.$store.dispatch('getAllPosts')
+        console.log("state.posts", this.$store.state.posts)
+        
+    },
+
+
+    computed: {
+        ...mapState({
+            posts: ["posts"]
+        }),
+
 		displayedPosts () {
 			return this.paginate(this.posts);
 		}
 	},
 
 
-  methods:{
+    methods:{
 		setPages () {
 			let numberOfPages = Math.ceil(this.posts.length / this.perPage);
 			for (let index = 1; index <= numberOfPages; index++) {
 				this.pages.push(index);
 			}
 		},
+        
 		paginate (posts) {
 			let page = this.page;
 			let perPage = this.perPage;
 			let from = (page * perPage) - perPage;
 			let to = (page * perPage);
-			return  posts.slice(from, to);
+			return  posts.post.slice(from, to);
 		},
 
-
-
         addLike(payload) {
-          axios.post("http://localhost:3000/api/posts/" + payload + "/like", "" , {
-            headers: {
-              Authorization: "Bearer " + localStorage.token
-            }
-          })
-          .then(() => {
-            window.location = "http://localhost:8080/index.html" 
-          })
-          .catch(error => {
-          console.log(error); 
-          });
+            axios.post("http://localhost:3000/api/posts/" + payload + "/like", "" , {
+                headers: {
+                    Authorization: "Bearer " + localStorage.token
+                }
+            })
+            .then(() => {
+                window.location = "http://localhost:8080/index.html" 
+            })
+            .catch(error => {
+            console.log(error); 
+            });
         }
-    },
-
-  
+    },       
 
 	watch: {
 		posts () {
 			this.setPages();
 		}
 	},
-  
 
-  mounted(){
-    axios.get("http://localhost:3000/api/posts", {
-      headers: {
-        Authorization: "Bearer " + localStorage.token
-      }
-    })
-    .then(response => {
-      console.log(response)
-        this.posts = response.data.post
-        
-    })
-    .catch(error => {
-    console.log(error); 
-    });
-  },
 }
 </script>
 
