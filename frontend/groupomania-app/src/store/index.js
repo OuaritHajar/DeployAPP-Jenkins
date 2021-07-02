@@ -80,7 +80,8 @@ const store = createStore({
         },
 
         GET_ONE_POST: (state,payload) => {
-            state.post = payload
+            state.post.post = payload.post,
+            state.post.comments = payload.comments
         }
 
 

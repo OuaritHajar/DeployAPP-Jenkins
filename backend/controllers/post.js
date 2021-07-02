@@ -162,11 +162,9 @@ module.exports = {
                     } else {
                         res.status(404).json({ error: "Comments not found" })
                     }
-
                 } else {
                     res.status(404).json({ "error": "no post fund" });
                 }
-
             } else {
                 return res.status(404).json({ 'error': 'user not found' });
             }

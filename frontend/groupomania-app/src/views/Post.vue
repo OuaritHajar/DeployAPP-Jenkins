@@ -5,29 +5,29 @@
         <div id="post" class="post">
 
             <!-- Titre / Description -->
-            <h2>  {{ post.title }} </h2>
-            <p class="description"> {{ post.description }} </p>
-            <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
+            <h2>  {{ post.post.title }} </h2>
+            <p class="description"> {{ post.post.description }} </p>
+            <img v-if="post.post.img_url != null" :src="post.post.img_url" alt="photo">
 
             <!-- Likes / Commentaires -->
             <div class="row interaction-post">
-                <p><button @click="addLike" class="nostyle">Like : </button> {{ post.likes }} </p>
+                <p><button @click="addLike()" class="nostyle">Like : </button> {{ post.post.likes }} </p>
                 <p class="spacer">-</p>
-                <p> Commentaire : {{ post.comments }}</p>
+                <p> Commentaire : {{ post.post.comments }}</p>
             </div>
             
             <!-- info supplémentaire -->
             <div class="row interaction-post information-post">
-                <router-link :to="{name: 'ProfilUser', params: {userId: post.userId }}">
-                    <p>post de {{ post.userId }} </p> 
+                <router-link :to="{name: 'ProfilUser', params: {userId: post.post.userId }}">
+                    <p>post de {{ post.post.userId }} </p> 
                 </router-link>
                 <span class="spacer"></span>
-                <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
-                <p v-else>modifié le : {{ post.updatedAt }} </p>
+                <p v-if="post.post.createdAt === post.post.updatedAt"> le : {{ post.post.createdAt }} </p> 
+                <p v-else>modifié le : {{ post.post.updatedAt }} </p>
             </div>
             
             <!-- Edit post -->
-            <div v-if="post.userId == $store.state.userId">
+            <div v-if="post.post.userId === user.userId">
                 <hr>
                 <form enctype="multipart/form-data">
                     <fieldset>
@@ -70,7 +70,7 @@
 
         <!-- Ajouter un commentaire -->
         <div class="new-comment">
-            <form class="form-inline" enctype="multipart/form-data">  
+            <form class="form-inline">  
 
                 <div class="col-sm-9">
                     <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="3"></textarea>
@@ -86,12 +86,12 @@
 
         <!-- Comments -->
         <div class="comments">
-            <div v-for="(comment, index) in allComments" :key="index" class="comment">
+            <div v-for="(comment, index) in post.comments" :key="index" class="comment">
                 <p> {{ comment.UserId }} </p>
                 <p> {{ comment.description }} </p>
 
                 <!-- Edit comment -->
-                <div v-if="comment.UserId == $store.state.userId" >
+                <div v-if="comment.UserId === user.userId" >
                     <form>
                         <textarea v-model="editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
                         
@@ -109,31 +109,39 @@
 
     </div>
 </template>
-
+h
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
     data(){
         return{
-            post:{},
-            allComments:[],
+            
+
             titlePost: '',
             descriptionPost:'',
+
             file: null,
             descriptionComment: "",
             editDescriptionComment:""
         }
     },
-
+    
+    computed: {
+        ...mapState({
+            post:['post'],
+            user:['user']
+        })
+    },
 
     mounted(){
         this.$store.dispatch('getOnePost', this.$route.params.postId )
-
-        this.post = this.$store.state.post.post
-        this.allComments = this.$store.state.post.comments
-        this.titlePost = this.$store.state.post.title
-        this.descriptionPost = this.$store.state.post.description
+        console.log(this.$route.params.postId)
+        //this.post = this.$store.state.post.post
+        //this.allComments = this.$store.state.post.comments
+        //this.titlePost = this.$store.state.post.title
+        //this.descriptionPost = this.$store.state.post.description
         
     },
 
