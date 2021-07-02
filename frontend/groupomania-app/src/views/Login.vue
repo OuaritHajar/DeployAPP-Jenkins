@@ -31,66 +31,98 @@
                     </div>
                 </div>
 
-                <button @click="userLogin" class="btn btn-primary">
+                <button @click="userLog()" class="btn btn-primary">
                     Entrer
                 </button>
-                <p> user ID: {{ user_id }} </p>
+                <p> {{ $store.state.status }} </p>
             </fieldset>
         </form>
     </section>
   </div>
 </template>
 
+
+
 <script>
-
-import { computed, ref } from "vue"
-import { useStore } from 'vuex'
-import axios from 'axios'
-
-
-export default{
-  setup() {
-      const store = useStore()
-
-      const email = ref('')
-      const password = ref('')
-      const userId = computed(() => store.state.userId)
-      const user_id= computed(() => store.getters.user_id)
-
-      function userLogin() {
-        try{
-          axios.post("http://localhost:3000/api/users/login", {
-            email:email.value,
-            password:password.value
-          })
-          .then(function(response){
-              console.log("response :",response.data)
-              localStorage.clear()
-              // save token in localStorage
-              localStorage.setItem('token', response.data.token)
-              // save userId in vuex 
-              store.dispatch('updateUserId', response.data.userId)
-              
-              window.location = "http://localhost:8080/index.html#/"
-          })
-          .catch(function(error){
-              console.error(error)
-          })
+export default {
+    data() {
+        return{
+            email:"",
+            password:""
         }
-        catch(err) {
-          console.error(err)
-        }
-      }
-
-      return {
-        userId,
-        user_id,
-        password,
-        email,
-        userLogin
-      }
-  }
+    },
+    computed: {
+        
+    },
+    methods: {
+        userLog: function () {
+            const self = this;
+            this.$store.dispatch("login", {
+                email: this.email,
+                password: this.password,
+            })
+            .then(function () {
+              self.$router.push("/Mur");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+    }
 }
+
+
+
+
+//import { computed, ref } from "vue"
+//import { useStore } from 'vuex'
+//import axios from 'axios'
+
+
+//export default{
+//  setup() {
+//      const store = useStore()
+//
+//      const email = ref('')
+//      const password = ref('')
+//      const userId = computed(() => store.state.userId)
+//      const user_id= computed(() => store.getters.user_id)
+//
+//      function userLogin() {
+//        try{
+//          axios.post("http://localhost:3000/api/users/login", {
+//            email:email.value,
+//            password:password.value
+//          })
+//          .then(function(response){
+//              console.log("response :",response.data)
+//              // save token in localStorage
+//              localStorage.setItem('token', response.data.token)
+//
+//              // save userId in vuex 
+//              store.dispatch('updateUserId', response.data.userId).then( function() {
+//              window.location = "http://localhost:8080/index.html#/mur"
+//              })
+//              
+//          })
+//          .catch(function(error){
+//              console.error(error)
+//          })
+//        }
+//        catch(err) {
+//          console.error(err)
+//        }
+//      }
+//
+//      return {
+//        userId,
+//        user_id,
+//        password,
+//        email,
+//        userLogin
+//      }
+//  }
+//}
 
 </script>
 

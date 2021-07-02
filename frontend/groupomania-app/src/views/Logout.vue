@@ -27,7 +27,7 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="gridCheck">
                         <label class="form-check-label" for="gridCheck">
-                            Sauvegardez les informations
+                            Sauvegardez les inwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwformations
                         </label>
                     </div>
                 </div>
@@ -35,7 +35,6 @@
                 <button @click="userLogin" class="btn btn-primary">
                     Entrer
                 </button>
-                <p> user ID: {{ user_id }} </p>
             </fieldset>
         </form>
     </section>
@@ -44,60 +43,31 @@
 
 <script>
 
-import { computed, ref } from "vue"
-import { useStore } from 'vuex'
-import axios from 'axios'
-
-
 export default{
-  setup() {
-      const store = useStore()
-
-      const email = ref('')
-      const password = ref('')
-      const userId = computed(() => store.state.userId)
-      const user_id= computed(() => store.getters.user_id)
-
-      function userLogin() {
-        try{
-          axios.post("http://localhost:3000/api/users/login", {
-            email:email.value,
-            password:password.value
-          })
-          .then(function(response){
-              console.log("response :",response.data)
-  
-              // save token in localStorage
-              localStorage.setItem('token', response.data.token)
-              // save userId in vuex 
-              store.dispatch('updateUserId', response.data.userId)
-              
-              window.location = "http://localhost:8080/index.html#/mur"
-              
-              
-          })
-          .catch(function(error){
-              console.error(error)
-          })
+  data() {
+        return{
+            email:"",
+            password:""
         }
-        catch(err) {
-          console.error(err)
-        }
-      }
-
-      return {
-        userId,
-        user_id,
-        password,
-        email,
-        userLogin
-      }
-  },
-  beforeMount() {
-      localStorage.clear()
-      const store = useStore()
-      store.dispatch('updateUserId', 0)
-  }
+    },
+    computed: {
+        
+    },
+    methods: {
+        userLog: function () {
+            const self = this;
+            this.$store.dispatch("login", {
+                email: this.email,
+                password: this.password,
+            })
+            .then(function () {
+              self.$router.push("/Mur");
+            },
+            function (error) {
+              console.log(error);
+            });
+        },
+    }
 }
 
 </script>

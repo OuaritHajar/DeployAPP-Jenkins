@@ -49,9 +49,10 @@
                 </div>
             </div>
 
-            <button @click="newUser" class="btn btn-primary">
+            <button @click="signup" class="btn btn-primary">
                 S'enregistrer
             </button>
+            <p> {{ $store.state.status }} </p>
         </fieldset>
     </form>
     </div> 
@@ -60,7 +61,6 @@
 
 
 <script>
-import axios from 'axios';
 
 export default {
     data() {
@@ -72,26 +72,22 @@ export default {
         }
     },
     methods: {
-        newUser(e) {
-            e.preventDefault()
-            try{
-                axios.post("http://localhost:3000/api/users/signup", {
-                    first_name:this.firstName,
-                    last_name:this.lastName,
-                    email:this.email,
-                    password:this.password
-                })
-                .then(function(response){
-                    console.log(response.data)
-                    window.location = "http://localhost:8080/index.html#/login"
-                })
-                .catch(function(error){
-                    console.log(error)
-                })
-            }
-            catch(err) {
-                console.error(err)
-            }
+        signup() {
+            const self = this;
+
+            this.$store.dispatch('signup', {
+                first_name:this.firstName,
+                last_name:this.lastName,
+                email:this.email,
+                password:this.password
+            })
+            .then(() => {
+                self.$router.push("/login");
+                
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         }
     }
 }

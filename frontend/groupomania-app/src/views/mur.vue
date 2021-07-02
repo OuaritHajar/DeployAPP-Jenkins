@@ -2,11 +2,13 @@
 <div>
   <section>
   <!-- Button new post -->
-  <div v-if="$store.state.userId != 0" class="text-center">
+  <div v-if="$store.state.userId != -1" class="text-center">
     <router-link to="/newPost" class="nav-link">
       <button class="btn btn-primary">Ajouter un post</button>
     </router-link>
   </div>
+  <p> userId : {{ $store.state.userId }} </p>
+  <p>userInfos : {{ $store.state.userInfos }} </p>
 
   <!-- Affiche tout les posts -->
   <div v-for="(post, index) in displayedPosts" :key="index">
@@ -30,7 +32,7 @@
       <!-- info supplémentaire -->
       <div class="row interaction-post information-post">
         <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
-            <p>post de {{ post.User.first_name }} {{ post.User.last_name }} </p> 
+            <p>post de <!-- {{ post.User.first_name }} --></p> 
         </router-link>
         
         <span class="spacer"></span>
@@ -106,20 +108,20 @@ export default {
 
 
 
-    addLike(payload) {
-      axios.post("http://localhost:3000/api/posts/" + payload + "/like", "" , {
-        headers: {
-          Authorization: "Bearer " + localStorage.token
+        addLike(payload) {
+          axios.post("http://localhost:3000/api/posts/" + payload + "/like", "" , {
+            headers: {
+              Authorization: "Bearer " + localStorage.token
+            }
+          })
+          .then(() => {
+            window.location = "http://localhost:8080/index.html" 
+          })
+          .catch(error => {
+          console.log(error); 
+          });
         }
-      })
-      .then(() => {
-        window.location = "http://localhost:8080/index.html" 
-      })
-      .catch(error => {
-      console.log(error); 
-      });
-    }
-  },
+    },
 
   
 

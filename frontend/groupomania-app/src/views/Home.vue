@@ -31,9 +31,9 @@
             </li>
 
             <li class="nav-item">
-              <router-link to="/logout" class="nav-link">
-                 Se déconnecter 
-              </router-link>
+                <button @click="logout()">
+                    Logout
+                </button>
             </li>
 
         </ul>
@@ -77,7 +77,6 @@
 
 
 <script>
-import { useStore } from 'vuex'
 
 export default {
       data() {
@@ -87,16 +86,18 @@ export default {
       },
       methods: {
         isAlreadyConnect() {
-          if(useStore().state.userId > 0 ) {
+          if(this.$store.state.userId > -1 ) {
             return this.isConnected = true
           } else {
             return this.isConnected = false
           }
         },
 
-        logoutFonction() {
-          console.log("logout")
+        logout() {
+            this.$store.dispatch('logout');
+            this.$router.push("/login");
         }
+
       }
     }
   

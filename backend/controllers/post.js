@@ -103,6 +103,7 @@ module.exports = {
                 offset: (!isNaN(offset)) ? offset : null,
                 include: db.User
                 
+                
             })
         } catch (err) {
             res.status(500).json({ 'error': 'invalide fields' });
