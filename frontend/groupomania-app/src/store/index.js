@@ -34,8 +34,9 @@ const store = createStore({
         userProfil:'',
         status:'',
         posts: [],
-
-        post:''
+        post:'',
+        commentsPost:'',
+        idCommentPost:''
     },
 
 
@@ -53,6 +54,7 @@ const store = createStore({
 
 
     mutations: {
+        // ----------------  CONNECTION  ----------------
         LOG_USER(state, user) {
             instance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
             localStorage.setItem('user', JSON.stringify(user));
@@ -75,26 +77,49 @@ const store = createStore({
             console.log(user)
         },
 
-        ALL_POSTS: function(state,payload) {
-            state.posts = payload
-        },
 
-        GET_ONE_POST: (state,payload) => {
-            state.post.post = payload.post,
-            state.post.comments = payload.comments
-        },
+        
 
-        CREATE_POST: (state,newPost) => {
-            state.posts.post.push(newPost)
-        },
-
+        // ----------- PROFIL -----------------
         GET_USER_PROFIL: (state, userProfil) => {
             state.userProfil = userProfil
         },
         EDIT_USER_PROFIL: (state, userProfil) => {
             state.userProfil.first_name = userProfil.first_name,
             state.userProfil.last_name = userProfil.last_name
+        },
+        
+
+
+
+        // ---------------  POSTS  ----------------
+        ALL_POSTS: function(state,payload) {
+            state.posts = payload
+        },
+
+        GET_ONE_POST: (state,payload) => {
+            state.post = payload.post,
+            state.commentsPost = payload.comments
+        },
+
+        CREATE_POST: (state,newPost) => {
+            state.posts.post.push(newPost)
+        },
+        EDIT_POST: (state, dataPost) => {
+            state.post = dataPost
+        },
+        NEW_COMMENT: (state, newComment) => {
+            state.commentsPost.push(newComment)
+        },
+        
+        GET_ONE_COMMENT:(state, data) => {
+            state.idCommentPost = data.commentId
+        },
+        EDIT_COMMENT: (state, dataComment) => {
+            state.post.comments = dataComment.description
         }
+
+
 
     },
 
@@ -137,6 +162,39 @@ const store = createStore({
         logout: (context) => {
             context.commit("LOG_OUT")
         },
+
+
+
+
+
+        
+    // --------------  PROFIL  ---------------
+
+    getUserProfil: ({state, commit}) => {
+        instance.get(`users/${state.user.userId}`)
+        .then( (response) => {
+            console.log(response.data)
+            commit('GET_USER_PROFIL', response.data)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+    },
+
+    editUser:({state, commit}, data) => {
+        instance.put(`users/${state.user.userId}`, data) 
+        .then( (response) => {
+            console.log("editUser",response.data)
+            commit('EDIT_USER_PROFIL', response.data)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+    },
+
+
+
+
         
 
     // ---------------- POSTS  ------------------
@@ -155,7 +213,7 @@ const store = createStore({
             instance.post('posts', data)
             .then( (response) => {
                 console.log(response)
-                commit('CREATE_POST', response)
+                commit('CREATE_POST', response.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -173,35 +231,54 @@ const store = createStore({
             });
         },
 
-
-    // --------------  PROFIL  ---------------
-
-        getUserProfil: ({commit}, userId) => {
-            instance.get('users/' + userId)
+        editPost: ({state, commit}, data) => {
+            instance.put(`posts/${state.post.id}`, data )
             .then( (response) => {
                 console.log(response.data)
-                commit('GET_USER_PROFIL', response.data)
+                commit('EDIT_POST', response.data)
             })
-            .catch((error) => {
-                console.error(error)
-            })
+            .catch((err) => {
+                console.error(err);
+            });
         },
 
-        editUser:({commit}, userId, data) => {
-            instance.put('users/' + userId, data) 
+        
+
+
+
+    // -------------------  COMMENTS  -----------------
+
+
+        newComment: ({state, commit}, data) => {
+            instance.post(`posts/${state.post.id}/comment`, data)
             .then( (response) => {
-                console.log("editUser",response.data)
-                commit('EDIT_USER_PROFIL', response.data)
+                console.log(response.data)
+                commit('NEW_COMMENT', response.data)
             })
-            .catch((error) => {
-                console.error(error)
-            })
+            .catch((err) => {
+                console.error(err);
+            });
         },
 
+        editComment: ({state, commit}, data) => {
+            commit('GET_ONE_COMMENT', data)
+            instance.put(`posts/${state.post.id}/comment/${state.idCommentPost}`,
+            data)
+                .then( (response) => {
+                console.log(response.data)
+                commit('EDIT_COMMENT', response.data)
+
+
+            })
+            .catch((err) => {
+                console.error(err);
+            });
 
 
 
-
+            
+        },
+            
 
 
 

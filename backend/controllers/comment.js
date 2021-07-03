@@ -138,14 +138,15 @@ module.exports = {
         // Getting auth header
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
-        const postId = JSON.parse(req.params.postId);
-        const commentId = JSON.parse(req.params.commentId);
+        const postId = req.params.postId;
+        const commentId = req.params.commentId;
 
+        console.log("req.body est : ", req.body)
         //Params
         const description = req.body.description;
 
         if (description.length <= 3) {
-            return res.status(400).json({ 'error': 'titre ou description trop cour' });
+            return res.status(400).json({ 'error': 'description trop courte' });
         }
 
         try {

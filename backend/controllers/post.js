@@ -149,7 +149,7 @@ module.exports = {
 
                 // récupère le post
                 const postFound = await db.Post.findOne({
-                    attributes: ['userId', 'title', 'description', 'img_url', 'createdAt', 'updatedAt', 'likes', 'comments'],
+                    attributes: ['id','userId', 'title', 'description', 'img_url', 'createdAt', 'updatedAt', 'likes', 'comments'],
                     where: { id: req.params.postId }
                 })
                 if (postFound) {

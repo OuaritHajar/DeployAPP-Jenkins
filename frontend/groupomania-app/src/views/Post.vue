@@ -5,29 +5,29 @@
         <div id="post" class="post">
 
             <!-- Titre / Description -->
-            <h2>  {{ post.post.title }} </h2>
-            <p class="description"> {{ post.post.description }} </p>
-            <img v-if="post.post.img_url != null" :src="post.post.img_url" alt="photo">
+            <h2>  {{ post.title }} </h2>
+            <p class="description"> {{ post.description }} </p>
+            <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
 
             <!-- Likes / Commentaires -->
             <div class="row interaction-post">
-                <p><button @click="addLike()" class="nostyle">Like : </button> {{ post.post.likes }} </p>
+                <p><button @click="addLike()" class="nostyle">Like : </button> {{ post.likes }} </p>
                 <p class="spacer">-</p>
-                <p> Commentaire : {{ post.post.comments }}</p>
+                <p> Commentaire : {{ post.comments }}</p>
             </div>
             
             <!-- info supplémentaire -->
             <div class="row interaction-post information-post">
-                <router-link :to="{name: 'ProfilUser', params: {userId: post.post.userId }}">
-                    <p>post de {{ post.post.userId }} </p> 
+                <router-link :to="{name: 'ProfilUser', params: {userId: post.userId }}">
+                    <p>post de {{ post.userId }} </p> 
                 </router-link>
                 <span class="spacer"></span>
-                <p v-if="post.post.createdAt === post.post.updatedAt"> le : {{ post.post.createdAt }} </p> 
-                <p v-else>modifié le : {{ post.post.updatedAt }} </p>
+                <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
+                <p v-else>modifié le : {{ post.updatedAt }} </p>
             </div>
             
             <!-- Edit post -->
-            <div v-if="post.post.userId === user.userId">
+            <div v-if="post.userId === user.userId">
                 <hr>
                 <form enctype="multipart/form-data">
                     <fieldset>
@@ -76,7 +76,7 @@
                     <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="3"></textarea>
                 </div>
                 <div class="col-sm-3">
-                    <button @click="newComment" class="btn btn-primary">
+                    <button @click="newComment()" class="btn btn-primary">
                         Envoyer
                     </button>
                 </div>
@@ -86,7 +86,7 @@
 
         <!-- Comments -->
         <div class="comments">
-            <div v-for="(comment, index) in post.comments" :key="index" class="comment">
+            <div v-for="(comment, index) in comments" :key="index" class="comment">
                 <p> {{ comment.UserId }} </p>
                 <p> {{ comment.description }} </p>
 
@@ -119,8 +119,8 @@ export default {
         return{
             titlePost: '',
             descriptionPost:'',
-
             file: null,
+
             descriptionComment: "",
             editDescriptionComment:""
         }
@@ -129,7 +129,8 @@ export default {
     computed: {
         ...mapState({
             post:['post'],
-            user:['user']
+            user:['user'],
+            comments:['commentsPost']
         })
     },
 
@@ -153,24 +154,7 @@ export default {
             data.append('description', this.descriptionPost);
             data.append('img_url', this.file); 
 
-            let config = {
-                headers : {
-                  'Content-Type' : 'application/x-www-form-urlencoded',
-                  'Authorization': "Bearer " + localStorage.token,
-                }
-            }
-
-            axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId, 
-                data,
-                config
-            )
-            .then(response => {
-                console.log("response", response)
-                window.location = "http://localhost:8080/index.html#/mur"+ this.$route.params.postId
-            })
-            .catch(error => {
-            console.log(error); 
-            });
+            this.$store.dispatch('editPost', data)
         },
 
 
@@ -192,36 +176,33 @@ export default {
 
 
         newComment() {
-            axios.post("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment", {
-                description: this.descriptionComment
-            },{
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
-            })
-            .then(( )=> {
-                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
-            })
-            .catch(error => {
-            console.log(error); 
-            });
+            let data = {'description': this.descriptionComment}
+            this.$store.dispatch('newComment', data)
         },
 
 
         editComment(commentId){
-            axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment/" + commentId, {
-                description: this.editDescriptionComment
-            },{
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
-            })
-            .then(( )=> {
-                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
-            })
-            .catch(error => {
-            console.log(error); 
-            });
+            let data = { 
+                'description': this.editDescriptionComment,
+                'commentId': commentId    
+            }
+            console.log(data)
+            this.$store.dispatch('editComment', data)
+
+
+            //axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment/" + commentId, {
+            //    description: this.editDescriptionComment
+            //},{
+            //    headers: {
+            //        Authorization: "Bearer " + localStorage.token
+            //    }
+            //})
+            //.then(( )=> {
+            //    window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
+            //})
+            //.catch(error => {
+            //console.log(error); 
+            //});
         },
 
 

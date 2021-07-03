@@ -42,7 +42,7 @@ export default {
     data(){
         return{
             lastName:'',
-            firstName:'',              //this.$store.state.userProfil.first_name
+            firstName: ''
         }
     },
 
@@ -55,7 +55,7 @@ export default {
 
 
     mounted(){
-        this.$store.dispatch('getUserProfil',this.$route.params.userId )
+        this.$store.dispatch('getUserProfil' )
         //this.lastName = this.$store.state.userProfil.last_name
     },
 
@@ -63,38 +63,11 @@ export default {
 
     methods: {
         editUser() {
-
-            //let data = new FormData();
-            //data.append('first_name', this.firstName )
-            //data.append('last_name', this.lastName)
-            //console.log('donné de ma data pour modifier l\'user', data )
-
-
             let data = {
                 first_name: this.firstName,
                 last_name: this.lastName
             }
-            console.log('donné de ma data pour modifier l\'user', data )
-
-            this.$store.dispatch('editUser',this.$route.params.userId, data)
-
-
-
-
-            //axios.put("http://localhost:3000/api/users/"+ this.$route.params.userId, {
-            //    first_name: this.firstName,
-            //    last_name: this.lastName
-            //},{
-            //    headers: {
-            //        Authorization: "Bearer " + localStorage.token
-            //    }
-            //})
-            //.then(response => {
-            //    console.log(response.data)
-            //})
-            //.catch(error => {
-            //    console.log(error); 
-            //});
+            this.$store.dispatch('editUser', data)
         },
 
         deleteUser() {

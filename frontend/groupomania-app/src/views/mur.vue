@@ -86,10 +86,8 @@ export default {
     },
 
     mounted(){
-        
         this.$store.dispatch('getAllPosts')
         console.log("state.posts", this.$store.state.posts)
-        
     },
 
 
@@ -97,7 +95,6 @@ export default {
         ...mapState({
             posts: ["posts"]
         }),
-
 		displayedPosts () {
 			return this.paginate(this.posts);
 		}

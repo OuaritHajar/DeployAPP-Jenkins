@@ -72,7 +72,7 @@ module.exports = {
     // Getting auth header
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
-    const postId = JSON.parse(req.params.postId);
+    const postId = req.params.postId;
     
     try {
       // récupère l'user
