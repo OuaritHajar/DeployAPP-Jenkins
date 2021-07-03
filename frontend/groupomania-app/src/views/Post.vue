@@ -186,39 +186,16 @@ export default {
                 'description': this.editDescriptionComment,
                 'commentId': commentId    
             }
-            console.log(data)
             this.$store.dispatch('editComment', data)
-
-
-            //axios.put("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment/" + commentId, {
-            //    description: this.editDescriptionComment
-            //},{
-            //    headers: {
-            //        Authorization: "Bearer " + localStorage.token
-            //    }
-            //})
-            //.then(( )=> {
-            //    window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
-            //})
-            //.catch(error => {
-            //console.log(error); 
-            //});
         },
 
 
 
         deleteComment(commentId){
-            axios.delete("http://localhost:3000/api/posts/"+ this.$route.params.postId + "/comment/" + commentId, {
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
-            })
-            .then( ()=> {
-                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
-            })
-            .catch(error => {
-            console.log(error); 
-            });
+            let data = {
+                'commentId': commentId
+            }
+            this.$store.dispatch('deleteComment', data)
         },
 
         

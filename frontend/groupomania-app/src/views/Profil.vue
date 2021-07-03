@@ -24,7 +24,7 @@
             <button @click="editUser()" class="btn btn-primary">
                 Modifier
             </button>
-            <button @click="deleteUser" class="btn btn-danger">
+            <button @click="deleteUser()" class="btn btn-danger">
                 Supprimer
             </button>
         </fieldset>

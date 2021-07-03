@@ -262,23 +262,27 @@ const store = createStore({
 
         editComment: ({state, commit}, data) => {
             commit('GET_ONE_COMMENT', data)
-            instance.put(`posts/${state.post.id}/comment/${state.idCommentPost}`,
-            data)
-                .then( (response) => {
+            instance.put(`posts/${state.post.id}/comment/${state.idCommentPost}`, data)
+            .then( (response) => {
                 console.log(response.data)
                 commit('EDIT_COMMENT', response.data)
-
-
             })
             .catch((err) => {
                 console.error(err);
             });
-
-
-
-            
         },
             
+        deleteComment:({ state, commit },data) => {
+            commit('GET_ONE_COMMENT', data)
+            instance.delete(`posts/${state.post.id}/comment/${state.idCommentPost}`)
+            .then( (response) => {
+                console.log(response)
+                //commit('DELETE_COMMENT', response.data)
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        }
 
 
 
