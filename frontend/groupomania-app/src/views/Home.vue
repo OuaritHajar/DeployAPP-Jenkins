@@ -25,7 +25,7 @@
             </li>
 
             <li class="nav-item">
-              <router-link :to="{name: 'Profil', params: {userId: $store.state.userId}}" class="nav-link">
+              <router-link :to="{name: 'Profil', params: {userId: $store.state.user.userId}}" class="nav-link">
                 Profil
               </router-link>
             </li>

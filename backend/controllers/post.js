@@ -15,6 +15,7 @@ module.exports = {
         const title = req.body.title;
         const description = req.body.description;
         let img_url;
+        console.log(req.body)
 
         if (req.file) { img_url = req.file.path } 
 

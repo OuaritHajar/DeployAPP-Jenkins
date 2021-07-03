@@ -117,8 +117,6 @@ import { mapState } from 'vuex'
 export default {
     data(){
         return{
-            
-
             titlePost: '',
             descriptionPost:'',
 
@@ -136,13 +134,7 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('getOnePost', this.$route.params.postId )
-        console.log(this.$route.params.postId)
-        //this.post = this.$store.state.post.post
-        //this.allComments = this.$store.state.post.comments
-        //this.titlePost = this.$store.state.post.title
-        //this.descriptionPost = this.$store.state.post.description
-        
+        this.$store.dispatch('getOnePost', this.$route.params.postId )        
     },
 
 

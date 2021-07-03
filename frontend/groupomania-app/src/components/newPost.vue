@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default{
     data() {
@@ -56,18 +55,14 @@ export default{
             data.append('description', this.description);
             data.append('img_url', this.file); 
             console.log(data)
-            //data.append('img_url', this.file, this.file.name); 
-            let config = {
-                headers : {
-                  'Content-Type' : 'application/x-www-form-urlencoded',
-                  'Authorization': "Bearer " + localStorage.token,
-                }
-            }
-            const URL = 'http://localhost:3000/api/posts/'; 
-            axios.post( URL,  data, config
-            ).then( () => {
-                window.location = "http://localhost:8080/index.html#/"
+
+            this.$store.dispatch('createPost', data)
+            .then(function () {
+              self.$router.push("/Mur");
             })
+            .catch(function (error) {
+              console.log(error);
+            });
         }
     }
 }

@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <button @click="editUser" class="btn btn-primary">
+            <button @click="editUser()" class="btn btn-primary">
                 Modifier
             </button>
             <button @click="deleteUser" class="btn btn-danger">
@@ -36,31 +36,65 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
     data(){
         return{
-            user:{},
             lastName:'',
-            firstName:''
+            firstName:'',              //this.$store.state.userProfil.first_name
         }
     },
+
+    computed: {
+        ...mapState({
+            user:['userProfil']
+        })
+    },
+
+
+
+    mounted(){
+        this.$store.dispatch('getUserProfil',this.$route.params.userId )
+        //this.lastName = this.$store.state.userProfil.last_name
+    },
+
+
+
     methods: {
         editUser() {
-            axios.put("http://localhost:3000/api/users/"+ this.$route.params.userId, {
+
+            //let data = new FormData();
+            //data.append('first_name', this.firstName )
+            //data.append('last_name', this.lastName)
+            //console.log('donné de ma data pour modifier l\'user', data )
+
+
+            let data = {
                 first_name: this.firstName,
                 last_name: this.lastName
-            },{
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
-            })
-            .then(response => {
-                console.log(response.data)
-            })
-            .catch(error => {
-                console.log(error); 
-            });
+            }
+            console.log('donné de ma data pour modifier l\'user', data )
+
+            this.$store.dispatch('editUser',this.$route.params.userId, data)
+
+
+
+
+            //axios.put("http://localhost:3000/api/users/"+ this.$route.params.userId, {
+            //    first_name: this.firstName,
+            //    last_name: this.lastName
+            //},{
+            //    headers: {
+            //        Authorization: "Bearer " + localStorage.token
+            //    }
+            //})
+            //.then(response => {
+            //    console.log(response.data)
+            //})
+            //.catch(error => {
+            //    console.log(error); 
+            //});
         },
 
         deleteUser() {
@@ -77,20 +111,6 @@ export default {
             });
         },
     },
-    mounted(){
-        axios.get("http://localhost:3000/api/users/" + this.$route.params.userId, {
-          headers: {
-            Authorization: "Bearer " + localStorage.token
-          }
-        })
-        .then(response => {
-          console.log(response.data)
-          this.user = response.data
-        })
-        .catch(error => {
-        console.log(error); 
-        });
-    }
 }
 </script>
 

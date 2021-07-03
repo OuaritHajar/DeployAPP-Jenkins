@@ -31,8 +31,9 @@ if (!user) {
 const store = createStore({
     state: {
         user:'',
+        userProfil:'',
         status:'',
-        posts: '',
+        posts: [],
 
         post:''
     },
@@ -73,7 +74,6 @@ const store = createStore({
             console.log(localStorage)
             console.log(user)
         },
-        
 
         ALL_POSTS: function(state,payload) {
             state.posts = payload
@@ -82,18 +82,27 @@ const store = createStore({
         GET_ONE_POST: (state,payload) => {
             state.post.post = payload.post,
             state.post.comments = payload.comments
+        },
+
+        CREATE_POST: (state,newPost) => {
+            state.posts.post.push(newPost)
+        },
+
+        GET_USER_PROFIL: (state, userProfil) => {
+            state.userProfil = userProfil
+        },
+        EDIT_USER_PROFIL: (state, userProfil) => {
+            state.userProfil.first_name = userProfil.first_name,
+            state.userProfil.last_name = userProfil.last_name
         }
-
-
-
-
 
     },
 
 
 
     actions: {
-        
+
+    // --------------  CONNECTION  ---------
         signup: ({commit},userInfos) => {
             return new Promise((resolve,reject) => {
                 instance.post('users/signup', userInfos)
@@ -128,8 +137,9 @@ const store = createStore({
         logout: (context) => {
             context.commit("LOG_OUT")
         },
+        
 
-
+    // ---------------- POSTS  ------------------
         getAllPosts: ({commit}) => {
             instance.get('posts')
             .then((response) => {
@@ -141,7 +151,16 @@ const store = createStore({
             });
         },
 
-
+        createPost:({commit},data) => {
+            instance.post('posts', data)
+            .then( (response) => {
+                console.log(response)
+                commit('CREATE_POST', response)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+        },
 
         getOnePost: ({commit}, postId) => {
             instance.get('posts/' + postId )
@@ -152,7 +171,35 @@ const store = createStore({
             .catch((err) => {
                 console.error(err);
             });
-        }
+        },
+
+
+    // --------------  PROFIL  ---------------
+
+        getUserProfil: ({commit}, userId) => {
+            instance.get('users/' + userId)
+            .then( (response) => {
+                console.log(response.data)
+                commit('GET_USER_PROFIL', response.data)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+        },
+
+        editUser:({commit}, userId, data) => {
+            instance.put('users/' + userId, data) 
+            .then( (response) => {
+                console.log("editUser",response.data)
+                commit('EDIT_USER_PROFIL', response.data)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+        },
+
+
+
 
 
 
