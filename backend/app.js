@@ -61,9 +61,9 @@ app.use('/api/posts', postRoutes);
 
 //db.sequelize.sync();
 
-//db.sequelize.sync({ alter: true }).then(() => {
-// console.log("Drop and re-sync db.");
-//});
+db.sequelize.sync({ alter: true }).then(() => {
+ console.log("Drop and re-sync db.");
+});
 
 
 //exporter cette application pour etre asccessible depuis servernode

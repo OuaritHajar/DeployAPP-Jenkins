@@ -230,51 +230,47 @@ module.exports = {
 
            
             // on cherche les posts
-            const postsFound = await db.Post.findOne({
+            const postsFound = await db.Post.findAll({
               where: { userId : userTargetFound.id },
             })
 
             if(postsFound) {
               console.log("postsfound", postsFound)
-              console.log("postsfound", postsFound)
+              console.log("postsfound lenght", postsFound.length)
 
 
               // pour chaque post 
+              for (post of postsFound) {
+                console.log('un post', post)
 
-
-
-
-
-              // on récupère tout les commentaires
-              const commentsFound = await postsFound.getComments({})
-
-              // on supprime tout les commentaires des posts
-              if (commentsFound) {
-                console.log(commentsFound)
-                const destroyCommentsOfOthersUsers = await db.Comment.destroy({
-                  where: { postId : postsFound.id }
+                 // on récupère tout les commentaires
+                const commentsFound = await db.Comment.findAll({
+                  where: { PostId : post.id }
                 })
+                console.log("les commentaires du post",commentsFound)
 
-                if(destroyCommentsOfOthersUsers){
-                  console.log("youpi")
+
+                // on supprime tout les commentaires des posts
+                if (commentsFound != null ) {
+                  console.log('=/= null')
+                  
+                  const destroyCommentsOfOthersUsers = await db.Comment.destroy({
+                    where: { PostId: post.id }
+                  })
+
+                  if(destroyCommentsOfOthersUsers){
+                    console.log("youpi")
+                  }
+                }
+
+                // on supprime enfin le post
+                const destroyPosts = await db.Post.destroy({
+                  where: { id : post.id }
+                })
+                if (destroyPosts) {
+
                 }
               }
-
-              // on supprime enfin le post
-              const destroyPosts = await db.Post.destroy({
-                where: { userId : userTargetFound.id }
-              })
-              if (destroyPosts) {
-                    
-              }
-
-
-
-
-
-
-
-               
             }
             
 

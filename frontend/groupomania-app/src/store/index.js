@@ -78,6 +78,7 @@ const store = createStore({
         },
 
 
+
         
 
         // ----------- PROFIL -----------------
@@ -189,6 +190,13 @@ const store = createStore({
         })
         .catch((error) => {
             console.error(error)
+        })
+    },
+
+    deleteUser:({state, commit}) => {
+        instance.delete(`users/${state.user.userId}`)
+        .then( () => {
+            commit('LOG_OUT')
         })
     },
 

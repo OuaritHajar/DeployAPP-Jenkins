@@ -27,14 +27,15 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="gridCheck">
                         <label class="form-check-label" for="gridCheck">
-                            Sauvegardez les inwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwformations
+                            Sauvegardez les informations
                         </label>
                     </div>
                 </div>
 
-                <button @click="userLogin" class="btn btn-primary">
+                <button @click="userLog()" class="btn btn-primary">
                     Entrer
                 </button>
+                <p> {{ $store.state.status }} </p>
             </fieldset>
         </form>
     </section>
@@ -44,7 +45,7 @@
 <script>
 
 export default{
-  data() {
+    data() {
         return{
             email:"",
             password:""
@@ -55,24 +56,24 @@ export default{
     },
     methods: {
         userLog: function () {
-            const self = this;
             this.$store.dispatch("login", {
                 email: this.email,
                 password: this.password,
             })
-            .then(function () {
-              self.$router.push("/Mur");
-            },
-            function (error) {
+            .then(() => {
+              this.$router.push("/Mur");
+            })
+            .catch((error) => {
               console.log(error);
             });
-        },
+        }
     }
 }
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
+
 <style scoped>
 form{
   border:solid rgb(151, 151, 151) 1px;

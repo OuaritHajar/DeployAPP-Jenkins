@@ -35,7 +35,6 @@
 
 
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
 
 export default {
@@ -71,17 +70,10 @@ export default {
         },
 
         deleteUser() {
-            axios.delete("http://localhost:3000/api/users/"+ this.$route.params.userId,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
+            this.$store.dispatch('deleteUser')
+            .then(()=> {
+                this.$router.push("/logout")
             })
-            .then( () => {
-                window.location = "http://localhost:8080/index.html#/logout"
-            })
-            .catch(error => {
-                console.log(error); 
-            });
         },
     },
 }

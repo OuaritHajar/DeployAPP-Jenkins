@@ -56,15 +56,14 @@ export default {
     },
     methods: {
         userLog: function () {
-            const self = this;
             this.$store.dispatch("login", {
                 email: this.email,
                 password: this.password,
             })
-            .then(function () {
-              self.$router.push("/Mur");
+            .then(() => {
+              this.$router.push("/Mur");
             })
-            .catch(function (error) {
+            .catch((error) =>{
               console.log(error);
             });
         },
@@ -72,61 +71,9 @@ export default {
 }
 
 
-
-
-//import { computed, ref } from "vue"
-//import { useStore } from 'vuex'
-//import axios from 'axios'
-
-
-//export default{
-//  setup() {
-//      const store = useStore()
-//
-//      const email = ref('')
-//      const password = ref('')
-//      const userId = computed(() => store.state.userId)
-//      const user_id= computed(() => store.getters.user_id)
-//
-//      function userLogin() {
-//        try{
-//          axios.post("http://localhost:3000/api/users/login", {
-//            email:email.value,
-//            password:password.value
-//          })
-//          .then(function(response){
-//              console.log("response :",response.data)
-//              // save token in localStorage
-//              localStorage.setItem('token', response.data.token)
-//
-//              // save userId in vuex 
-//              store.dispatch('updateUserId', response.data.userId).then( function() {
-//              window.location = "http://localhost:8080/index.html#/mur"
-//              })
-//              
-//          })
-//          .catch(function(error){
-//              console.error(error)
-//          })
-//        }
-//        catch(err) {
-//          console.error(err)
-//        }
-//      }
-//
-//      return {
-//        userId,
-//        user_id,
-//        password,
-//        email,
-//        userLogin
-//      }
-//  }
-//}
-
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
 form{
   border:solid rgb(151, 151, 151) 1px;
