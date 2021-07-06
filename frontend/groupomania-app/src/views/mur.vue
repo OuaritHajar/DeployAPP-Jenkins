@@ -31,7 +31,7 @@
       <!-- info supplémentaire -->
       <div class="row interaction-post information-post">
         <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
-            <p>post de  {{ post.User.first_name }} {{ post.User.last_name }} </p> 
+            <p v-if="post.User">post de  {{ post.User.first_name }} {{ post.User.last_name }} </p> 
         </router-link>
         
         <span class="spacer"></span>
@@ -51,18 +51,18 @@
   <!-- pagination -->
     <div class="offset">
     <nav aria-label="Page navigation example">
-			<ul class="pagination">
-				<li class="page-item">
-					<button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
-				</li>
-				<li class="page-item">
-					<button type="button" class="page-link" v-for="(pageNumber, index) in pages.slice(page-1, page+10)" :key="index" @click="page = pageNumber"> {{pageNumber}} </button>
-				</li>
-				<li class="page-item">
-					<button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
-				</li>
-			</ul>
-		</nav>	
+		<ul class="pagination">
+			<li class="page-item">
+				<button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
+			</li>
+			<li class="page-item">
+				<button type="button" class="page-link" v-for="(pageNumber, index) in pages.slice(page-1, page+10)" :key="index" @click="page = pageNumber"> {{pageNumber}} </button>
+			</li>
+			<li class="page-item">
+				<button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
+			</li>
+		</ul>
+	</nav>	
   </div>
 
 
@@ -86,6 +86,7 @@ export default {
     },
 
     mounted(){
+
         this.$store.dispatch('getAllPosts')
         console.log("state.posts", this.$store.state.posts)
     },
@@ -96,7 +97,7 @@ export default {
             posts: ["posts"]
         }),
 		displayedPosts () {
-			return this.paginate(this.posts);
+			return this.posts;
 		}
 	},
 
@@ -114,7 +115,7 @@ export default {
 			let perPage = this.perPage;
 			let from = (page * perPage) - perPage;
 			let to = (page * perPage);
-			return  posts.post.slice(from, to);
+			return  posts.slice(from, to);
 		},
 
         addLike(payload) {

@@ -11,38 +11,73 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
-      models.Like.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'user',
-      });
+      //models.User.belongsToMany(models.Post, {
+      //  through: models.Like,
+      //  foreignKey: 'userId',
+      //  otherKey: 'postId',
+      //});
+////
+      //models.Post.belongsToMany(models.User, {
+      //  through: models.Like,
+      //  foreignKey: 'postId',
+      //  otherKey: 'userId',
+      //});
+//
+        Like.belongsTo(models.User, {
+          foreignKey:{
+            allowNull:false,
+            onDelete: 'cascade'
+          }
+        });
+      //
+        Like.belongsTo(models.Post, {
+          foreignKey:{
+            allowNull:false,
+            onDelete: 'cascade'
+          }
+        });
+    
       
-      models.Like.belongsTo(models.Post, {
-        foreignKey: 'postId',
-        as: 'post',
-      });
     }
   };
   Like.init({
-    postId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model:'Post',
-        key:'id'
-      }
-    },
-    
-    userId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model:'User',
-        key:'id'
-      }
-    }
+    //postId: {
+    //  type: DataTypes.INTEGER,
+    //  references: {
+    //    model:'Post',
+    //    key:'id'
+    //  }
+    //},
+    //
+    //userId: {
+    //  type: DataTypes.INTEGER,
+    //  references: {
+    //    model:'User',
+    //    key:'id'
+    //  }
+    //}
 
   }, {
     sequelize,
     modelName: 'Like',
   });
+
+
+  Like.afterCreate(async like => {
+    const post = await like.getPost()
+    await post.update({
+      likes: post.likes + 1
+    })
+  })
+
+  Like.beforeDestroy(async like => {
+    const post = await like.getPost()
+    await post.update({
+      likes: post.likes - 1
+    })
+  })
+
+
+
   return Like;
 };

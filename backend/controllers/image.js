@@ -97,7 +97,7 @@ module.exports = {
             // image dans la requete
             } else {
               // vérifie si il y a déjà une image
-              const imageFound = await db.images.findOne({
+              const imageFound = await db.Image.findOne({
                 where: {id: postId}
               })
               if(imageFound.url != null) {

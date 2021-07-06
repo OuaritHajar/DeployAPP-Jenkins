@@ -103,7 +103,7 @@ const store = createStore({
         },
 
         CREATE_POST: (state,newPost) => {
-            state.posts.post.push(newPost)
+            state.posts.push(newPost)
         },
         EDIT_POST: (state, dataPost) => {
             state.post = dataPost
@@ -201,8 +201,9 @@ const store = createStore({
         getAllPosts: ({commit}) => {
             instance.get('posts')
             .then((response) => {
+                console.log("response front",response.data)
                 commit('ALL_POSTS', response.data)
-                console.log(response.data)
+                
             })
             .catch((error) => {
                 console.error(error);

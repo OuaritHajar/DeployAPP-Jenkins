@@ -11,17 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
 
-      models.Post.belongsTo(models.User, {
-        //targetKey: 'first_name',
+      Post.belongsTo(models.User, {
         foreignKey:{
-          allowNull:false,
+          allowNull: false,
+          onDelete: 'cascade'
         }
-      }),
-
-      models.Post.hasMany(models.Comment),
-      models.Post.hasMany(models.Like)
-      //models.Post.hasMany(models.Image)
+      })
       
+      Post.hasMany(models.Comment)
+      Post.hasMany(models.Like)
+
     }
   };
   Post.init({

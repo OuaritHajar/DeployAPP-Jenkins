@@ -27,6 +27,6 @@ router.delete('/:postId/comment/:commentId', commentCtrl.deleteOneComment);
 
 // Like routes
 router.post('/:postId/like', likesCtrl.likePost);
-router.post('/:postId/removelike', likesCtrl.removeLike);
+//router.post('/:postId/removelike', likesCtrl.removeLike);
 
 module.exports = router;

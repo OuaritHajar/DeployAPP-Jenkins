@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-
-      models.User.hasMany(models.Post),
-      models.User.hasMany(models.Comment),
-      models.User.hasMany(models.Like),
-      models.User.hasMany(models.Image)
+      
+      User.hasMany(models.Post, {onDelete: 'CASCADE', hooks:true})
+      User.hasMany(models.Comment, {onDelete: 'CASCADE', hooks:true}),
+      User.hasMany(models.Like,{onDelete: 'CASCADE', hooks:true}),
+      User.hasMany(models.Image)
     }
   };
   User.init({

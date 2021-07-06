@@ -28,7 +28,9 @@ module.exports = {
 
         try {
             // récupère l'user
-            const userFound = await db.User.findOne({ where: { id: userId } });
+            const userFound = await db.User.findOne(
+                { where: { id: userId } }
+            );
             if (userFound) {
                 console.log("requete body :",req.body,"requete file :", req.file)
                 // on créé le post
@@ -48,7 +50,7 @@ module.exports = {
                 }
 
             } else {
-                return res.status(404).json({ 'error': 'user not found' });
+                return res.status(404).json({ 'error': 'user not found ou requete non authentifié' });
             }
         }
         catch (err) {
@@ -77,53 +79,39 @@ module.exports = {
             limit = ITEMS_LIMIT;
         }
 
-
         // récupère l'user
         try {
             var userFound = await db.User.findOne({
                 where: { id: userId },
                 attributes: ['id', 'first_name', 'last_name', 'createdAt', 'updatedAt']
             });
-        } catch (err) {
-            return res.status(500).json({ 'error': 'unable to verify user 2' });
-        };
 
-        // récupère les commentaires
-        try {
-            var commentFound = await db.Comment.findAll();
-        } catch (err) {
-            return res.status(500).json({ 'error': 'unable to verify comment' });
-        };
+            if (userFound) {
+                // récupère tout les posts
+            
+                var allPosts = await db.Post.findAll({
+                    order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+                    attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                    limit: (!isNaN(limit)) ? limit : null,
+                    offset: (!isNaN(offset)) ? offset : null,
+                    include: db.User
+                })
 
-        // récupère tout les posts
-        try {
-            var allPosts = await db.Post.findAll({
-                order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
-                attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
-                limit: (!isNaN(limit)) ? limit : null,
-                offset: (!isNaN(offset)) ? offset : null,
-                include: {model: db.User}
-                
-                
-            })
-        } catch (err) {
-            res.status(500).json({ 'error': 'invalide fields' });
-        };
-
-
-        if (userFound) {
-            if (commentFound) {
                 if (allPosts) {
-                    res.status(200).json({ 'user': userFound, 'post': allPosts, 'comments': commentFound });
+                    
+                        res.status(200).json(allPosts);
+                    
                 } else {
                     res.status(404).json({ "error": "no post fund" });
                 }
+                
             } else {
-                return res.status(404).json({ 'error': 'comment not found' });
+                return res.status(404).json({ 'error': 'user not found' });
             }
-        } else {
-            return res.status(404).json({ 'error': 'user not found' });
-        }
+
+        } catch (err) {
+            return console.error(err)
+        };
     },
 
 
@@ -299,7 +287,7 @@ module.exports = {
                                 
                             } 
                         }
-
+//
                     
 
                         //on cherche l'image

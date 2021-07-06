@@ -9,15 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
 
-      models.Comment.belongsTo(models.User, {
+      Comment.belongsTo(models.User, {
         foreignKey: {
-          allowNull: false
+          allowNull: false,
+          onDelete: 'cascade'
         }
       });
 
-      models.Comment.belongsTo(models.Post, {
+      Comment.belongsTo(models.Post, {
         foreignKey:{
-          allowNull:false
+          allowNull:false,
+          onDelete: 'cascade'
         }
       });
     }
@@ -28,5 +30,14 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Comment',
   });
+
+
+  //Comment.beforeDestroy(async comment => {
+  //  const post = await comment.getPost()
+  //  await post.update({
+  //    comments: post.comments - 1
+  //  })
+  //})
+
   return Comment;
 };

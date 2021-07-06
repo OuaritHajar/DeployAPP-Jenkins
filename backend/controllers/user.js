@@ -228,56 +228,56 @@ module.exports = {
             }
 
 
-            // suppprimer les commentaires appatenant au post de l'user delete
-
-
-
-
+           
             // on cherche les posts
-            const postsFound = await db.Post.findAll({
-              where: { userId : userTargetFound.id}
+            const postsFound = await db.Post.findOne({
+              where: { userId : userTargetFound.id },
             })
 
             if(postsFound) {
+              console.log("postsfound", postsFound)
+              console.log("postsfound", postsFound)
 
-              //console.log("postFound", postsFound)
-//
-              //postsFound.forEach(post => {
-              //  console.log("post",post)
-              //  console.log("post.id",post.id)
-              //  
-              //  const commentsOtherUserOnPost = await db.Comment.findAll({
-              //    where: { postId : post.id}
-              //  })
-              //  console.log("commentothertruc", commentsOtherUserOnPost)
-              //});
-//
-              //
-              //
-              //if(commentsOtherUserOnPost) {
-//
-              //}
 
+              // pour chaque post 
+
+
+
+
+
+              // on récupère tout les commentaires
+              const commentsFound = await postsFound.getComments({})
+
+              // on supprime tout les commentaires des posts
+              if (commentsFound) {
+                console.log(commentsFound)
+                const destroyCommentsOfOthersUsers = await db.Comment.destroy({
+                  where: { postId : postsFound.id }
+                })
+
+                if(destroyCommentsOfOthersUsers){
+                  console.log("youpi")
+                }
+              }
+
+              // on supprime enfin le post
               const destroyPosts = await db.Post.destroy({
                 where: { userId : userTargetFound.id }
               })
               if (destroyPosts) {
-                  
+                    
               }
+
+
+
+
+
+
+
+               
             }
-
-            console.log("likesFound : ",likesFound)
-
-            //for(const like in likeFound) {
-            //    console.log("chaque like",like)
-            //    await postsFound.update({
-            //    likes: postFound.likes - 1
-            //  })
-            //}
-
-
             
-            
+
 
 
             // on cherche les images
@@ -305,109 +305,9 @@ module.exports = {
                       }
                     }
                     //res.status(202).json({ 'message': ' Image from post deleted' })
-                      
                 }
             }
             
-
-              //[
-              //  Image {
-              //    dataValues: {
-              //      id: 46,
-              //      type: 'image/jpeg',
-              //      name: '652a7adb1b_98148_01-intro-773.jpg',
-              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
-              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163881325-652a7adb1b_98148_01-intro-773.jpg',
-              //      createdAt: 2021-07-01T18:24:41.000Z,
-              //      updatedAt: 2021-07-01T18:24:41.000Z,
-              //      UserId: 10
-              //    },
-              //    _previousDataValues: {
-              //      id: 46,
-              //      type: 'image/jpeg',
-              //      name: '652a7adb1b_98148_01-intro-773.jpg',
-              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
-              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163881325-652a7adb1b_98148_01-intro-773.jpg',
-              //      createdAt: 2021-07-01T18:24:41.000Z,
-              //      updatedAt: 2021-07-01T18:24:41.000Z,
-              //      UserId: 10
-              //    },
-              //    _changed: Set(0) {},
-              //    _options: {
-              //      isNewRecord: false,
-              //      _schema: null,
-              //      _schemaDelimiter: '',
-              //      raw: true,
-              //      attributes: [Array]
-              //    },
-              //    isNewRecord: false
-              //  },
-              //  Image {
-              //    dataValues: {
-              //      id: 47,
-              //      type: 'image/jpeg',
-              //      name: '652a7adb1b_98148_01-intro-773.jpg',
-              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
-              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163891928-652a7adb1b_98148_01-intro-773.jpg',
-              //      createdAt: 2021-07-01T18:24:51.000Z,
-              //      updatedAt: 2021-07-01T18:24:51.000Z,
-              //      UserId: 10
-              //    },
-              //    _previousDataValues: {
-              //      id: 47,
-              //      type: 'image/jpeg',
-              //      name: '652a7adb1b_98148_01-intro-773.jpg',
-              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
-              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163891928-652a7adb1b_98148_01-intro-773.jpg',
-              //      createdAt: 2021-07-01T18:24:51.000Z,
-              //      updatedAt: 2021-07-01T18:24:51.000Z,
-              //      UserId: 10
-              //    },
-              //    _changed: Set(0) {},
-              //    _options: {
-              //      isNewRecord: false,
-              //      _schema: null,
-              //      _schemaDelimiter: '',
-              //      raw: true,
-              //      attributes: [Array]
-              //    },
-              //    isNewRecord: false
-              //  },
-              //  Image {
-              //    dataValues: {
-              //      id: 48,
-              //      type: 'image/jpeg',
-              //      name: '652a7adb1b_98148_01-intro-773.jpg',
-              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
-              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163909422-652a7adb1b_98148_01-intro-773.jpg',
-              //      createdAt: 2021-07-01T18:25:09.000Z,
-              //      updatedAt: 2021-07-01T18:25:09.000Z,
-              //      UserId: 10
-              //    },
-              //    _previousDataValues: {
-              //      id: 48,
-              //      type: 'image/jpeg',
-              //      name: '652a7adb1b_98148_01-intro-773.jpg',
-              //      data: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 01 00 48 00 48 00 00 ff db 00 43 00 0d 09 0a 0b 0a 08 0d 0b 0a 0b 0e 0e 0d 0f 13 20 15 13 12 12 13 27 1c 1e 17 ... 27804 more bytes>,
-              //      url: 'C:\\Users\\michm\\Documents\\rest\\P7_Groupomania\\backend\\resources\\static\\assets\\uploads\\img_url-1625163909422-652a7adb1b_98148_01-intro-773.jpg',
-              //      createdAt: 2021-07-01T18:25:09.000Z,
-              //      updatedAt: 2021-07-01T18:25:09.000Z,
-              //      UserId: 10
-              //    },
-              //    _changed: Set(0) {},
-              //    _options: {
-              //      isNewRecord: false,
-              //      _schema: null,
-              //      _schemaDelimiter: '',
-              //      raw: true,
-              //      attributes: [Array]
-              //    },
-              //    isNewRecord: false
-              //  }
-              //]
-
-
-
 
 
             // on supprimer l'user

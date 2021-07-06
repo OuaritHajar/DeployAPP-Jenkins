@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const app = express();
 global.__basedir = __dirname;
-//const db = require('./config/db.config.js');
+const dbImage = require('./config/db.config.js');
 const db = require('./models/index.js');
 const path = require('path')
 
@@ -60,6 +60,7 @@ app.use('/api/posts', postRoutes);
 
 
 //db.sequelize.sync();
+
 //db.sequelize.sync({ alter: true }).then(() => {
 // console.log("Drop and re-sync db.");
 //});

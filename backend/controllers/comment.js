@@ -33,9 +33,9 @@ module.exports = {
                     where: { id: req.params.postId }
                 })
                 if (postFound) {
-
+                    console.log(postFound)
                     // créer le commentaire
-                    const createComment = await db.Comment.create({
+                    const createComment = await postFound.createComment({
                         description: description,
                         PostId: postFound.id,
                         UserId: userFound.id,
@@ -103,7 +103,7 @@ module.exports = {
                 if (postFound) {
                     
                     // récupère les commentaires du post
-                    const AllCommentsOfPost = await db.Comment.findAll({
+                    const AllCommentsOfPost = await postFound.getComments({
                         where: { postId: req.params.postId }
                     })
                     if (AllCommentsOfPost) {

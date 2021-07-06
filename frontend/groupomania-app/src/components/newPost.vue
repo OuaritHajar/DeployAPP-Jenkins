@@ -49,6 +49,7 @@ export default{
             this.file = event.target.files[0]
         },
         creatNewPost() {
+            
             let data = new FormData();
 
             data.append('title', this.title);
@@ -57,8 +58,8 @@ export default{
             console.log(data)
 
             this.$store.dispatch('createPost', data)
-            .then(function () {
-              self.$router.push("/Mur");
+            .then(() => {
+              this.$router.push("/Mur");
             })
             .catch(function (error) {
               console.log(error);
