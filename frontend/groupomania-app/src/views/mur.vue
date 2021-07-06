@@ -23,7 +23,7 @@
 
         <!-- Likes / Commentaires -->
       <div class="row interaction-post">
-          <p><button @click="addLike()" class="nostyle">Like : </button> {{ post.likes }} </p>
+          <p><button @click="addLike(post.id)" class="nostyle">Like : </button> {{ post.likes }} </p>
           <p class="spacer">-</p>
           <p> Commentaire : {{ post.comments }}</p>
       </div>
@@ -72,8 +72,6 @@
 
 
 <script>
-//import Post from '../components/post'
-import axios from 'axios'
 import { mapState } from 'vuex'
 
 export default {
@@ -118,18 +116,11 @@ export default {
 			return  posts.slice(from, to);
 		},
 
-        addLike(payload) {
-            axios.post("http://localhost:3000/api/posts/" + payload + "/like", "" , {
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
+        addLike(postId) {
+            this.$store.dispatch('addOrRemoveLike', postId)
+            .then(()=> {
+                this.$router.push("/mur");
             })
-            .then(() => {
-                window.location = "http://localhost:8080/index.html" 
-            })
-            .catch(error => {
-            console.log(error); 
-            });
         }
     },       
 

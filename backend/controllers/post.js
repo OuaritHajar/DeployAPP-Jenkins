@@ -287,7 +287,7 @@ module.exports = {
                                 
                             } 
                         }
-//
+                        
                     
 
                         //on cherche l'image
@@ -301,7 +301,6 @@ module.exports = {
                                 where: { id: req.params.postId }
                             })
                             if (destroyImage) {
-
 
                                 if(imageFound.url != null) {
                                     // supprime l'image

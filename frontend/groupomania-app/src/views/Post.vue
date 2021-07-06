@@ -54,12 +54,12 @@
                             </div>
                         </div>
 
-                        <button @click="editPost" class="btn btn-primary">
+                        <button @click="editPost()" class="btn btn-primary">
                             Modifier
                         </button>
                         
                         <span class="spacer"></span>
-                        <button @click="deletePost" class="btn btn-danger">
+                        <button @click="deletePost()" class="btn btn-danger">
                             Supprimer
                         </button>
 
@@ -111,7 +111,6 @@
 </template>
 h
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
 
 export default {
@@ -155,29 +154,28 @@ export default {
             data.append('img_url', this.file); 
 
             this.$store.dispatch('editPost', data)
+            .then(()=> {
+                this.$router.push('/mur/'+this.$route.params.postId)
+            })
         },
 
 
 
         deletePost() {
-            axios.delete("http://localhost:3000/api/posts/"+ this.$route.params.postId,{
-                headers: {
-                    Authorization: "Bearer " + localStorage.token
-                }
-            })
-            .then( ()=> {
-              window.location = "http://localhost:8080/index.html#/"
 
+            this.$store.dispatch('deletePost')
+            .then(()=> {
+                this.$router.push('/post/'+this.$route.params.postId)
             })
-            .catch(error => {
-            console.log(error); 
-            });
         },
 
 
         newComment() {
             let data = {'description': this.descriptionComment}
             this.$store.dispatch('newComment', data)
+            .then(()=> {
+                this.$router.push('/post/'+this.$route.params.postId)
+            })
         },
 
 
@@ -187,6 +185,9 @@ export default {
                 'commentId': commentId    
             }
             this.$store.dispatch('editComment', data)
+            .then(()=> {
+                this.$router.push('/post/'+this.$route.params.postId)
+            })
         },
 
 
@@ -196,22 +197,18 @@ export default {
                 'commentId': commentId
             }
             this.$store.dispatch('deleteComment', data)
+            .then(()=> {
+                this.$router.push('/post/'+this.$route.params.postId)
+            })
         },
 
         
 
-        addLike() {
-            axios.post("http://localhost:3000/api/posts/" + this.$route.params.postId + "/like", "" , {
-              headers: {
-                Authorization: "Bearer " + localStorage.token
-              }
+        addLike(postId) {
+            this.$store.dispatch('addOrRemoveLike', postId)
+            .then(()=> {
+                this.$router.push('/post/'+this.$route.params.postId)
             })
-            .then( () => {
-                window.location = "http://localhost:8080/index.html#/post/" + this.$route.params.postId
-            })
-            .catch(error => {
-            console.log(error); 
-            });
         }
     },
     

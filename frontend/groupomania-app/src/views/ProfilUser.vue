@@ -11,9 +11,6 @@
 
 
 <script>
-import axios from 'axios'
-
-
 export default {
     data() {
         return{
@@ -21,18 +18,7 @@ export default {
         }
     },
     mounted(){
-        axios.get("http://localhost:3000/api/users/" + this.$route.params.userId, {
-          headers: {
-            Authorization: "Bearer " + localStorage.token
-          }
-        })
-        .then(response => {
-          console.log(response.data)
-          this.user = response.data
-        })
-        .catch(error => {
-        console.log(error); 
-        });
+        this.$store.dispatch('getProfilUsers', this.$route.params.userId)
     }
 }
 </script>

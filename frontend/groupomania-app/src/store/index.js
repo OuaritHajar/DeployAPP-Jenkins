@@ -109,6 +109,11 @@ const store = createStore({
         EDIT_POST: (state, dataPost) => {
             state.post = dataPost
         },
+        POST_DELETE:()=> {
+
+        },
+
+        // -----------------  COMMENTS  ---------------
         NEW_COMMENT: (state, newComment) => {
             state.commentsPost.push(newComment)
         },
@@ -118,6 +123,11 @@ const store = createStore({
         },
         EDIT_COMMENT: (state, dataComment) => {
             state.post.comments = dataComment.description
+        },
+
+        // ------------------ LIKES ----------------
+        ADD_REMOVE_LIKE:() => {
+
         }
 
 
@@ -166,42 +176,42 @@ const store = createStore({
 
 
 
-
-
         
     // --------------  PROFIL  ---------------
+        getUserProfil: ({state, commit}) => {
+            instance.get(`users/${state.user.userId}`)
+            .then( (response) => {
+                console.log(response.data)
+                commit('GET_USER_PROFIL', response.data)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+        },
 
-    getUserProfil: ({state, commit}) => {
-        instance.get(`users/${state.user.userId}`)
-        .then( (response) => {
-            console.log(response.data)
-            commit('GET_USER_PROFIL', response.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-    },
+        editUser:({state, commit}, data) => {
+            instance.put(`users/${state.user.userId}`, data) 
+            .then( (response) => {
+                console.log("editUser",response.data)
+                commit('EDIT_USER_PROFIL', response.data)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+        },
 
-    editUser:({state, commit}, data) => {
-        instance.put(`users/${state.user.userId}`, data) 
-        .then( (response) => {
-            console.log("editUser",response.data)
-            commit('EDIT_USER_PROFIL', response.data)
-        })
-        .catch((error) => {
-            console.error(error)
-        })
-    },
-
-    deleteUser:({state, commit}) => {
-        instance.delete(`users/${state.user.userId}`)
-        .then( () => {
-            commit('LOG_OUT')
-        })
-    },
-
+        deleteUser:({state, commit}) => {
+            instance.delete(`users/${state.user.userId}`)
+            .then( () => {
+                commit('LOG_OUT')
+            })
+        },
 
 
+    //------------------  PROFIL USERS  ------------------
+        getProfilUsers:(userId) => {
+            instance.get('users/'+  userId)
+        },
 
         
 
@@ -251,13 +261,18 @@ const store = createStore({
             });
         },
 
+        deletePost:({state, commit}) => {
+            instance.delete(`posts/${state.post.id}`)
+            .then(()=>{
+                commit('POST_DELETE')
+            })
+        },
+
         
 
 
 
-    // -------------------  COMMENTS  -----------------
-
-
+    // -------------------  COMMENTS  -------------------
         newComment: ({state, commit}, data) => {
             instance.post(`posts/${state.post.id}/comment`, data)
             .then( (response) => {
@@ -291,17 +306,18 @@ const store = createStore({
             .catch((err) => {
                 console.error(err);
             });
+        },
+
+    // -------------------  LIKES  -------------------
+        addOrRemoveLike:({commit},userId) => {
+            instance.post('posts/' + userId + '/like')
+            .then(()=> {
+                commit('ADD_REMOVE_LIKE')
+            })
+            .catch((err) => {
+                console.error(err);
+            });
         }
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -45,17 +45,17 @@ module.exports = {
 
                         if (addLike) {
 
-                            //// update du like
-                            //const updatePost = await postFound.update({
-                            //    likes: postFound.likes + 1,
-                            //})
-                            //if (updatePost) {
+                            // update du like
+                            const updatePost = await postFound.update({
+                                likes: postFound.likes + 1,
+                            })
+                            if (updatePost) {
 
                                 return res.status(201).json({'message': 'like added'});
-                            //}
-                            //else {
-                            //    res.status(500).json({ 'error': 'cannot update post like counter' });
-                            //};
+                            }
+                            else {
+                                res.status(500).json({ 'error': 'cannot update post like counter' });
+                            };
                         } else {
                             res.status(409).json({ 'error': ' unable to set user reaction' });
                         }
@@ -68,17 +68,17 @@ module.exports = {
 
                        if (removeLike) {
 
-                            //// update du like
-                            //const updatePost = await postFound.update({
-                            //    likes: postFound.likes - 1,
-                            //})
-                            //if (updatePost) {
+                            // update du like
+                            const updatePost = await postFound.update({
+                                likes: postFound.likes - 1,
+                            })
+                            if (updatePost) {
 
                                 res.status(201).json({'message': 'like removed'});
-                            //}
-                            //else {
-                            //    res.status(500).json({ 'error': 'cannot update post like counter' });
-                            //};
+                            }
+                            else {
+                                res.status(500).json({ 'error': 'cannot update post like counter' });
+                            };
                        } else {
                            res.status(409).json({ 'error': ' unable to set user reaction' });
                        }
