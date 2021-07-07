@@ -204,8 +204,8 @@ module.exports = {
             //tout les likes qui m'appartiennent
             if(likesFound) {
 
-              for( like of likesFound) {
-                console.log(like)
+              for(like of likesFound) {
+                console.log("un like",like)
 
                 //récupère post du like
                 const postOuYAvaitLeLike = await db.Post.findOne({
@@ -225,9 +225,6 @@ module.exports = {
                   const destroyLikes = await like.destroy({
                     where: { UserId : userTargetFound.id }
                   })
-                  if (destroyLikes) {
-                    console.log()          
-                  }
                 }
               }
             }
@@ -241,17 +238,36 @@ module.exports = {
             })
 
             if(commentsFound) {
-              const destroyComments = await db.Comment.destroy({
-                where: { userId : userTargetFound.id }
-              })
-              if (destroyComments) {
-                  
+              console.log("commentsFound : ",commentsFound)
+
+              for(comment of commentsFound) {
+                console.log("un comment", comment)
+
+                // pour chaque commentaire on cherche le post ou y a le comment
+                const postOuYAvaitLeComment = await db.Post.findOne({
+                  where: {
+                    id: comment.PostId
+                  }
+                })
+                console.log("postOuYAvaitLeComment  ", postOuYAvaitLeComment)
+
+                // update le post
+                const updateCommentPost = await postOuYAvaitLeComment.update({
+                  comments: postOuYAvaitLeComment.comments = postOuYAvaitLeComment.comments - 1
+                })
+
+
+                //destroy comments
+                const destroyComments = await db.Comment.destroy({
+                  where: { id : comment.id }
+                })
               }
             }
 
 
            
             // on cherche les posts
+            
             const postsFound = await db.Post.findAll({
               where: { userId : userTargetFound.id },
             })
@@ -263,24 +279,18 @@ module.exports = {
               for (post of postsFound) {
                 //console.log('un post', post)
 
+
+
                  // on récupère tout les commentaires
                 const commentsFromOtherFound = await db.Comment.findAll({
                   where: { PostId : post.id }
                 })
-
                 // on supprime tout les commentaires des posts
                 if (commentsFromOtherFound != null ) {
                   
                   const destroyCommentsOfOthersUsers = await db.Comment.destroy({
                     where: { PostId: post.id }
                   })
-
-                  if(destroyCommentsOfOthersUsers){
-                    //console.log("nombre de commentaires : ", commentsFromOtherFound.length)
-                    //console.log(post.comments)
-                    //postsFound.comments -= 1
-                    //console.log(postsFound.comments)
-                  }
                 }
 
 
@@ -289,14 +299,12 @@ module.exports = {
                 const likesFromOtherFound = await db.Like.findAll({
                   where: { postId: post.id }
                 })
-
                 //on les supprimes
                 if (likesFromOtherFound != null) {
                   const destroyLikesFromOtherUsers = await db.Like.destroy({
                     where: { postId: post.id }
                   })
                 }
-
 
 
 
