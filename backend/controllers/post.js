@@ -94,7 +94,8 @@ module.exports = {
                     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                     limit: (!isNaN(limit)) ? limit : null,
                     offset: (!isNaN(offset)) ? offset : null,
-                    include: db.User
+                    include: db.User,
+                    include: db.Comment
                 })
 
                 if (allPosts) {
@@ -138,13 +139,15 @@ module.exports = {
                 // récupère le post
                 const postFound = await db.Post.findOne({
                     attributes: ['id','userId', 'title', 'description', 'img_url', 'createdAt', 'updatedAt', 'likes', 'comments'],
-                    where: { id: req.params.postId }
+                    where: { id: req.params.postId },
+                    include: db.User
                 })
                 if (postFound) {
 
                     // récup les commentaires
                     const commentsFound = await db.Comment.findAll({
-                        where: { postId: req.params.postId }
+                        where: { postId: req.params.postId },
+                        include: db.User
                     })
                     if (commentsFound) {
                         res.status(200).json({ 'post': postFound, 'comments': commentsFound, 'user': userFound });

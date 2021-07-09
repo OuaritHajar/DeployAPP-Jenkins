@@ -104,7 +104,8 @@ module.exports = {
                     
                     // récupère les commentaires du post
                     const AllCommentsOfPost = await postFound.getComments({
-                        where: { postId: req.params.postId }
+                        where: { postId: req.params.postId },
+                        include: db.User
                     })
                     if (AllCommentsOfPost) {
 

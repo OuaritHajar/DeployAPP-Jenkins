@@ -31,12 +31,14 @@ if (!user) {
 const store = createStore({
     state: {
         user:'',
+        profil:'',
         userProfil:'',
         status:'',
         posts: [],
         post:'',
         commentsPost:'',
-        idCommentPost:''
+        idCommentPost:'',
+        commentsOfPost:''
     },
 
 
@@ -82,12 +84,15 @@ const store = createStore({
         
 
         // ----------- PROFIL -----------------
-        GET_USER_PROFIL: (state, userProfil) => {
-            state.userProfil = userProfil
+        GET_PROFIL: (state, profil) => {
+            state.profil = profil
         },
-        EDIT_USER_PROFIL: (state, userProfil) => {
-            state.userProfil.first_name = userProfil.first_name,
-            state.userProfil.last_name = userProfil.last_name
+        EDIT_PROFIL: (state, profil) => {
+            state.profil.first_name = profil.first_name,
+            state.profil.last_name = profil.last_name
+        },
+        GET_USER_PROFIL:(state, userProfil)=> {
+            state.userProfil = userProfil
         },
         
 
@@ -109,9 +114,7 @@ const store = createStore({
         EDIT_POST: (state, dataPost) => {
             state.post = dataPost
         },
-        POST_DELETE:()=> {
-
-        },
+        POST_DELETE:()=> {},
 
         // -----------------  COMMENTS  ---------------
         NEW_COMMENT: (state, newComment) => {
@@ -123,6 +126,9 @@ const store = createStore({
         },
         EDIT_COMMENT: (state, dataComment) => {
             state.post.comments = dataComment.description
+        },
+        GET_COMMENTS_POST:(state, comments) => {
+            state.commentsOfPost = comments
         },
 
         // ------------------ LIKES ----------------
@@ -178,11 +184,11 @@ const store = createStore({
 
         
     // --------------  PROFIL  ---------------
-        getUserProfil: ({state, commit}) => {
+        getProfil: ({state, commit}) => {
             instance.get(`users/${state.user.userId}`)
             .then( (response) => {
                 console.log(response.data)
-                commit('GET_USER_PROFIL', response.data)
+                commit('GET_PROFIL', response.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -192,8 +198,7 @@ const store = createStore({
         editUser:({state, commit}, data) => {
             instance.put(`users/${state.user.userId}`, data) 
             .then( (response) => {
-                console.log("editUser",response.data)
-                commit('EDIT_USER_PROFIL', response.data)
+                commit('EDIT_PROFIL', response.data)
             })
             .catch((error) => {
                 console.error(error)
@@ -209,8 +214,16 @@ const store = createStore({
 
 
     //------------------  PROFIL USERS  ------------------
-        getProfilUsers:(userId) => {
-            instance.get('users/'+  userId)
+        getProfilUsers:({commit},userId) => {
+            instance.get('users/'+ userId)
+            .then((response) => {
+                console.log(response.data)
+                commit('GET_USER_PROFIL', response.data)
+                
+            })
+            .catch((error) => {
+                console.error(error);
+            });
         },
 
         
@@ -219,7 +232,7 @@ const store = createStore({
         getAllPosts: ({commit}) => {
             instance.get('posts')
             .then((response) => {
-                console.log("response front",response.data)
+                console.log("response front All posts",response.data)
                 commit('ALL_POSTS', response.data)
                 
             })
@@ -242,7 +255,7 @@ const store = createStore({
         getOnePost: ({commit}, postId) => {
             instance.get('posts/' + postId )
             .then( (response) => {
-                console.log(response.data)
+                console.log("response front OnePost : ", response.data)
                 commit('GET_ONE_POST', response.data)
             })
             .catch((err) => {
@@ -284,6 +297,17 @@ const store = createStore({
             });
         },
 
+        getCommentsPost: ({commit},postId) => {
+            instance.get('posts/' + postId + '/comments')
+            .then( (response) => {
+                console.log("c'est ca qui m'interesse",response.data)
+                commit('GET_COMMENTS_POST', response.data)
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        },
+
         editComment: ({state, commit}, data) => {
             commit('GET_ONE_COMMENT', data)
             instance.put(`posts/${state.post.id}/comment/${state.idCommentPost}`, data)
@@ -309,7 +333,7 @@ const store = createStore({
         },
 
     // -------------------  LIKES  -------------------
-        addOrRemoveLike:({commit},userId) => {
+        addOrRemoveLike:({commit}, userId) => {
             instance.post('posts/' + userId + '/like')
             .then(()=> {
                 commit('ADD_REMOVE_LIKE')

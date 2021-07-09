@@ -11,7 +11,7 @@
 
             <!-- Likes / Commentaires -->
             <div class="row interaction-post">
-                <p><button @click="addLike()" class="nostyle">Like : </button> {{ post.likes }} </p>
+                <p><button @click="addLike(post.id)" class="nostyle">Like : </button> {{ post.likes }} </p>
                 <p class="spacer">-</p>
                 <p> Commentaire : {{ post.comments }}</p>
             </div>
@@ -19,7 +19,7 @@
             <!-- info supplémentaire -->
             <div class="row interaction-post information-post">
                 <router-link :to="{name: 'ProfilUser', params: {userId: post.userId }}">
-                    <p>post de {{ post.userId }} </p> 
+                    <p  v-if="post.User">post de {{ post.User.first_name }} {{ post.User.last_name }} </p> 
                 </router-link>
                 <span class="spacer"></span>
                 <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
@@ -87,7 +87,9 @@
         <!-- Comments -->
         <div class="comments">
             <div v-for="(comment, index) in comments" :key="index" class="comment">
-                <p> {{ comment.UserId }} </p>
+                <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
+                    <p v-if="comment.User"> {{ comment.User.first_name }} {{ comment.User.last_name}}</p>
+                </router-link>
                 <p> {{ comment.description }} </p>
 
                 <!-- Edit comment -->
@@ -109,7 +111,7 @@
 
     </div>
 </template>
-h
+
 <script>
 import { mapState } from 'vuex'
 
@@ -130,7 +132,7 @@ export default {
             post:['post'],
             user:['user'],
             comments:['commentsPost']
-        })
+        }),
     },
 
     mounted(){
@@ -155,7 +157,7 @@ export default {
 
             this.$store.dispatch('editPost', data)
             .then(()=> {
-                this.$router.push('/mur/'+this.$route.params.postId)
+                this.$router.go()
             })
         },
 
@@ -165,7 +167,7 @@ export default {
 
             this.$store.dispatch('deletePost')
             .then(()=> {
-                this.$router.push('/post/'+this.$route.params.postId)
+                this.$router.push('/mur')
             })
         },
 
@@ -174,7 +176,7 @@ export default {
             let data = {'description': this.descriptionComment}
             this.$store.dispatch('newComment', data)
             .then(()=> {
-                this.$router.push('/post/'+this.$route.params.postId)
+                this.$router.go()
             })
         },
 
@@ -186,7 +188,7 @@ export default {
             }
             this.$store.dispatch('editComment', data)
             .then(()=> {
-                this.$router.push('/post/'+this.$route.params.postId)
+                this.$router.go()
             })
         },
 
@@ -198,7 +200,7 @@ export default {
             }
             this.$store.dispatch('deleteComment', data)
             .then(()=> {
-                this.$router.push('/post/'+this.$route.params.postId)
+                this.$router.go()
             })
         },
 
@@ -207,7 +209,7 @@ export default {
         addLike(postId) {
             this.$store.dispatch('addOrRemoveLike', postId)
             .then(()=> {
-                this.$router.push('/post/'+this.$route.params.postId)
+                this.$router.go()
             })
         }
     },
@@ -217,8 +219,6 @@ export default {
 
 
 <style scoped lang="scss">
-
-
 
 .post{
   margin: 20px 20px;
@@ -272,13 +272,12 @@ export default {
 
 
 .comments{
+    background-color:#f0f0f0;
+    border: solid 1px #e6e6e6;
     margin:20px 20px
 }
 .comment{
-    background-color:#f0f0f0;
-    border: solid 1px #a1a1a1;
-    border-radius: 10px;
-    margin:10px 20px;
+    border: solid 1px #e6e6e6;
     padding:10px 20px;
 }
 .new-comment{

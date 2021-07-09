@@ -38,8 +38,9 @@ const routes = [
     name: 'Mur',
     component: Mur
   },
+
   {
-    path: '/user/:userId',
+    path: '/user/:userId',  //son propre profil
     name: 'Profil',
     component: Profil
   },

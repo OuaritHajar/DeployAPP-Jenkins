@@ -59,7 +59,7 @@ export default{
 
             this.$store.dispatch('createPost', data)
             .then(() => {
-              this.$router.push("/Mur");
+              this.$router.go();
             })
             .catch(function (error) {
               console.log(error);

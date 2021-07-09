@@ -51,8 +51,8 @@ export default{
             password:""
         }
     },
-    computed: {
-        
+    mounted(){
+        this.$store.dispatch('logout')
     },
     methods: {
         userLog: function () {

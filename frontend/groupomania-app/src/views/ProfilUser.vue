@@ -11,12 +11,20 @@
 
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     data() {
         return{
-            user:{}
         }
     },
+
+    computed: {
+        ...mapState({
+            user:['userProfil']
+        })
+    },
+
     mounted(){
         this.$store.dispatch('getProfilUsers', this.$route.params.userId)
     }

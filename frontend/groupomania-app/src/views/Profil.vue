@@ -47,14 +47,14 @@ export default {
 
     computed: {
         ...mapState({
-            user:['userProfil']
+            user:['profil']
         })
     },
 
 
 
     mounted(){
-        this.$store.dispatch('getUserProfil' )
+        this.$store.dispatch('getProfil' )
         //this.lastName = this.$store.state.userProfil.last_name
     },
 
@@ -70,10 +70,12 @@ export default {
         },
 
         deleteUser() {
-            this.$store.dispatch('deleteUser')
-            .then(()=> {
-                this.$router.push("/logout")
-            })
+            if(confirm("Do you really want to delete?")){
+                this.$store.dispatch('deleteUser')
+                .then(()=> {
+                    this.$router.push("/logout")
+                })
+            }
         },
     },
 }
