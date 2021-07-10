@@ -94,8 +94,7 @@ module.exports = {
                     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                     limit: (!isNaN(limit)) ? limit : null,
                     offset: (!isNaN(offset)) ? offset : null,
-                    include: db.User,
-                    include: db.Comment
+                    include: db.User
                 })
 
                 if (allPosts) {

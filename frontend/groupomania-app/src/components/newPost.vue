@@ -3,7 +3,7 @@
     <div class="new-post">
         <form enctype="multipart/form-data">
         <fieldset>
-            <legend> Créer un nouveau post</legend>
+            <legend class="text-center"> Créer un nouveau post</legend>
             <hr/>
             <div class="form-row">
                 
@@ -20,13 +20,16 @@
                 </div>
 
                 <!-- Image-->
-                <div class="col-md-12 mb-3">
-                    <label for="inputImg_url">Image :</label>
-                    <input type="file" @change="uploadImage($event)" id="file-input">
+                <div class="col-md-12">
+                    <label for="inputImgUrl">Image :</label>
+                    <input type="file" @change="uploadImage($event)" id="inputImgUrl">
                 </div>
             </div>
             
-            <button @click="creatNewPost" class="btn btn-primary">Créer</button>
+            <div class="text-center">
+                <button @click="creatNewPost" class="btn btn-primary">Créer</button>
+            </div>
+            
         </fieldset>  
         </form>
     </div>
@@ -79,7 +82,7 @@ export default{
     background-color:#e0e0e0;
     border-radius: 5px;
 }
-#file-input{
+#inputImgUrl{
     margin-left:10px;
 }
 hr{

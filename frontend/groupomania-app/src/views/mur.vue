@@ -4,75 +4,74 @@
 
     <!-- Button new post -->
     <div class="text-center">
-        <button v-if="afficheNewPost == false" @click="afficheNewPost = true" class="btn btn-primary">Ajouter un post</button>
-        <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Ajouter un post</button>
-        <div v-if="afficheNewPost">
-          <NewPost/>
-        </div>
+      <button v-if="afficheNewPost == false" @click="afficheNewPost = true" class="btn btn-primary">Ajouter un post</button>
+      <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Masquer</button>
     </div>
-  
+    <div v-if="afficheNewPost">
+      <NewPost/>
+    </div>
     
-      
-  
+
   
     <!-- Affiche tout les posts -->
-    <div v-for="(post, index) in displayedPosts" :key="index">
-      <div class="post">
-          
-        <!-- Titre / Description -->
-        <router-link :to="{name: 'Post', params: {postId: post.id}}">
-          <h2>  {{ post.title }} </h2>
-          <p class="description"> {{ post.description }} </p>
-          <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
-        </router-link>
-  
-  
-          <!-- Likes / Commentaires -->
-        <div class="row interaction-post">
-            <p><button @click="addLike(post.id)" class="nostyle">Like : </button> {{ post.likes }} </p>
-            <p class="spacer">-</p>
-            <p> Commentaire : {{ post.comments }}</p>
+    <div v-for="(post, index) in displayedPosts" :key="index" class="post">
+      
+      <!-- Titre / Description -->
+      <router-link :to="{name: 'Post', params: {postId: post.id}}">
+        <h2>  {{ post.title }} </h2>
+        <p class="description"> {{ post.description }} </p>
+        <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
+      </router-link>
+
+
+        <!-- Likes / Commentaires -->
+      <div class="row interaction-post">
+          <p><button @click="addLike(post.id)" class="nostyle">Like : </button> {{ post.likes }} </p>
+          <p class="spacer">-</p>
+          <p> Commentaire : {{ post.comments }}</p>
+      </div>
+      
+
+      <!-- info supplémentaire -->
+      <div class="row information-post">
+        <div class="col-md-5">
+          <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
+            <p v-if="post.User">post de  {{ post.User.first_name }} {{ post.User.last_name }} </p> 
+          </router-link>
         </div>
         
-        <!-- info supplémentaire -->
-        <div class="row interaction-post information-post">
-          <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }}">
-              <p v-if="post.User">post de  {{ post.User.first_name }} {{ post.User.last_name }} </p> 
-          </router-link>
-          
-          <span class="spacer"></span>
-  
+        
+        <div class="col-md-7 text-right">
           <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
           <p v-else>modifié le : {{ post.updatedAt }} </p>
         </div>
-        <!-- <CommentsPost postId={post.id} ></CommentsPost> -->
-
-
-
-        <!-- Commentaires -->
-        <div>
-          <div v-if="post.Comments.length != 0" class="text-center">
-            <hr>
-            <button v-if="afficherLesCommentaires == false" @click="afficheComments(post.id)"  class="btn">Afficher les commentaires</button>
-            <button v-if="afficherLesCommentaires" @click="masquerComments(post.id)" class="btn" >Masquer les commentaires</button>
-          </div>
-
-          <div v-if="afficherLesCommentaires">
-            <div v-for="(comment,index) in commentsPost" :key="index">
-              <!-- on affiche que sur le post -->
-              <div v-if="comment.PostId == post.id">
-                <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
-                  <p v-if="comment.User"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
-                </router-link>
-                <p> {{ comment.description }}</p>
-                <hr>
-              </div>
-              
-            </div>
-          </div>
-        </div>
-
+        
       </div>
+
+
+      <!-- Commentaires -->
+      
+      <div v-if="post.comments > 0" class="text-center btn-comment">
+        <hr>
+        <button v-if="afficherLesCommentaires == false" @click="afficheComments(post.id)"  class="btn">Afficher les commentaires</button>
+        <button v-if="afficherLesCommentaires" @click="masquerComments(post.id)" class="btn" >Masquer les commentaires</button>
+      </div>
+      
+      
+      
+      <div v-for="(comment,index) in commentsPost" :key="index">
+        <!-- on affiche que sur le post -->
+        <div v-if="comment.PostId == post.id && afficherLesCommentaires">
+          <hr>
+          <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
+            <p v-if="comment.User" class="user-comment"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
+          </router-link>
+          <p> {{ comment.description }}</p>
+          
+        </div>
+      </div>
+      
+
     </div>
   </section> 
 
@@ -229,7 +228,7 @@ button.page-link {
 
 .post{
   margin: 20px 20px;
-  padding:30px 40px;
+  padding:30px 40px 10px;
   background-color:#e0e0e0;
   border: solid 1px #a1a1a1;
   border-radius: 10px;
@@ -251,7 +250,7 @@ button.page-link {
   }
 
   h2:hover, .description:hover{
-    color:rgb(68, 68, 68)
+    color:rgb(0, 68, 255)
   }
 }
 
@@ -266,9 +265,9 @@ button.page-link {
   color:#808080;
 }
 .interaction-post{
-  margin-left: 10px;
+  margin-left: -5px;
+  margin-bottom: -10px;
 }
-
 
 
 .spacer{
@@ -281,7 +280,13 @@ button.page-link {
 .nostyle:hover{
   border-radius: 5px;
   background-color: #d4d4d4;
+}
 
+hr{
+  margin:0 ;
+}
+.user-comment{
+  margin:10px 0;
 }
 
 
