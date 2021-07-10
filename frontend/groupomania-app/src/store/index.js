@@ -300,7 +300,7 @@ const store = createStore({
         getCommentsPost: ({commit},postId) => {
             instance.get('posts/' + postId + '/comments')
             .then( (response) => {
-                console.log("c'est ca qui m'interesse",response.data)
+                console.log("reponse front comments du post",response.data)
                 commit('GET_COMMENTS_POST', response.data)
             })
             .catch((err) => {

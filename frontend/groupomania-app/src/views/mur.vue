@@ -4,7 +4,8 @@
 
     <!-- Button new post -->
     <div class="text-center">
-        <button @click="afficheNewPost = true" class="btn btn-primary">Ajouter un post</button>
+        <button v-if="afficheNewPost == false" @click="afficheNewPost = true" class="btn btn-primary">Ajouter un post</button>
+        <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Ajouter un post</button>
         <div v-if="afficheNewPost">
           <NewPost/>
         </div>
@@ -44,29 +45,32 @@
           <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
           <p v-else>modifié le : {{ post.updatedAt }} </p>
         </div>
-          <!-- <CommentsPost postId={post.id} ></CommentsPost> -->
+        <!-- <CommentsPost postId={post.id} ></CommentsPost> -->
 
 
 
-          <!-- Commentaires -->
-          <div v-if="commentsPost">
-            <div v-if="post.Comments.length != 0" class="text-center">
-              <hr>
-              <button class="btn" @click="afficheComments(post.id)">Afficher les commentaires</button>
-            </div>
+        <!-- Commentaires -->
+        <div>
+          <div v-if="post.Comments.length != 0" class="text-center">
+            <hr>
+            <button v-if="afficherLesCommentaires == false" @click="afficheComments(post.id)"  class="btn">Afficher les commentaires</button>
+            <button v-if="afficherLesCommentaires" @click="masquerComments(post.id)" class="btn" >Masquer les commentaires</button>
+          </div>
 
-            <div v-if="afficherLesCommentaires">
-              <p> post index {{ index }} </p> 
-                
-
-              <div v-for="(comment,index) in commentsPost" :key="index">
+          <div v-if="afficherLesCommentaires">
+            <div v-for="(comment,index) in commentsPost" :key="index">
+              <!-- on affiche que sur le post -->
+              <div v-if="comment.PostId == post.id">
+                <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
                   <p v-if="comment.User"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
-                  <p> {{ comment.description }}</p>
+                </router-link>
+                <p> {{ comment.description }}</p>
+                <hr>
               </div>
-
               
+            </div>
           </div>
-          </div>
+        </div>
 
       </div>
     </div>
@@ -148,6 +152,10 @@ export default {
         .then(()=> {
           this.afficherLesCommentaires = true
           })
+      },
+
+      masquerComments(){
+        this.afficherLesCommentaires = false
       },
 
 
