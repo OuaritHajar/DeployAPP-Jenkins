@@ -1,6 +1,8 @@
 <template>
     <section>
         <div>
+            <p> {{ user.avatar }} </p>
+            <img :src="user.avatarUrl" alt="avatar">
             <p>Nom : {{ user.first_name }} </p>
             <p>Prenom : {{ user.last_name }}</p>
             <p>Email : {{ user.email }}</p>
@@ -30,3 +32,7 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+</style>

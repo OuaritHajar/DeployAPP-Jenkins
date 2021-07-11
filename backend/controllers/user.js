@@ -16,6 +16,7 @@ module.exports = {
     const email = req.body.email;
     const password = req.body.password;
     const isAdmin = false;
+    const avatarUrl = "https://picsum.photos/id/1005/600/200"
 
     if (firstName === null || lastName === null || email === null || password === null) {
       return res.status(400).json({ 'error': 'missing parameters' });
@@ -45,7 +46,8 @@ module.exports = {
             last_name: lastName,
             email: email,
             password: bcryptedPassword,
-            isAdmin: isAdmin
+            isAdmin: isAdmin,
+            avatarUrl: avatarUrl
           })
           if (newUser) {
             console.log(newUser.dataValues);
@@ -117,7 +119,7 @@ module.exports = {
 
     try {
       const userFound = await db.User.findOne({
-        attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt'],
+        attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt','avatarUrl'],
         where: { id: req.params.userId }
       })
       if (userFound) {

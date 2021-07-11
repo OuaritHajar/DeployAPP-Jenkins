@@ -7,6 +7,19 @@
 
             <!-- Nom / Prenom -->
             <div>
+                <p>{{ user.avatarUrl }}</p>
+                <img src="@/assets/avatar/avatar1.png" alt="avatar">
+                <img :src="user.avatarUrl">
+
+                <v-avatar>
+        <img
+          src="https://cdn.vuetifyjs.com/images/john.jpg"
+          alt="John"
+        >
+      </v-avatar>
+
+
+
                 <div class="form-group">
                     <label for="inputLastName">Prénom : {{ user.last_name }}</label>
                     <input v-model="lastName" type="text" class="form-control">
@@ -38,10 +51,12 @@
 import { mapState } from 'vuex'
 
 export default {
+    vuetify: new Vuetify(),
     data(){
         return{
             lastName:'',
-            firstName: ''
+            firstName: '',
+            avatarUrl: 'https://picsum.photos/id/1005/600/200'
         }
     },
 
