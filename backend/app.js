@@ -19,7 +19,6 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 
 
-
 //connect au cluster - base de donnée
 const sequelize = new Sequelize(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASS, {
     host: 'localhost',

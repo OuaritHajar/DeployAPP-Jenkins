@@ -12,6 +12,7 @@ module.exports = {
 
         // Params
         const description = req.body.description;
+        console.log("req body : ",req.body.description)
 
         // condition
         if (description === null) {

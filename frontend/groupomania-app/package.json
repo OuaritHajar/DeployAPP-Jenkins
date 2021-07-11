@@ -5,12 +5,18 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "make:component": "vue-cli-service make:component",
+    "make:directive": "vue-cli-service make:directive",
+    "make:layout": "vue-cli-service make:layout",
+    "make:mixin": "vue-cli-service make:mixin",
+    "make:view": "vue-cli-service make:view"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap-icons": "^1.5.0",
     "core-js": "^3.6.5",
+    "holiday-avatar": "^0.0.5",
     "vue": "^3.1.2",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",
@@ -26,7 +32,9 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
+    "pluralize": "^8.0.0",
     "sass": "^1.26.5",
-    "sass-loader": "^8.0.2"
+    "sass-loader": "^8.0.2",
+    "vue-cli-plugin-vuetify-cli": "~0.2.3"
   }
 }

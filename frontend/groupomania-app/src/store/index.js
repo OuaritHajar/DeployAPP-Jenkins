@@ -286,8 +286,8 @@ const store = createStore({
 
 
     // -------------------  COMMENTS  -------------------
-        newComment: ({state, commit}, data) => {
-            instance.post(`posts/${state.post.id}/comment`, data)
+        newComment: ({commit}, data) => {
+            instance.post('posts/'+ data.postId + '/comment', data)
             .then( (response) => {
                 console.log(response.data)
                 commit('NEW_COMMENT', response.data)

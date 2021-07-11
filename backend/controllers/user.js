@@ -16,15 +16,24 @@ module.exports = {
     const email = req.body.email;
     const password = req.body.password;
     const isAdmin = false;
-    const avatarUrl = "https://picsum.photos/id/1005/600/200"
+    
+    const pathAvatar = `${req.protocol}://${req.get('host')}/images/static/avatar/`
+    console.log(pathAvatar)
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * max);
+    }
+
+    const avatarUrl = pathAvatar + 'avatar' + getRandomInt(6) + '.png'
+    console.log(avatarUrl)
 
     if (firstName === null || lastName === null || email === null || password === null) {
       return res.status(400).json({ 'error': 'missing parameters' });
     }
-    if (firstName.length >= 20 || firstName.length <= 2) {
+    if (firstName.length >= 30 || firstName.length <= 2) {
       return res.status(400).json({ 'error': 'first name invalid (length : 3 - 19' });
     }
-    if (lastName.length >= 20 || lastName.length <= 2) {
+    if (lastName.length >= 30 || lastName.length <= 2) {
       return res.status(400).json({ 'error': 'last name invalid (length : 3 - 19' });
     }
     if (!EMAIL_REGEX.test(email)) {

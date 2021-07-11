@@ -19,10 +19,10 @@ module.exports = {
 
         if (req.file) { img_url = req.file.path } 
 
-        if (title === null || description === null) {
+        if ( description === null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
-        if (title.length <= 2 || description.length <= 2) {
+        if ( description.length <= 2) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
 
@@ -35,7 +35,7 @@ module.exports = {
                 console.log("requete body :",req.body,"requete file :", req.file)
                 // on créé le post
                 const newPost = await db.Post.create({
-                    title, title,
+                    title: title ? title : null,
                     img_url: req.file ? `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}` : null,
                     description: description,
                     likes: 0,

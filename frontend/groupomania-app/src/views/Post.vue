@@ -76,7 +76,7 @@
                     <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="3"></textarea>
                 </div>
                 <div class="col-sm-3">
-                    <button @click="newComment()" class="btn btn-primary">
+                    <button @click="newComment(post.id)" class="btn btn-primary">
                         Envoyer
                     </button>
                 </div>
@@ -172,8 +172,11 @@ export default {
         },
 
 
-        newComment() {
-            let data = {'description': this.descriptionComment}
+        newComment(postId) {
+            let data = {
+                'description': this.descriptionComment,
+                'postId' : postId
+                }
             this.$store.dispatch('newComment', data)
             .then(()=> {
                 this.$router.go()
