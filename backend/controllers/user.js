@@ -15,17 +15,22 @@ module.exports = {
     const lastName = req.body.last_name;
     const email = req.body.email;
     const password = req.body.password;
+    const sexe = req.body.sexe
     const isAdmin = false;
-    
-    const pathAvatar = `${req.protocol}://${req.get('host')}/images/static/avatar/`
-    console.log(pathAvatar)
+    let avatarUrl = ''
 
+    const pathAvatar = `${req.protocol}://${req.get('host')}/images/static/avatar/`
     function getRandomInt(max) {
       return Math.floor(Math.random() * max);
     }
 
-    const avatarUrl = pathAvatar + 'avatar' + getRandomInt(12) + '.png'
-    console.log(avatarUrl)
+    if(sexe == 0){
+      avatarUrl = pathAvatar + 'avatar' + (getRandomInt(7)+6) + '.png'
+    } else {
+      avatarUrl = pathAvatar + 'avatar' + getRandomInt(7) + '.png'
+    }
+    
+    
 
     if (firstName === null || lastName === null || email === null || password === null) {
       return res.status(400).json({ 'error': 'missing parameters' });
@@ -56,7 +61,8 @@ module.exports = {
             email: email,
             password: bcryptedPassword,
             isAdmin: isAdmin,
-            avatarUrl: avatarUrl
+            avatarUrl: avatarUrl,
+            sexe: sexe
           })
           if (newUser) {
             console.log(newUser.dataValues);

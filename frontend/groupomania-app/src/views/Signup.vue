@@ -5,6 +5,7 @@
             <legend>Inscription</legend>
             <hr />
             <p>Saisissez vos informations pour créer un compte utilisateur.</p>
+
             <!-- Nom / Prenom -->
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -18,8 +19,24 @@
                         required>
                 </div>
             </div>
-            <div class="form-row">
 
+            <!-- Sexe -->
+            <div class="form-row">
+                <div class="col-md-12">
+                    <label>Sexe : </label>
+                    <div class="form-check form-check-inline">
+                      <input v-model="sexe" class="form-check-input" type="radio" value="0" id="inlineCheckbox1">
+                      <label class="form-check-label" for="inlineCheckbox1">Homme</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input v-model="sexe" class="form-check-input" type="radio" value="1" id="inlineCheckbox2">
+                      <label class="form-check-label" for="inlineCheckbox2">Femme</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-row">
                 <!-- Email-->
                 <div class="form-group col-md-6">
                     <label for="inputEmail">Email</label>
@@ -67,21 +84,22 @@ export default {
             firstName:'',
             lastName:'',
             email: '',
-            password: ''
+            password: '',
+            sexe:''
         }
     },
     methods: {
         signup() {
-            const self = this;
 
             this.$store.dispatch('signup', {
                 first_name:this.firstName,
                 last_name:this.lastName,
                 email:this.email,
-                password:this.password
+                password:this.password,
+                sexe: this.sexe
             })
             .then(() => {
-                self.$router.push("/login");
+                this.$router.push("/login");
                 
             })
             .catch((error) => {
