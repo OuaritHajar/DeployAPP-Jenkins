@@ -1,23 +1,17 @@
 # P7_Groupomania
 Réseau sociaux d'entreprise
 
-![Légende](url vers l'image)
+![Légende](https://zupimages.net/up/21/28/1k1c.png)
 
 
-## Prérequis
-* NodeJs 
-* MySQL Server 
-  
-    
-    
 
-### Description
+## Description
   Réseau sosical d'entreprise comprenant une base de donnée relationnelle MySQL, API Rest, Front-End avec VueJs v3
 
-### Langages utilisés 
+## Langages utilisés 
   HTML, CSS, JavaScript
   
-### Frameworks et outils
+## Frameworks et outils
   * Front : VueJs, VueX  
    
    * Back : NodeJs, Express, Sequelize  
@@ -30,21 +24,34 @@ Réseau sociaux d'entreprise
 
 # Installation
 
+
+### Prérequis
+* NodeJs 
+* MySQL Server 
+  
+  
+  
 ## Base de donnée
-Connection : `mysql -u root -p` 
-Récupération de la base de donnée :
-  1. Créer la base de donnée --------- `CREATE DATABASE database_development;`
-  2. Utiliser la base de donné --------- `USE database_development`
-  3. Récuperer les données ----------- `SOURCE P7_groupomania/sauvegarde_database_groupomania.sql`
-  4. Motdepasse? 
-
+  1. Connection : ---------------------- `mysql -u root -p` 
+  2. Créer la base de donnée --------- `CREATE DATABASE database_development;`
+  3. Utiliser la base de donné --------- `USE database_development`
+  4. Récuperer les données ----------- `SOURCE P7_groupomania/sauvegarde_database_groupomania.sql`    
+  
+  
+  
+  
 ## Back-End API Rest
-1. Dépendances backend--------------  `cd backend` => `npm install`
-2. Lancer le serveur --------------------   `nodemon server`
-
+1. Dépendances backend-------------  `cd backend` => `npm install`
+2. Lancer le serveur -------------------   `nodemon server`
+  
+  
+  
+  
 ## Front-End VueJs   
-1. Installer les dépendances  ------------------ `cd frontend/groupomania-app` => `npm install`
-2. Lancer le serveur --------------------------- `npm run serve`
-
+1. Installer les dépendances  ---------- `cd frontend/groupomania-app` => `npm install`
+2. Lancer le serveur ------------------- `npm run serve`
+  
+  
+  
 # Ouvrer l'application
 http://localhost:8080/
