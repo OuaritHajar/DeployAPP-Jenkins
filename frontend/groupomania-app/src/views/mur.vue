@@ -65,22 +65,28 @@
           </button> 
         </div>
 
+
         <div class="col-3 text-center">
           <button v-if="afficherInputCommentaire == false" @click="afficherInputCommentaire = true"  class="btn btn-personnaliser">Répondre</button>
           <button v-if="afficherInputCommentaire" @click="afficherInputCommentaire = false"  class="btn btn-personnaliser">Masquer</button>
         </div>
 
+        
         <div class="col-3 text-center">
           <router-link :to="{name: 'Post', params: {postId: post.id}}">
-            <button v-if="post.UserId == user.userId" class="btn btn-personnaliser">Editer</button>
+            <div v-if="post.UserId">
+              <button v-if="post.UserId == user.userId" class="btn btn-personnaliser">Editer</button>
+            </div>
           </router-link>
         </div>
 
         <div class="col-3 text-center">
           <router-link :to="{name: 'Post', params: {postId: post.id}}">
-            <button v-if="post.UserId == user.userId" class="btn">
-              <i class="bi bi-trash"></i>
-            </button>
+            <div v-if="post.UserId">
+              <button v-if="post.UserId == user.userId" class="btn">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
           </router-link>
         </div>
           

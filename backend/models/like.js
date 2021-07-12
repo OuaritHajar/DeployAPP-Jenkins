@@ -63,6 +63,19 @@ module.exports = (sequelize, DataTypes) => {
   });
 
 
+  //Like.afterCreate(async like => {
+  //  const post = await like.getPost()
+  //  await post.update({
+  //    likes: post.likes + 1
+  //  })
+  //})
+
+  //Like.afterDestroy(async like => {
+  //  const post = await like.getPost()
+  //  await post.update({
+  //    likes: post.likes - 1
+  //  })
+  //})
 
 
 

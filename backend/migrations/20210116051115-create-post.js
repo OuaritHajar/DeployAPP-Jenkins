@@ -8,16 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      //userId: {
-      //  allowNull: false,
-      //  type: Sequelize.INTEGER,
-      //  references: {
-      //    model:'Users',
-      //    key:'id'
-      //  },
-      //  onUpdate: 'cascade',
-      //  onDelete: 'cascade'
-      //},
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model:'Users',
+          key:'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
+      },
       title: {
         allowNull: true,
         type: Sequelize.STRING
@@ -28,7 +28,7 @@ module.exports = {
       },
       description: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.TEXT('long')
       },
       likes: {
         allowNull: true,

@@ -8,22 +8,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      //postId: {
-      //  allowNull: false,
-      //  type: Sequelize.INTEGER,
-      //  references: {
-      //    model: 'Posts',
-      //    key: 'id'
-      //  }
-      //},
-      //userId: {
-      //  allowNull: false,
-      //  type: Sequelize.INTEGER,
-      //  references: {
-      //    model:'Users',
-      //    key:'id'
-      //  }
-      //},
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model:'Users',
+          key:'id'
+        }
+      },
       type: {
         allowNull: false,
         type: Sequelize.STRING
@@ -34,7 +26,7 @@ module.exports = {
       },
       data: {
         allowNull: false,
-        type: Sequelize.BLOB
+        type: Sequelize.BLOB('long')
       },
       url: {
         allowNull: true,
