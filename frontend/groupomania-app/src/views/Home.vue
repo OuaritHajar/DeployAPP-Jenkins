@@ -18,23 +18,23 @@
       <div v-if="$store.state.user.userId > -1 ">
         <ul class="navbar-nav">
 
-            <li class="nav-item">
-              <router-link to="/mur" class="nav-link">
-                Mur
-              </router-link>
-            </li>
+          <li class="nav-item">
+            <router-link to="/mur" class="nav-link">
+              Forum
+            </router-link>
+          </li>
 
-            <li class="nav-item">
-              <router-link :to="{name: 'Profil', params: {userId: $store.state.user.userId}}" class="nav-link">
-                Profil
-              </router-link>
-            </li>
+          <li class="nav-item">
+            <router-link :to="{name: 'Profil', params: {userId: $store.state.user.userId}}" class="nav-link">
+              Profil
+            </router-link>
+          </li>
 
-            <li class="nav-item">
-              <router-link to="/logout" class="nav-link">
-                Déconnection
-              </router-link>
-            </li>
+          <li class="nav-item">
+            <router-link to="/logout" class="nav-link">
+              Déconnection
+            </router-link>
+          </li>
 
         </ul>
       </div>
@@ -58,12 +58,10 @@
     </div>
   </nav>
 
-  
-
   <main>
     <div class="container">
         <router-view/>
-        
+
         <div v-if="$store.state.user.userId < 1">
           <div class="text-center">
             <h1>Bienvenue sur le réseau social de groupomania</h1>

@@ -10,7 +10,7 @@
                 <!-- Titre -->
                 <div class="col-md-12 mb-3">
                     <label for="inputTitle">Titre :</label>
-                    <input v-model="title" type="text" class="form-control" id="inputTitle" placeholder="Entrer votre titre">
+                    <input v-model="title" type="text" class="form-control" id="inputTitle" placeholder="Facultatif">
                 </div>
 
                 <!-- Description -->

@@ -34,8 +34,9 @@
             </div>
 
             <div class="row ml-3">
-              <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
-              <p v-else>modifié le : {{ post.updatedAt }} </p>
+              <p v-if="post.createdAt === post.updatedAt"> il y a {{ moment(post.createdAt).fromNow(true) }} </p> 
+              <p v-else>modifié il y a {{ moment(post.updatedAt).fromNow(true) }}  </p>
+              <p></p>
             </div>
           </div>
 
@@ -54,62 +55,49 @@
 
       <hr>
 
-      <!-- Likes / Commentaires -->
+      <!-- Likes / Btn commentaire / editer -->
       <div class="row interaction-post">
 
-          <div class=" col-sm-3 text-center btn-like">
-            <button @click="addLike(post.id)" class="nostyle">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
-                <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
-              </svg> 
-              <span> {{ post.likes }} </span>
-            </button> 
-          </div>
+        <div class=" col-sm-3 text-center btn-like">
+          <button @click="addLike(post.id)" class="nostyle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
+              <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+            </svg> 
+            <span> {{ post.likes }} </span>
+          </button> 
+        </div>
 
-          <div class="col-sm-3 text-center">
-            <button v-if="afficherInputCommentaire == false" @click="afficherInputCommentaire = true"  class="btn">Répondre</button>
-            <button v-if="afficherInputCommentaire" @click="afficherInputCommentaire = false"  class="btn">Masquer</button>
-          </div>
+        <div class="col-sm-3 text-center">
+          <button v-if="afficherInputCommentaire == false" @click="afficherInputCommentaire = true"  class="btn btn-personnaliser">Répondre</button>
+          <button v-if="afficherInputCommentaire" @click="afficherInputCommentaire = false"  class="btn btn-personnaliser">Masquer</button>
+        </div>
 
-          <div class="col-sm-3 text-center">
-            <button v-if="post.UserId == user.userId" @click="afficherInputCommentaire = true"  class="btn">Editer</button>
-          </div>
+        <div class="col-sm-3 text-center">
+          <router-link :to="{name: 'Post', params: {postId: post.id}}">
+            <button v-if="post.UserId == user.userId" class="btn btn-personnaliser">Editer</button>
+          </router-link>
+        </div>
 
-          <div class="col-sm-3 text-center">
-            <button v-if="post.UserId == user.userId" @click="afficherInputCommentaire = true"  class="btn">Supprimer</button>
-          </div>
+        <div class="col-sm-3 text-center">
+          <router-link :to="{name: 'Post', params: {postId: post.id}}">
+            <button v-if="post.UserId == user.userId" class="btn btn-personnaliser">Supprimer</button>
+          </router-link>
+        </div>
           
       </div>
       
 
 
-
-      <!-- Ajouter un commentaire -->
-      <div v-if="afficherInputCommentaire" class="row new-comment">
-          <div class="col-sm-9">
-              <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="2"></textarea>
-          </div>
-          <div class="col-sm-3">
-              <button @click="newComment(post.id)" class="btn btn-secondary mt-2">
-                  Envoyer
-              </button>
-          </div>
-      </div>
-
-
-
-
-
       <!-- Bouton Commentaires -->
       <div v-if="post.comments == 1" class="text-center">
         <hr>
-        <button v-if="afficherLesCommentaires == false" @click="afficheComments(post.id)"  class="btn btn-secondary btn-comment">Afficher le commentaire</button>
+        <button v-if="afficherLesCommentaires == false" @click="afficheComments(post.id)" class="btn btn-secondary btn-comment">Afficher le commentaire</button>
         <button v-if="afficherLesCommentaires" @click="masquerComments(post.id)" class="btn btn-secondary btn-comment" >Masquer le commentaire</button>
       </div>
 
       <div v-else-if="post.comments > 0" class="text-center">
         <hr>
-        <button v-if="afficherLesCommentaires == false" @click="afficheComments(post.id)"  class="btn btn-secondary btn-comment">Afficher les {{ post.comments }} commentaires</button>
+        <button v-if="afficherLesCommentaires == false" @click="afficheComments(post.id)" class="btn btn-secondary btn-comment">Afficher les {{ post.comments }} commentaires</button>
         <button v-if="afficherLesCommentaires" @click="masquerComments(post.id)" class="btn btn-secondary btn-comment" >Masquer les commentaires</button>
       </div>
 
@@ -132,6 +120,7 @@
               <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
                 <p class="user-comment"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
               </router-link>
+              <p class="comment-date"> Il y a 52min</p>
             </div>
           </div>
 
@@ -140,6 +129,18 @@
           </div>
           <hr>
         </div>
+      </div>
+
+      <!-- Ajouter un commentaire -->
+      <div v-if="afficherInputCommentaire || afficherLesCommentaires" class="row new-comment">
+          <div class="col-md-10 col-sm-9">
+              <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="2"></textarea>
+          </div>
+          <div class="col-md-2 col-sm-3 text-center">
+              <button @click="newComment(post.id)" class="btn btn-secondary mt-2">
+                  Envoyer
+              </button>
+          </div>
       </div>
       
     </div>
@@ -172,7 +173,7 @@
 <script>
 import { mapState } from 'vuex'
 import NewPost from '@/components/newPost.vue'
-//import CommentsPost from '@/components/commentsPost.vue'
+let moment = require("moment");
 
 export default {
     components: {
@@ -182,6 +183,7 @@ export default {
 
     data() {
         return{
+          moment: moment,
           page: 1,
           perPage: 10,
           pages: [],
@@ -196,6 +198,7 @@ export default {
     mounted(){
         this.$store.dispatch('getAllPosts')
         console.log("state.posts", this.$store.state.posts)
+        moment.locale('fr');
     },
 
 
@@ -314,7 +317,7 @@ button.page-link {
   }
 
   img{
-    max-width: 400px;
+    max-width: 500px;
     width:100%;
 
     margin-left:auto;
@@ -329,23 +332,26 @@ button.page-link {
     margin: 10px 10px 0 10px;
   }
 
+  .description{
+    margin:10px auto 20px auto;
+    text-align: justify;
+  }
+
   a{
     text-decoration: none;
     & h2, .description{
       color:black;
     }
   }
-}
-.post__user-name{
-  margin-top:5px;
-  margin-bottom: -10px;
+  .post__user-name{
+    margin-top:5px;
+    margin-bottom: -10px;
+  }
+
 }
 
 
-.description{
-  margin:10px auto 20px auto;
-  text-align: justify;
-}
+
 .information-post{
   font-size:0.8rem;
   color:#808080;
@@ -367,6 +373,14 @@ button.page-link {
     }
   }
 
+  .btn-personnaliser:hover{
+    background-color: rgb(226, 226, 226);
+  }
+
+  .btn-delete{
+    margin-left:-15px;
+  }
+
 }
 
 
@@ -385,9 +399,16 @@ button.page-link {
 
 /* Comments */
 .user-comment{
-  margin-top:25px;
+  margin-top:22px;
+  margin-bottom:0;
   font-size:0.8rem;
 }
+.comment-date{
+  font-size:0.8rem;
+  margin-bottom:0
+}
+
+
 hr{
   margin:0
 }
@@ -410,7 +431,11 @@ hr{
   
 }
 .description-comment{
-    margin: 10px 40px;
-  }
+    margin: 15px 10px 20px;
+}
+.new-comment{
+  margin-top:20px;
+  margin-bottom: 10px;
+}
 
 </style>

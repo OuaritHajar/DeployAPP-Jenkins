@@ -24,7 +24,7 @@ module.exports = {
       return Math.floor(Math.random() * max);
     }
 
-    const avatarUrl = pathAvatar + 'avatar' + getRandomInt(6) + '.png'
+    const avatarUrl = pathAvatar + 'avatar' + getRandomInt(12) + '.png'
     console.log(avatarUrl)
 
     if (firstName === null || lastName === null || email === null || password === null) {

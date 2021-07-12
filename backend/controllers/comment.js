@@ -34,7 +34,7 @@ module.exports = {
                     where: { id: req.params.postId }
                 })
                 if (postFound) {
-                    console.log(postFound)
+
                     // créer le commentaire
                     const createComment = await postFound.createComment({
                         description: description,

@@ -164,11 +164,12 @@ export default {
 
 
         deletePost() {
-
-            this.$store.dispatch('deletePost')
-            .then(()=> {
-                this.$router.push('/mur')
-            })
+            if(confirm('Etes vous sur ?')) {
+                this.$store.dispatch('deletePost')
+                .then(()=> {
+                    this.$router.push('/mur')
+                })
+            }
         },
 
 

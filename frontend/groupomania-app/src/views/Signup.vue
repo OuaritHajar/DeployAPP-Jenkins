@@ -5,7 +5,6 @@
             <legend>Inscription</legend>
             <hr />
             <p>Saisissez vos informations pour créer un compte utilisateur.</p>
-
             <!-- Nom / Prenom -->
             <div class="form-row">
                 <div class="form-group col-md-6">
