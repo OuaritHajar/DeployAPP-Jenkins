@@ -4,11 +4,13 @@ Réseau sociaux d'entreprise
 ![Légende](url vers l'image)
 
 
-##Prérequis
-NodeJs - MySQL Server 
+## Prérequis
+* NodeJs 
+* MySQL Server 
+  
+    
+    
 
-
------------------
 ### Description
   Réseau sosical d'entreprise comprenant une base de donnée relationnelle MySQL, API Rest, Front-End avec VueJs v3
 
@@ -16,15 +18,16 @@ NodeJs - MySQL Server
   HTML, CSS, JavaScript
   
 ### Frameworks et outils
-   Front : VueJs, VueX
-   Back : NodeJs, Express, Sequelize
-   BDD : MySQL
+  * Front : VueJs, VueX  
+   
+   * Back : NodeJs, Express, Sequelize  
+   
+   * BDD : MySQL  
+   
 
 ### Logiciels
   MySQL WorkBench v8.0 - MAMP v4.2 - PostMan v8.7 - VSC - Suite Git
 
-
------------------
 # Installation
 
 ## Base de donnée
@@ -36,7 +39,7 @@ Récupération de la base de donnée :
   4. Motdepasse? 
 
 ## Back-End API Rest
-1. Dépendances backend-----------  `cd backend` => `npm install`
+1. Dépendances backend--------------  `cd backend` => `npm install`
 2. Lancer le serveur --------------------   `nodemon server`
 
 ## Front-End VueJs   
