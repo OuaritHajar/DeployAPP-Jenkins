@@ -1,44 +1,58 @@
 <template>
-    <div>
+    <section>
+        <div class="post">
 
-        <!-- Post -->
-        <div id="post" class="post">
+             <!-- info user -->
+            <div class="row information-post">
+
+                <!-- Avatar -->
+                <div class="col-xs-3">
+                    <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }} " v-if="post.User">
+                        <img :src="post.User.avatarUrl" alt="">
+                    </router-link>
+                </div>
+                
+                <div class="col-xs-9">
+                    <!-- Nom / Prénom -->
+                    <div class="row ml-3 post__user-name">
+                        <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }} " v-if="post.User">
+                            <p class="post_user-name">{{ post.User.first_name }} {{ post.User.last_name }} </p>
+                        </router-link>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="row ml-3">
+                        <p v-if="post.createdAt === post.updatedAt"> il y a {{ moment(post.createdAt).fromNow(true) }} </p> 
+                        <p v-else>modifié il y a {{ moment(post.updatedAt).fromNow(true) }}  </p>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
 
             <!-- Titre / Description -->
-            <h2>  {{ post.title }} </h2>
-            <p class="description"> {{ post.description }} </p>
-            <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
+            <div class="description-post">
+                <h2 v-if="post.title">  {{ post.title }} </h2>
+                <p class="description"> {{ post.description }} </p>
+                <div class="img-post">
+                    <img v-if="post.img_url != null" :src="post.img_url" alt="photo" >
+                </div>
+            </div>
 
-            <!-- Likes / Commentaires -->
-            <div class="row interaction-post">
-                <p><button @click="addLike(post.id)" class="nostyle">Like : </button> {{ post.likes }} </p>
-                <p class="spacer">-</p>
-                <p> Commentaire : {{ post.comments }}</p>
-            </div>
-            
-            <!-- info supplémentaire -->
-            <div class="row interaction-post information-post">
-                <router-link :to="{name: 'ProfilUser', params: {userId: post.userId }}">
-                    <p  v-if="post.User">post de {{ post.User.first_name }} {{ post.User.last_name }} </p> 
-                </router-link>
-                <span class="spacer"></span>
-                <p v-if="post.createdAt === post.updatedAt"> le : {{ post.createdAt }} </p> 
-                <p v-else>modifié le : {{ post.updatedAt }} </p>
-            </div>
-            
+
+
             <!-- Edit post -->
-            <div v-if="post.userId === user.userId">
+            <div v-if="post.userId === user.userId" class="edit-post">
                 <hr>
                 <form enctype="multipart/form-data">
                     <fieldset>
-                        <legend>Modifier votre post</legend>
+                        <legend class="text-center">Modifier votre post</legend>
                         <hr>
                         <div >
                         
                             <!-- Titre-->
                             <div class="form-group ">
                                 <label for="inputTitle">Titre :</label>
-                                <input v-model="titlePost" type="text" class="form-control gray" id="inputTitlePost" > 
+                                <input v-model="titlePost" type="text" class="form-control gray" id="inputTitlePost"> 
                             </div>
 
                             <!-- Message -->
@@ -50,18 +64,21 @@
                             <!-- Image-->
                             <div class="form-group">
                                 <label for="inputImg_url">Image : </label>
-                                <input type="file" @change="uploadImage($event)" id="file-input">
+                                <input type="file" @change="uploadImage($event)" class="file-input">
                             </div>
                         </div>
 
-                        <button @click="editPost()" class="btn btn-primary">
-                            Modifier
-                        </button>
+                        <div class="text-center">
+                            <button @click="editPost()" class="btn btn-primary">
+                                Modifier
+                            </button>
+
+                            <span class="spacer"></span>
+                            <button @click="deletePost()" class="btn btn-danger">
+                                Supprimer
+                            </button>
+                        </div>
                         
-                        <span class="spacer"></span>
-                        <button @click="deletePost()" class="btn btn-danger">
-                            Supprimer
-                        </button>
 
                     </fieldset>
                 </form>
@@ -72,11 +89,11 @@
         <div class="new-comment">
             <form class="form-inline">  
 
-                <div class="col-sm-9">
+                <div class="col-sm-10">
                     <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="3"></textarea>
                 </div>
-                <div class="col-sm-3">
-                    <button @click="newComment(post.id)" class="btn btn-primary">
+                <div class="col-sm-2 text-center">
+                    <button @click="newComment(post.id)" class="btn btn-primary ">
                         Envoyer
                     </button>
                 </div>
@@ -84,46 +101,63 @@
         </div>
         
 
-        <!-- Comments -->
-        <div class="comments">
-            <div v-for="(comment, index) in comments" :key="index" class="comment">
-                <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
-                    <p v-if="comment.User"> {{ comment.User.first_name }} {{ comment.User.last_name}}</p>
-                </router-link>
-                <p> {{ comment.description }} </p>
+        <!-- Commentaires -->
+        <div v-for="(comment, index) in comments" :key="index" class="comments">
 
-                <!-- Edit comment -->
-                <div v-if="comment.UserId === user.userId" >
-                    <form>
-                        <textarea v-model="editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
-                        
-                        <button @click="editComment(comment.id)" class="btn btn-primary">
-                            Modifier
-                        </button>
-                        <span class="spacer"></span>
-                        <button @click="deleteComment(comment.id)" class="btn btn-danger">
-                            Supprimer
-                        </button>
-                    </form>
+            <div class="row" v-if="comment.User">
+                <div class="col-2 col-md-2 comments_image-comment" >
+                  <img :src="comment.User.avatarUrl" alt="">
+                </div>
+
+                <div class="col-7 col-md-8">
+                    <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
+                        <p class="user-comment"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
+                    </router-link>
+                    <p class="comment-date" v-if="comment.createdAt === comment.updatedAt"> il y a {{ moment(comment.createdAt).fromNow(true) }} </p> 
+                    <p class="comment-date" v-else >modifié il y a {{ moment(comment.updatedAt).fromNow(true) }}  </p>
+                </div>
+
+                <div cass="col-3 col-md-2" v-if="comment.UserId === user.userId" >
+                    <button @click="editComment(comment.id, comment.editDescriptionComment)" class="btn btn-primary">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <span class="spacer"></span>
+                    <button @click="deleteComment(comment.id)" class="btn btn-danger">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </div>
             </div>
-        </div>
 
-    </div>
+            <p class="description-comment"> {{ comment.description }} </p>
+
+            <!-- Edit comment -->
+            <div v-if="comment.UserId === user.userId" >
+                <form>
+                    <textarea v-model="comment.editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
+                </form>
+            </div>
+        </div>
+        
+
+    </section>
 </template>
+
+
 
 <script>
 import { mapState } from 'vuex'
+let moment = require("moment");
 
 export default {
     data(){
         return{
+            moment:moment,
             titlePost: '',
             descriptionPost:'',
             file: null,
 
             descriptionComment: "",
-            editDescriptionComment:""
+            
         }
     },
     
@@ -136,7 +170,7 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('getOnePost', this.$route.params.postId )        
+        this.$store.dispatch('getOnePost', this.$route.params.postId )
     },
 
 
@@ -185,9 +219,9 @@ export default {
         },
 
 
-        editComment(commentId){
+        editComment(commentId, description){
             let data = { 
-                'description': this.editDescriptionComment,
+                'description': description,
                 'commentId': commentId    
             }
             this.$store.dispatch('editComment', data)
@@ -222,76 +256,135 @@ export default {
 </script>
 
 
+
 <style scoped lang="scss">
 
 .post{
-  margin: 20px 20px;
-  padding:30px 40px;
-  background-color:#e0e0e0;
-  border: solid 1px #a1a1a1;
-  border-radius: 10px;
-  
-  img{
-    max-width: 400px;
-    width:100%;
+    margin: 20px 20px;
+    padding:30px 40px 20px;
+    background-color:#e0e0e0;
+    border: solid 1px #a1a1a1;
+    border-radius: 10px;
+    
+    img{
+        max-width: 400px;
+        width:100%;
 
-    margin-left:auto;
-    margin-right:auto;
-  }
-}
-#file-input{
-    margin-left:10px;
-}
-.gray{
-    color:gray
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .spacer{
+        margin:0 10px 0 10px
+    }
+
+    hr{
+        margin: 5px 0 5px 0;
+    }
 }
 
 
-.description{
-  margin:10px auto 20px auto;
-  text-align: justify;
-}
 .information-post{
-  font-size:0.8rem;
-  color:#808080;
+    font-size:0.8rem;
+    color:#808080;
+    
+    img{
+        height:60px;
+        width: 60px;
+    }
+
+    .post_user-name{
+        font-size:1rem;
+        margin-top:8px;
+        margin-bottom: 0px;
+    }
 }
-.interaction-post{
-  margin-left: 10px;
+
+.description-post{
+    margin: 10px 10px 0 10px;
+
+    .img-post{
+        margin-bottom:10px;
+        display:flex;
+        justify-content: center;
+
+        img{
+            max-width: 500px;
+            width:100%;
+            margin-left:auto;
+            margin-right:auto;
+        }
+    }
+
+    .description{
+        margin:10px auto 20px auto;
+        text-align: justify;
+    }
+
+}
+
+.edit-post{
+
+    .gray{
+        color:gray
+    }
+    .file-input{
+        margin-left:10px;
+    }
 }
 
 
 
-.spacer{
-  margin:0 10px 0 10px
-}
-.nostyle{
-  border:none;
-  background-color: #e0e0e0;
-}
-.nostyle:hover{
-  border-radius: 5px;
-  background-color: #d4d4d4;
-
-}
-
-
-.comments{
-    background-color:#f0f0f0;
-    border: solid 1px #e6e6e6;
-    margin:20px 20px
-}
-.comment{
-    border: solid 1px #e6e6e6;
-    padding:10px 20px;
-}
 .new-comment{
     margin:20px 20px;
+
+    textarea.form-control{
+        width:100%;
+    }
+
+    .col-sm-10,.col-sm-2{
+        padding:0;
+    }
 }
-textarea.form-control{
-    width:100%;
+
+
+
+.comments {
+    background-color:#f0f0f0;
+    border: solid 1px #e6e6e6;
+    margin:0px 20px;
+    padding:10px 20px;
+
+    img{
+        height:40px;
+        width:40px;
+    }
+    .comments_image-comment{
+        margin: 0px 0px
+    }
+    .user-comment{
+        margin-bottom:0;
+        font-size:0.8rem;
+    }
+    .comment-date{
+        font-size:0.8rem;
+        margin-bottom:0
+    }
+    .description-comment{
+        margin: 10px 10px 10px;
+    }
+    .btn{
+        margin-top:5px;
+        padding:2px 5px;
+    }
 }
-hr{
-    margin: 5px 0 5px 0;
+
+
+/* Bootstrap icons */
+.bi{
+    font-size: 1rem;
 }
+
+
 
 </style>

@@ -48,7 +48,10 @@ const store = createStore({
         },
         get_status(state) {
             return state.status
-        }
+        },
+        get_all_posts(state) {
+            return state.posts
+        },
     },
 
 
@@ -100,6 +103,7 @@ const store = createStore({
         // ---------------  POSTS  ----------------
         ALL_POSTS: function(state,payload) {
             state.posts = payload
+
         },
 
         GET_ONE_POST: (state,payload) => {
@@ -128,6 +132,16 @@ const store = createStore({
         },
         GET_COMMENTS_POST:(state, comments) => {
             state.commentsOfPost = comments
+        },
+
+        DISPLAY_COMMENT:(state, postId) => {
+            const LePost = state.posts.find(post => post.id === postId)
+            LePost.displayComment = true
+        },
+
+        HIDE_COMMENT:(state, postId) => {
+            const LePost = state.posts.find(post => post.id === postId)
+            LePost.displayComment = false
         },
 
         // ------------------ LIKES ----------------
@@ -231,6 +245,9 @@ const store = createStore({
         getAllPosts: ({commit}) => {
             instance.get('posts')
             .then((response) => {
+                response.data.forEach(post => {
+                    post.displayComment = false
+                });
                 console.log("response front All posts",response.data)
                 commit('ALL_POSTS', response.data)
                 
@@ -299,8 +316,10 @@ const store = createStore({
         getCommentsPost: ({commit},postId) => {
             instance.get('posts/' + postId + '/comments')
             .then( (response) => {
+
                 console.log("reponse front comments du post",response.data)
                 commit('GET_COMMENTS_POST', response.data)
+
             })
             .catch((err) => {
                 console.error(err);
@@ -340,7 +359,17 @@ const store = createStore({
             .catch((err) => {
                 console.error(err);
             });
-        }
+        },
+
+        displayComments:({commit},postId) => {
+            commit('DISPLAY_COMMENT', postId)
+            console.log("action :",postId)
+        },
+
+        hideComments:({commit},postId) => {
+            commit('HIDE_COMMENT', postId)
+        },
+
 
 
 
