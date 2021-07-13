@@ -50,6 +50,7 @@ const store = createStore({
             return state.status
         },
         get_all_posts(state) {
+            console.log("getters",state.posts)
             return state.posts
         },
     },
@@ -111,9 +112,20 @@ const store = createStore({
             state.commentsPost = payload.comments
         },
 
+
+
+
+
+        
         CREATE_POST: (state,newPost) => {
-            state.posts.push(newPost)
+            state.posts.splice(0,0,newPost)
         },
+
+
+
+
+
+
         EDIT_POST: (state, dataPost) => {
             state.post = dataPost
         },
@@ -143,13 +155,6 @@ const store = createStore({
             const LePost = state.posts.find(post => post.id === postId)
             LePost.displayComment = false
         },
-
-        // ------------------ LIKES ----------------
-        ADD_REMOVE_LIKE:() => {
-
-        }
-
-
 
     },
 

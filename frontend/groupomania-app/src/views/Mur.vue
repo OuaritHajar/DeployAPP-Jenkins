@@ -153,7 +153,6 @@
     </div>
 
     <!-- pagination -->
-    {{ posts }}
     
     <nav aria-label="pagination">
 		<ul class="pagination">
