@@ -39,6 +39,8 @@
 <script>
 
 export default{
+    
+
     data() {
         return{
             title: "",
@@ -54,11 +56,9 @@ export default{
         creatNewPost() {
             
             let data = new FormData();
-
             data.append('title', this.title);
             data.append('description', this.description);
             data.append('img_url', this.file); 
-            console.log(data)
 
             this.$store.dispatch('createPost', data)
             .then(() => {
@@ -67,6 +67,10 @@ export default{
             .catch(function (error) {
               console.log(error);
             });
+
+            this.$emit('post-created')
+
+
         }
     }
 }

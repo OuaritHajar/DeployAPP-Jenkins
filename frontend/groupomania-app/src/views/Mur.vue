@@ -7,7 +7,7 @@
         <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Masquer</button>
     </div>
     <div v-if="afficheNewPost">
-        <NewPost/>
+        <NewPost @post-created="updateDisplayBtn"/>
     </div>
 
   
@@ -220,6 +220,11 @@ export default {
   },
 
   methods:{
+      
+    updateDisplayBtn() {
+        this.afficheNewPost = false
+    },
+
     afficheComments(postId) {
       this.$store.dispatch('getCommentsPost', postId)
       .then(()=> {
@@ -231,10 +236,6 @@ export default {
       this.$store.dispatch('hideComments', postId)
     },
 
-
-
-
-
     newComment(postId) {
       let data = {
         'description': this.descriptionComment,
@@ -245,26 +246,27 @@ export default {
           this.$router.go()
       })
     },
-    setPages () {
-			let numberOfPages = Math.ceil(this.posts.length / this.perPage);
-			for (let index = 1; index <= numberOfPages; index++) {
-				this.pages.push(index);
-			}
-		},
-        
-    paginate (posts) {
-      let page = this.page;
-      let perPage = this.perPage;
-      let from = (page * perPage) - perPage;
-      let to = (page * perPage);
-      return  posts.slice(from, to);
-    },
-
+    
     addLike(postId) {
         this.$store.dispatch('addOrRemoveLike', postId)
         .then(()=> {
             this.$router.go();
         })
+    },
+
+    setPages () {
+		let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+		for (let index = 1; index <= numberOfPages; index++) {
+			this.pages.push(index);
+		}
+	},
+        
+    paginate (posts) {
+        let page = this.page;
+        let perPage = this.perPage;
+        let from = (page * perPage) - perPage;
+        let to = (page * perPage);
+        return  posts.slice(from, to);
     },
   },       
 
