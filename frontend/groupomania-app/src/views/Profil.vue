@@ -25,6 +25,7 @@
                     <div>
                         <p>Email : {{ user.email }} </p>
                         <p>Crée le {{ moment(user.createdAt).format("DD-MM-YYYY HH:mm") }} </p>
+                        <p>Sexe : {{ sexe }}</p>
                         
                     </div>
                     <button @click="editUser()" class="btn btn-primary">
@@ -59,7 +60,14 @@ export default {
     computed: {
         ...mapState({
             user:['profil']
-        })
+        }),
+        sexe(){
+            if(this.user.sexe) {
+                return 'Femme'
+            }else {
+                return 'Homme'
+            }
+        }
     },
 
     mounted(){

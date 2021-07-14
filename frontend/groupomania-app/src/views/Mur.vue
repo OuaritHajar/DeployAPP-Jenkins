@@ -41,7 +41,7 @@
     
           <!-- Titre / Description -->
           <div class="description-post">
-            <h2 v-if="post.title">  {{ post.title }} </h2>
+            <p class="title" v-if="post.title">  {{ post.title }} </p>
             <p class="description"> {{ post.description }} </p>
             <div class="img-post">
               <img v-if="post.img_url != null" :src="post.img_url" alt="photo" >
@@ -56,38 +56,58 @@
         <div class="row interaction-post">
           
           <div class="col-3 text-center">
-            <button @click="addLike(post.id)" class="btn btn-like">
-              <i class="bi bi-hand-thumbs-up"></i>
-              <span class="like"> {{ post.likes }} </span>
+            <button @click="addLike(post.id)" @mouseover="listUsersLike(post.id)" @mouseleave="hideListUsersLike(post.id)" class="btn btn-like">
+              <i v-if="post.userAlreadyLike" class="bi bi-hand-thumbs-up-fill"></i>
+              <i v-else-if="post.userAlreadyLike == false || undefined" class="bi bi-hand-thumbs-up"></i>
+              
+              <span v-if="post.Likes">
+                  <span v-if="post.Likes.length > 0" class="like"> {{ post.Likes.length }} </span>
+              </span>
             </button> 
           </div>
-    
-    
+
           <div class="col-3 text-center">
-            <button v-if="afficherInputCommentaire == false" @click="afficherInputCommentaire = true"  class="btn btn-personnaliser">Répondre</button>
-            <button v-if="afficherInputCommentaire" @click="afficherInputCommentaire = false"  class="btn btn-personnaliser">Masquer</button>
+            <button v-if="post.displayInputComment == false" @click="afficherInputCommentaire(post.id)"  class="btn btn-personnaliser"><i class="bi bi-reply"></i></button>
+            <button v-if="post.displayInputComment" @click="masquerInputCommentaire(post.id) "  class="btn btn-personnaliser"><i class="bi bi-reply-fill"></i></button>
           </div>
     
           
           <div class="col-3 text-center">
             <router-link :to="{name: 'Post', params: {postId: post.id}}">
               <div v-if="post.UserId">
-                <button v-if="post.UserId == user.userId" class="btn btn-personnaliser">Editer</button>
+                <button v-if="post.UserId == user.userId" class="btn"><i class="bi bi-pencil-square"></i></button>
               </div>
             </router-link>
           </div>
     
           <div class="col-3 text-center">
-            <router-link :to="{name: 'Post', params: {postId: post.id}}">
               <div v-if="post.UserId">
-                <button v-if="post.UserId == user.userId" class="btn">
+                <button v-if="post.UserId == user.userId" @click="(deletePost(post.id))" class="btn">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
-            </router-link>
           </div>
             
         </div>
+
+
+
+
+        <!-- list users qui on liké le post -->
+        <span class="liste-users-flotant" v-if="post.Likes">
+            <p class="list-users-like-post" v-if="post.Likes.length > 0 && post.listUsersLike"> Liké par&ensp;
+            <span v-for="(like, index) in post.Likes" :key="index" >
+                <router-link :to="{name: 'ProfilUser', params: {userId: like.UserId }}">
+                    {{ like.User.first_name }} {{ like.User.last_name }}&ensp;
+                </router-link>
+                <!-- <p v-if="like.UserId == user.userId"> J'ai liké </p> -->
+            </span>
+            </p>
+        </span>
+        
+
+
+
         
         <!-- Espace commentaires -->
         <div class="comments">
@@ -137,7 +157,7 @@
             </div>
 
             <!-- Ajouter un commentaire -->
-            <div v-if="afficherInputCommentaire || post.displayComment" class="row new-comment">
+            <div v-if="post.displayInputComment || post.displayComment" class="row new-comment">
                 <div class="col-md-10 col-sm-9">
                     <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="2"></textarea>
                 </div>
@@ -180,95 +200,150 @@ import NewPost from '@/components/newPost.vue'
 let moment = require("moment");
 
 export default {
-  components: {
-    NewPost,
-    //CommentsPost
-  },
-
-  data() {
-      return{
-        moment: moment,
-        page: 1,
-        perPage: 10,
-        pages: [],
-        afficheNewPost: false,
-        afficherLesCommentaires: false,
-        afficherInputCommentaire: false,
-        descriptionComment:''
-      }
-  },
-
-
-
-  computed: {
-    ...mapState({
-        commentsPost: ["commentsOfPost"],
-        user: ['user']
-    }),
-    ...mapGetters({
-        posts: ['get_all_posts']
-    }),
-
-    displayedPosts () {
-      return this.paginate(this.posts);
+    components: {
+        NewPost,
+        //CommentsPost
     },
-  },
+
+    data() {
+        return{
+            moment: moment,
+            page: 1,
+            perPage: 10,
+            pages: [],
+            afficheNewPost: false,
+            afficherLesCommentaires: false,
+            descriptionComment:'',
+        }
+    },
+
+
+
+    computed: {
+        ...mapState({
+            commentsPost: ["commentsOfPost"],
+            user: ['user']
+        }),
+        ...mapGetters({
+            posts: ['get_all_posts']
+        }),
+
+        displayedPosts () {
+            return this.paginate(this.posts);
+        },
+    },
+
+
     mounted(){
-      this.$store.dispatch('getAllPosts')
-      console.log("state.posts", this.$store.getters.posts)
-      moment.locale('fr');
-  },
+        moment.locale('fr');
+        this.$store.dispatch('getAllPosts')
+        //this.posts.forEach(post => {
+        //    post.Likes.forEach(like => {
+        //        
+        //        if(like.UserId == this.user.userId) {
+        //            post.userAlreadyLike = true
+        //        } else {
+        //            post.userAlreadyLike = false
+        //        }
+        //    })
+        //});
 
-  methods:{
-      
-    updateDisplayBtn() {
-        this.afficheNewPost = false
-    },
-
-    afficheComments(postId) {
-      this.$store.dispatch('getCommentsPost', postId)
-      .then(()=> {
-          this.$store.dispatch('displayComments', postId)
-      })
     },
 
-    masquerComments(postId){
-      this.$store.dispatch('hideComments', postId)
+
+    beforeUpdate() {
+        this.posts.forEach(post => {
+            post.userAlreadyLike = false
+
+            post.Likes.forEach(like => {
+                
+                if(like.UserId == this.user.userId) {
+                    post.userAlreadyLike = true
+                }
+
+            })
+        });
     },
 
-    newComment(postId) {
-      let data = {
-        'description': this.descriptionComment,
-        'postId' : postId
-      }
-      this.$store.dispatch('newComment', data)
-      .then(()=> {
-          this.$router.go()
-      })
-    },
-    
-    addLike(postId) {
-        this.$store.dispatch('addOrRemoveLike', postId)
-        .then(()=> {
-            this.$router.go();
-        })
-    },
+    methods:{
 
-    setPages () {
-		let numberOfPages = Math.ceil(this.posts.length / this.perPage);
-		for (let index = 1; index <= numberOfPages; index++) {
-			this.pages.push(index);
-		}
-	},
-        
-    paginate (posts) {
-        let page = this.page;
-        let perPage = this.perPage;
-        let from = (page * perPage) - perPage;
-        let to = (page * perPage);
-        return  posts.slice(from, to);
-    },
-  },       
+    // Affichage
+        updateDisplayBtn() {
+            this.afficheNewPost = false
+        },
+
+        afficheComments(postId) {
+          this.$store.dispatch('getCommentsPost', postId)
+          .then(()=> {
+              this.$store.dispatch('displayComments', postId)
+          })
+        },
+        masquerComments(postId){
+          this.$store.dispatch('hideComments', postId)
+        },
+
+
+        afficherInputCommentaire(postId){
+            this.$store.dispatch('displayInputComments', postId)
+        },
+        masquerInputCommentaire(postId){
+            this.$store.dispatch('hideInputComments', postId)
+        },
+
+
+        listUsersLike(postId){
+            this.$store.dispatch('displayListUsersLike', postId)
+        },
+        hideListUsersLike(postId){
+            this.$store.dispatch('hideListUsersLike', postId)
+        },
+
+
+
+    // Interaction
+        deletePost(postId) {
+            if(confirm('Etes vous sur ?')) {
+                this.$store.dispatch('deletePost', postId)
+                .then(()=> {
+                    this.$router.go()
+                })
+            }
+        },
+
+        newComment(postId) {
+            let data = {
+                'description': this.descriptionComment,
+                'postId' : postId
+            }
+            this.$store.dispatch('newComment', data)
+            .then(()=> {
+                this.$router.go()
+            })
+        },
+
+        addLike(postId) {
+            this.$store.dispatch('addOrRemoveLike', postId)
+            .then(()=> {
+                this.$router.go()
+            })
+        },
+
+    // Pagination
+        setPages () {
+            let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+            for (let index = 1; index <= numberOfPages; index++) {
+                this.pages.push(index);
+            }
+        },
+
+        paginate (posts) {
+            let page = this.page;
+            let perPage = this.perPage;
+            let from = (page * perPage) - perPage;
+            let to = (page * perPage);
+            return  posts.slice(from, to);
+        },
+    },       
 
 	watch: {
 		posts () {
@@ -284,8 +359,8 @@ export default {
 <style scoped lang="scss">
 
 .post{
-    margin: 20px 20px 0 20px;
-    padding:20px 30px 0 30px;
+    margin: 10px 10px;
+    padding:20px 20px 0 20px;
     background-color:#ececec;
     border: solid 1px #cfcfcf;
     border-radius: 5px;
@@ -311,6 +386,7 @@ export default {
     img{
         height:60px;
         width: 60px;
+        margin-left:20px;
     }
 
     .post_user-name{
@@ -326,10 +402,13 @@ export default {
 .description-post{
     margin: 10px 10px 0 10px;
 
+    .title{
+        font-size:1.3rem;
+        color:black;
+    }
+
     .img-post{
         margin-bottom:10px;
-        display:flex;
-        justify-content: center;
 
         img{
             max-width: 500px;
@@ -351,7 +430,6 @@ export default {
 
 
 .interaction-post{
-    margin: 0px 0 0px 0;
 
     .btn:hover{
         background-color: rgb(226, 226, 226);
@@ -359,6 +437,7 @@ export default {
 
     .btn-like{
         padding-top:3px;
+        margin-bottom:-3px;
 
         .like{
             margin-left:10px;
@@ -367,12 +446,15 @@ export default {
     }
 
     .btn-personnaliser{
-        margin-top:5px;
+        margin-top:-2px;
+        padding:0 10px 2px 10px;
     }
-    
-    .btn-delete{
-        margin-left:0px;
-    }
+}
+
+.list-users-like-post{
+    font-size:0.8rem;
+    margin-bottom:5px;
+    margin-left:5px;
 }
 
 
@@ -413,19 +495,29 @@ export default {
 }
 
 
-
-
 /* Bootstrap icons */
 .bi{
     font-size:1.5rem;
 
-    &.bi-hand-thumbs-up{
+    &.bi-hand-thumbs-up, &.bi-hand-thumbs-up-fill{
         color:rgb(37, 37, 204);
         margin:0;
         padding:0;
     }
     &.bi-trash{
         color:rgb(223, 24, 24);
+    }
+    &.bi-pencil-square{
+        color:rgb(37, 37, 204);
+    }
+    &.bi-box-arrow-in-left{
+        color:rgb(37, 37, 204);
+    }
+    &.bi-reply, &.bi-reply-fill{
+        font-size: 2rem;
+        margin:0;   
+        padding:0;
+        color:rgb(37, 37, 204)
     }
 }
 

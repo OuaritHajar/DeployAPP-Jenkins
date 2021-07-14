@@ -74,7 +74,7 @@
                             </button>
 
                             <span class="spacer"></span>
-                            <button @click="deletePost()" class="btn btn-danger">
+                            <button @click="deletePost(post.id)" class="btn btn-danger">
                                 Supprimer
                             </button>
                         </div>
@@ -145,32 +145,35 @@
 
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 let moment = require("moment");
 
 export default {
     data(){
         return{
             moment:moment,
-            titlePost: '',
-            descriptionPost:'',
+            titlePost: this.$store.getters.get_one_post.title,
+            descriptionPost: this.$store.getters.get_one_post.description,
             file: null,
 
             descriptionComment: "",
-            
         }
     },
     
     computed: {
         ...mapState({
-            post:['post'],
             user:['user'],
-            comments:['commentsPost']
+            comments: ['commentsPost']
         }),
+        ...mapGetters({
+            post:['get_one_post'],
+            //comments:['get_one_post_comments']
+        })
     },
 
     mounted(){
         this.$store.dispatch('getOnePost', this.$route.params.postId )
+        console.log('fsdfsdfdssd : ',this.post.description )
     },
 
 
@@ -197,11 +200,11 @@ export default {
 
 
 
-        deletePost() {
+        deletePost(postId) {
             if(confirm('Etes vous sur ?')) {
-                this.$store.dispatch('deletePost')
+                this.$store.dispatch('deletePost', postId)
                 .then(()=> {
-                    this.$router.push('/mur')
+                    this.$router.go(-1)
                 })
             }
         },
@@ -262,8 +265,9 @@ export default {
 .post{
     margin: 20px 20px;
     padding:30px 40px 20px;
-    background-color:#e0e0e0;
-    border: solid 1px #a1a1a1;
+    
+    background-color:#ececec;
+    border: solid 1px #cfcfcf;
     border-radius: 10px;
     
     img{

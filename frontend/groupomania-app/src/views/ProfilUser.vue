@@ -10,6 +10,7 @@
                 
                 <p>Prénom : {{ user.last_name }}</p>
                 <p>Nom : {{ user.first_name }}</p>
+                <p>Sexe : {{ sexe }}</p>   
                 <p>Email : {{ user.email }} </p>
                 <p>Crée le {{ moment(user.createdAt).format("DD-MM-YYYY HH:mm") }} </p>
                 
@@ -37,7 +38,14 @@ export default {
     computed: {
         ...mapState({
             user:['userProfil']
-        })
+        }),
+        sexe(){
+            if(this.user.sexe){
+                return 'Femme'
+            } else {
+                return 'Homme'
+            }
+        }
     },
 
     mounted(){

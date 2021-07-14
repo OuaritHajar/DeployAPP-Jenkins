@@ -105,13 +105,13 @@ module.exports = {
             return res.status(200).json({
               'userId': userFound.id,
               'token': jwtUtils.generateTokenForUser(userFound)
-            });
+            })
           } else {
-            return res.status(403).json({ 'error': 'Invalide password' });
+            return res.status(403).json({ 'error': 'Invalide password' })
           }
-        });
+        })
       } else {
-        return res.status(404).json({ 'error': 'user not exist' });
+        return res.status(404).json({ 'error': 'user not exist' })
       }
 
     } catch (err) {
@@ -134,7 +134,7 @@ module.exports = {
 
     try {
       const userFound = await db.User.findOne({
-        attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt','avatarUrl'],
+        attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt','avatarUrl','sexe'],
         where: { id: req.params.userId }
       })
       if (userFound) {

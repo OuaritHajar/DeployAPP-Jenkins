@@ -94,21 +94,24 @@ module.exports = {
                     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                     limit: (!isNaN(limit)) ? limit : null,
                     offset: (!isNaN(offset)) ? offset : null,
-                    include: db.User
+                    include: [{ 
+                        model: db.User , attributes: ['first_name', 'last_name','avatarUrl'] 
+                        },{
+                        model: db.Like,
+                        include: [{ 
+                            model: db.User , attributes: ['first_name', 'last_name','avatarUrl'] 
+                        }] 
+                    }]
                 })
 
                 if (allPosts) {
-                    
-                        res.status(200).json(allPosts);
-                    
+                    res.status(200).json(allPosts);
                 } else {
-                    res.status(404).json({ "error": "no post fund" });
+                    return res.status(404).json({ "error": "no post fund" });
                 }
-                
             } else {
                 return res.status(404).json({ 'error': 'user not found' });
             }
-
         } catch (err) {
             return console.error(err)
         };

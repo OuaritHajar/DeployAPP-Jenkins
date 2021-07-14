@@ -82,8 +82,9 @@ export default{
     margin: 20px 20px;
     padding: 20px 20px;
 
-    border: #a1a1a1 solid 1px;
-    background-color:#e0e0e0;
+
+    background-color:#ececec;
+    border: solid 1px #cfcfcf;
     border-radius: 5px;
 }
 #inputImgUrl{
