@@ -41,9 +41,14 @@ Réseau sociaux d'entreprise
   
   
 ## Back-End API Rest
-1. Dépendances backend-------------  `cd backend` => `npm install`
-2. Lancer le serveur -------------------   `nodemon server`
-  
+Ajouter le fichier '.env' dans le dossier backend:  :`
+DB_HOST='database_development'
+DB_USER='root'
+DB_PASS='motdepasse'
+`
+1. Dépendances backend -------------  `cd backend` => `npm install`
+3. Lancer le serveur -------------------   `nodemon server`
+
   
   
   
