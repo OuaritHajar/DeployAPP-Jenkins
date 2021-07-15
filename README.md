@@ -35,7 +35,7 @@ Réseau sociaux d'entreprise
   1. Connection : ---------------------- `mysql -u root -p` 
   2. Créer la base de donnée --------- `CREATE DATABASE database_development;`
   3. Utiliser la base de donné --------- `USE database_development`
-  4. Récuperer les données ----------- `SOURCE P7_groupomania/sauvegarde_database_groupomania.sql`    
+  4. Récuperer les données ----------- `SOURCE P7_groupomania/sauvegarde_database.sql`    
   
   
   
