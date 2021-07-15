@@ -32,7 +32,6 @@ const store = createStore({
     state: {
         user:'',
         status:'',
-        profil:'',
         userProfil:'',
         posts: [],
         post:'',
@@ -60,9 +59,6 @@ const store = createStore({
         },
         get_comments_post_forum(state) {
             return state.commentsOfPost
-        },
-        get_profil(state) {
-            return state.profil
         },
         get_user_profil(state) {
             return state.userProfil
@@ -99,12 +95,10 @@ const store = createStore({
         
 
         // ----------- PROFIL -----------------
-        GET_PROFIL: (state, profil) => {
-            state.profil = profil
-        },
+
         EDIT_PROFIL: (state, profil) => {
-            state.profil.first_name = profil.first_name,
-            state.profil.last_name = profil.last_name
+            state.userProfil.first_name = profil.first_name,
+            state.userProfil.last_name = profil.last_name
         },
         GET_USER_PROFIL:(state, userProfil) => {
             state.userProfil = userProfil
@@ -203,7 +197,6 @@ const store = createStore({
                     commit('STATUS', 'Erreur, vérifier vos informations' )
                     reject(error)
                 })
-                
             })
         },
 
@@ -216,6 +209,7 @@ const store = createStore({
                     commit('STATUS', '' )
                     commit('LOG_USER', response.data);
                     resolve(response)
+                    console.log('isAdmin : ',response.data)
                 })
                 .catch(function (error) {
                     commit('STATUS', 'Erreur de connection')
@@ -232,19 +226,9 @@ const store = createStore({
 
         
     // --------------  PROFIL  ---------------
-        getProfil: ({state, commit}) => {
-            instance.get(`users/${state.user.userId}`)
-            .then( (response) => {
-                console.log(response.data)
-                commit('GET_PROFIL', response.data)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        },
 
-        editUser:({state, commit}, data) => {
-            instance.put(`users/${state.user.userId}`, data) 
+        editUser:({ commit }, data) => {
+            instance.put('users/' + data.userId, data) 
             .then( (response) => {
                 commit('EDIT_PROFIL', response.data)
             })
@@ -253,8 +237,8 @@ const store = createStore({
             })
         },
 
-        deleteUser:({state, commit}) => {
-            instance.delete(`users/${state.user.userId}`)
+        deleteUser:({ commit }, userId) => {
+            instance.delete('users/' + userId)
             .then( () => {
                 commit('LOG_OUT')
             })
@@ -262,7 +246,7 @@ const store = createStore({
 
 
     //------------------  PROFIL USERS  ------------------
-        getProfilUsers:({commit},userId) => {
+        getProfilUsers:({ commit },userId) => {
             instance.get('users/'+ userId)
             .then((response) => {
                 console.log(response.data)

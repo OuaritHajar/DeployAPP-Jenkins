@@ -5,7 +5,6 @@ import Logout from '../views/Logout.vue'
 
 import Mur from '../views/Mur'
 import Profil from '../views/Profil'
-import ProfilUser from '../views/ProfilUser'
 import Post from '../views/Post'
 
 
@@ -41,7 +40,7 @@ const routes = [
   },
 
   {
-    path: '/user/:userId',  //son propre profil
+    path: '/user/:userId',
     name: 'Profil',
     component: Profil
   },
@@ -54,11 +53,6 @@ const routes = [
   },
 
   //profils
-  {
-    path: '/users/:userId',
-    name: 'ProfilUser',
-    component: ProfilUser
-  },
 ]
 
 const router = createRouter({

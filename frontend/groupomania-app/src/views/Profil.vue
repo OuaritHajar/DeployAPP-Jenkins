@@ -14,12 +14,11 @@
                 <div class="col-sm-7 offset-sm-1">
                     <div class="form-group">
                         <label for="inputLastName">Prénom : {{ user.last_name }}</label>
-                        <input v-model="lastName" type="text" class="form-control">
+                        <input v-if="thisUser.userId === user.id || thisUser.isAdmin" v-model="lastName" type="text" class="form-control">
                     </div>
-
                     <div class="form-group">
                         <label for="inputFirstName">Nom : {{ user.first_name }} </label>
-                        <input v-model="firstName" type="text" class="form-control">  
+                        <input v-if="user.id === thisUser.userId || thisUser.isAdmin" v-model="firstName" type="text" class="form-control">  
                     </div>
 
                     <div>
@@ -59,8 +58,10 @@ export default {
 
     computed: {
         ...mapGetters({
-            user:['get_profil']
+            user:['get_user_profil'],
+            thisUser: ['get_user']
         }),
+
         sexe(){
             if(this.user.sexe) {
                 return 'Femme'
@@ -71,21 +72,22 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('getProfil' )
+        this.$store.dispatch('getProfilUsers', this.$route.params.userId )
     },
 
     methods: {
         editUser() {
             let data = {
                 first_name: this.firstName,
-                last_name: this.lastName
+                last_name: this.lastName,
+                userId: this.$route.params.userId
             }
             this.$store.dispatch('editUser', data)
         },
 
         deleteUser() {
             if(confirm("Voulez vous vraiment supprimer votre compte ?")){
-                this.$store.dispatch('deleteUser')
+                this.$store.dispatch('deleteUser', this.$route.params.userId)
                 .then(()=> {
                     this.$router.push("/logout")
                 })

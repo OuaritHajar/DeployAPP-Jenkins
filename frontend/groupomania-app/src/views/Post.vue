@@ -7,7 +7,7 @@
 
                 <!-- Avatar -->
                 <div class="col-xs-3">
-                    <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }} " v-if="post.User">
+                    <router-link :to="{name: 'Profil', params: {userId: post.UserId }} " v-if="post.User">
                         <img :src="post.User.avatarUrl" alt="">
                     </router-link>
                 </div>
@@ -15,7 +15,7 @@
                 <div class="col-xs-9">
                     <!-- Nom / Prénom -->
                     <div class="row ml-3 post__user-name">
-                        <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }} " v-if="post.User">
+                        <router-link :to="{name: 'Profil', params: {userId: post.UserId }} " v-if="post.User">
                             <p class="post_user-name">{{ post.User.first_name }} {{ post.User.last_name }} </p>
                         </router-link>
                     </div>
@@ -41,7 +41,7 @@
 
 
             <!-- Edit post -->
-            <div v-if="post.userId === user.userId" class="edit-post">
+            <div v-if="post.userId === user.userId || user.isAdmin" class="edit-post">
                 <hr>
                 <form enctype="multipart/form-data">
                     <fieldset>
@@ -110,14 +110,14 @@
                 </div>
 
                 <div class="col-7 col-md-8">
-                    <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
+                    <router-link :to="{name: 'Profil', params: {userId: comment.UserId }}">
                         <p class="user-comment"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
                     </router-link>
                     <p class="comment-date" v-if="comment.createdAt === comment.updatedAt"> il y a {{ moment(comment.createdAt).fromNow(true) }} </p> 
                     <p class="comment-date" v-else >modifié il y a {{ moment(comment.updatedAt).fromNow(true) }}  </p>
                 </div>
 
-                <div cass="col-3 col-md-2" v-if="comment.UserId === user.userId" >
+                <div cass="col-3 col-md-2" v-if="comment.UserId === user.userId || user.isAdmin" >
                     <button @click="editComment(comment.id, comment.editDescriptionComment)" class="btn btn-primary">
                         <i class="bi bi-pencil-square"></i>
                     </button>
@@ -131,7 +131,7 @@
             <p class="description-comment"> {{ comment.description }} </p>
 
             <!-- Edit comment -->
-            <div v-if="comment.UserId === user.userId" >
+            <div v-if="comment.UserId === user.userId || user.isAdmin" >
                 <form>
                     <textarea v-model="comment.editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
                 </form>
@@ -234,13 +234,13 @@ export default {
 
 
         deleteComment(commentId){
-            let data = {
-                'commentId': commentId
+            if(confirm('Etes vous sur de vouloir supprimer le commentaire ?')){
+                let data = {'commentId': commentId }
+                this.$store.dispatch('deleteComment', data)
+                .then(()=> {
+                    this.$router.go()
+                })
             }
-            this.$store.dispatch('deleteComment', data)
-            .then(()=> {
-                this.$router.go()
-            })
         },
 
         

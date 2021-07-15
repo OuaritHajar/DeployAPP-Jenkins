@@ -257,7 +257,7 @@ module.exports = {
                 if (postFound) {
 
                     // on verifie la légitimité
-                    if (postFound.UserId == userFound.id) {
+                    if (postFound.UserId == userFound.id || userFound.isAdmin) {
 
 
                         // on cherche les commentaires

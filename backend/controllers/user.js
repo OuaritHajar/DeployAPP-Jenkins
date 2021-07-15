@@ -24,13 +24,13 @@ module.exports = {
       return Math.floor(Math.random() * max);
     }
 
-    if(sexe == 0){
-      avatarUrl = pathAvatar + 'avatar' + (getRandomInt(7)+6) + '.png'
+    if (sexe == 0) {
+      avatarUrl = pathAvatar + 'avatar' + (getRandomInt(7) + 6) + '.png'
     } else {
       avatarUrl = pathAvatar + 'avatar' + getRandomInt(7) + '.png'
     }
-    
-    
+
+
 
     if (firstName === null || lastName === null || email === null || password === null) {
       return res.status(400).json({ 'error': 'missing parameters' });
@@ -76,8 +76,8 @@ module.exports = {
       }
     } catch (err) {
       console.error(err);
-      return res.status(400).json({'erreur' : err})
-      
+      return res.status(400).json({ 'erreur': err })
+
     }
   },
 
@@ -106,7 +106,8 @@ module.exports = {
           if (resBycrypt) {
             return res.status(200).json({
               'userId': userFound.id,
-              'token': jwtUtils.generateTokenForUser(userFound)
+              'token': jwtUtils.generateTokenForUser(userFound),
+              'isAdmin': userFound.isAdmin
             })
           } else {
             return res.status(403).json({ 'error': 'Invalide password' })
@@ -136,7 +137,7 @@ module.exports = {
 
     try {
       const userFound = await db.User.findOne({
-        attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt','avatarUrl','sexe'],
+        attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt', 'avatarUrl', 'sexe', 'isAdmin'],
         where: { id: req.params.userId }
       })
       if (userFound) {
@@ -163,31 +164,40 @@ module.exports = {
 
     try {
 
-      // on cherche l'utilisateur ciblé
-      const userCible = await db.User.findOne({
-        attributes: ['id', 'first_name', 'last_name'],
-        where: { id: req.params.userId }
+      // user
+      const userFound = await db.User.findOne({
+        where: { id: userId }
       })
+      if (userFound) {
 
-      if (userCible) {
+        // on cherche l'utilisateur ciblé
+        const userCible = await db.User.findOne({
+          attributes: ['id', 'first_name', 'last_name'],
+          where: { id: req.params.userId }
+        })
 
-        //son propre profil 
-        if (userCible.id == userId) {
+        if (userCible) {
 
-          // si on le trouve on met a jour la base de donnée
-          const updateProfil = await userCible.update({
-            first_name: (firstName ? firstName : userCible.first_name),
-            last_name: (lastName ? lastName : userCible.last_name)
-          })
+          //son propre profil 
+          if (userCible.id == userId || userFound.isAdmin) {
 
-          if (updateProfil) {
-            res.status(201).json(updateProfil)
+            // si on le trouve on met a jour la base de donnée
+            const updateProfil = await userCible.update({
+              first_name: (firstName ? firstName : userCible.first_name),
+              last_name: (lastName ? lastName : userCible.last_name)
+            })
+
+            if (updateProfil) {
+              res.status(201).json(updateProfil)
+            }
+          } else {
+            return res.status(404).json({ 'error': 'no authorized, modifier votre propre profil ou augmenter vos privilège' })
           }
         } else {
-          return res.status(404).json({ 'error': 'no authorized, modifier votre propre profil ou augmenter vos privilège' })
+          res.status(404).json({ 'error': 'user not found' });
         }
       } else {
-        res.status(404).json({ 'error': 'user not found' });
+        return res.status(404).json({ 'error': 'user not found' })
       }
     }
     catch (err) {
@@ -206,25 +216,33 @@ module.exports = {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
 
-    try{
-    // on cherche l'utilisateur ciblé
-    const userTargetFound = await db.User.findOne({
-      where: { id: req.params.userId }
-    })
+    try {
+
+      //user
+      const userFound = await db.User.findOne({
+        where: { id: userId }
+      })
+      if (userFound) {
+
+
+        // on cherche l'utilisateur ciblé
+        const userTargetFound = await db.User.findOne({
+          where: { id: req.params.userId }
+        })
         if (userTargetFound) {
-          
-          if (userId === userTargetFound.id ) {
+
+          if (userId === userTargetFound.id || userFound.isAdmin) {
 
             // on cherche les likes de l'user sur tout les posts
             const likesFound = await db.Like.findAll({
-              where: { userId : userTargetFound.id}
+              where: { userId: userTargetFound.id }
             })
 
             //tout les likes qui m'appartiennent
-            if(likesFound) {
+            if (likesFound) {
 
-              for(like of likesFound) {
-                console.log("un like",like)
+              for (like of likesFound) {
+                console.log("un like", like)
 
                 //récupère post du like
                 const postOuYAvaitLeLike = await db.Post.findOne({
@@ -233,16 +251,16 @@ module.exports = {
                   }
                 })
 
-                if(postOuYAvaitLeLike) {
+                if (postOuYAvaitLeLike) {
 
-                  //update post
-                  const updateLikePost = await postOuYAvaitLeLike.update({
-                      likes: postOuYAvaitLeLike.likes = postOuYAvaitLeLike.likes-1
-                  })
+                  ////update post
+                  //const updateLikePost = await postOuYAvaitLeLike.update({
+                  //  likes: postOuYAvaitLeLike.likes = postOuYAvaitLeLike.likes - 1
+                  //})
 
                   //destroy like
                   const destroyLikes = await like.destroy({
-                    where: { UserId : userTargetFound.id }
+                    where: { UserId: userTargetFound.id }
                   })
                 }
               }
@@ -253,13 +271,13 @@ module.exports = {
 
             // on cherche les comments
             const commentsFound = await db.Comment.findAll({
-              where: { userId : userTargetFound.id}
+              where: { userId: userTargetFound.id }
             })
 
-            if(commentsFound) {
-              console.log("commentsFound : ",commentsFound)
+            if (commentsFound) {
+              console.log("commentsFound : ", commentsFound)
 
-              for(comment of commentsFound) {
+              for (comment of commentsFound) {
                 console.log("un comment", comment)
 
                 // pour chaque commentaire on cherche le post ou y a le comment
@@ -271,27 +289,27 @@ module.exports = {
                 console.log("postOuYAvaitLeComment  ", postOuYAvaitLeComment)
 
                 // update le post
-                const updateCommentPost = await postOuYAvaitLeComment.update({
-                  comments: postOuYAvaitLeComment.comments = postOuYAvaitLeComment.comments - 1
-                })
+                //const updateCommentPost = await postOuYAvaitLeComment.update({
+                //  comments: postOuYAvaitLeComment.comments = postOuYAvaitLeComment.comments - 1
+                //})
 
 
                 //destroy comments
                 const destroyComments = await db.Comment.destroy({
-                  where: { id : comment.id }
+                  where: { id: comment.id }
                 })
               }
             }
 
 
-           
+
             // on cherche les posts
-            
+
             const postsFound = await db.Post.findAll({
-              where: { userId : userTargetFound.id },
+              where: { userId: userTargetFound.id },
             })
 
-            if(postsFound) {
+            if (postsFound) {
               console.log("postsfound lenght", postsFound.length)
 
               // pour chaque post 
@@ -300,13 +318,13 @@ module.exports = {
 
 
 
-                 // on récupère tout les commentaires
+                // on récupère tout les commentaires
                 const commentsFromOtherFound = await db.Comment.findAll({
-                  where: { PostId : post.id }
+                  where: { PostId: post.id }
                 })
                 // on supprime tout les commentaires des posts
-                if (commentsFromOtherFound != null ) {
-                  
+                if (commentsFromOtherFound != null) {
+
                   const destroyCommentsOfOthersUsers = await db.Comment.destroy({
                     where: { PostId: post.id }
                   })
@@ -329,45 +347,44 @@ module.exports = {
 
                 // on supprime enfin le post
                 const destroyPosts = await db.Post.destroy({
-                  where: { id : post.id }
+                  where: { id: post.id }
                 })
                 if (destroyPosts) {
 
                 }
               }
             }
-            
+
 
 
 
             // on cherche les images
             const imageFound = await db.Image.findAll({
-              where: { userId : userId}
+              where: { userId: userTargetFound.id }
             })
-            if(imageFound) {
+            if (imageFound) {
+
+                // supprime les images
+                for ( image in imageFound) {
+                  if (`${imageFound[image].url}` != null) {
+                    fs.unlink(`${imageFound[image].url}`, (err) => {
+                      if (err) {
+                        console.error(err)
+                      } else {
+                        console.log('image ' + `${imageFound[image].url}` + ' supprimé')
+                      }
+                    })
+                  }
+                }
+
 
                 // on supprime l'image de la database
-                const destroyImage = await db.Image.destroy({
-                    where: { userId: userId }
-                })
-                if (destroyImage) {
-
-                    // supprime les images
-                    for( const image in imageFound) {
-                      if(`${imageFound[image].url}` != null) {
-                        fs.unlink(`${imageFound[image].url}`, (err) =>{
-                          if (err) {
-                            console.error(err)
-                          } else {
-                            console.log('image ' + `${imageFound[image].url}` + ' supprimé')
-                          }
-                        })
-                      }
-                    }
-                    //res.status(202).json({ 'message': ' Image from post deleted' })
-                }
+              const destroyImage = await db.Image.destroy({
+                where: { userId: userTargetFound.id }
+              })
             }
-            
+              
+
 
 
             // on supprimer l'user
@@ -376,18 +393,25 @@ module.exports = {
             })
 
             if (deleteUserTarget)
-                res.status(201).json({ 'message': 'User deleted' })
-                
+              res.status(201).json({ 'message': 'User deleted' })
+
           } else {
             return res.status(404).json({ 'error': 'no permission' })
           }
         } else {
           return res.status(404).json({ 'error': 'user not found' });
         }
+
+
+      } else {
+        return res.status(404).json({ 'error': 'user not found' })
       }
-      catch(err) {
-        console.error(err)
-      };
+
+
+    }
+    catch (err) {
+      console.error(err)
+    };
   }
 
 

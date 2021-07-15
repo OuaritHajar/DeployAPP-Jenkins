@@ -19,14 +19,14 @@
           <div class="row information-post">
             
             <div class="col-xs-3">
-              <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }} " v-if="post.User">
+              <router-link :to="{name: 'Profil', params: {userId: post.UserId }} " v-if="post.User">
                 <img :src="post.User.avatarUrl" alt="">
               </router-link>
             </div>
     
             <div class="col-xs-9">
               <div class="row ml-3">
-                <router-link :to="{name: 'ProfilUser', params: {userId: post.UserId }} " v-if="post.User">
+                <router-link :to="{name: 'Profil', params: {userId: post.UserId }} " v-if="post.User">
                   <p class="post_user-name">{{ post.User.first_name }} {{ post.User.last_name }} </p>
                 </router-link>
               </div>
@@ -75,14 +75,14 @@
           <div class="col-3 text-center">
             <router-link :to="{name: 'Post', params: {postId: post.id}}">
               <div v-if="post.UserId">
-                <button v-if="post.UserId == user.userId" class="btn"><i class="bi bi-pencil-square"></i></button>
+                <button v-if="post.UserId == user.userId || user.isAdmin" class="btn"><i class="bi bi-pencil-square"></i></button>
               </div>
             </router-link>
           </div>
     
           <div class="col-3 text-center">
               <div v-if="post.UserId">
-                <button v-if="post.UserId == user.userId" @click="(deletePost(post.id))" class="btn">
+                <button v-if="post.UserId == user.userId || user.isAdmin" @click="(deletePost(post.id))" class="btn">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
@@ -97,7 +97,7 @@
         <span class="liste-users-flotant" v-if="post.Likes">
             <p class="list-users-like-post" v-if="post.Likes.length > 0 && post.listUsersLike"> Liké par&ensp;
             <span v-for="(like, index) in post.Likes" :key="index" >
-                <router-link :to="{name: 'ProfilUser', params: {userId: like.UserId }}">
+                <router-link :to="{name: 'Profil', params: {userId: like.UserId }}">
                     {{ like.User.first_name }} {{ like.User.last_name }}&ensp;
                 </router-link>
                 <!-- <p v-if="like.UserId == user.userId"> J'ai liké </p> -->
@@ -141,7 +141,7 @@
                   </div>
 
                   <div class="col-xs-9">
-                    <router-link :to="{name: 'ProfilUser', params: {userId: comment.UserId }}">
+                    <router-link :to="{name: 'Profil', params: {userId: comment.UserId }}">
                       <p class="user-comment"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
                     </router-link>
                     <p v-if="comment.createdAt === comment.updatedAt" class="comment-date"> il y a {{ moment(comment.createdAt).fromNow(true) }} </p> 

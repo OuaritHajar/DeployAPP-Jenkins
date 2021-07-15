@@ -133,7 +133,6 @@ hr{
 }
 .status{
     margin-left:10px;
-    color: rgb(184, 0, 0);
     font-weight: bold;
 }
 
