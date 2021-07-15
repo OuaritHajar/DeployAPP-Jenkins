@@ -110,18 +110,18 @@
 
         
         <!-- Espace commentaires -->
-        <div class="comments">
+        <div class="comments" v-if="post.Comments">
 
             <!-- Bouton Commentaires -->
-            <div v-if="post.comments == 1" class="text-center">
+            <div v-if="post.Comments.length == 1" class="text-center">
               <hr>
               <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary btn-comment">Afficher le commentaire</button>
               <button v-if="post.displayComment" @click="masquerComments(post.id)" class="btn btn-primary btn-comment" >Masquer le commentaire</button>
             </div>
 
-            <div v-else-if="post.comments > 1" class="text-center">
+            <div v-else-if="post.Comments.length > 1" class="text-center">
               <hr>
-              <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary btn-comment">Afficher les {{ post.comments }} commentaires</button>
+              <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary btn-comment">Afficher les {{ post.Comments.length }} commentaires</button>
               <button v-if="post.displayComment" @click="masquerComments(post.id)" class="btn btn-primary btn-comment" >Masquer les commentaires</button>
             </div>
 

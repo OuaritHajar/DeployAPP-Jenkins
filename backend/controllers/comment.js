@@ -44,17 +44,17 @@ module.exports = {
                     if (createComment) {
 
                         // update du compteur commentaires
-                        const updateComments = await postFound.update({
-                            comments: postFound.comments += 1,
-                        })
-                        if (updateComments) {
+                        //const updateComments = await postFound.update({
+                        //    comments: postFound.comments += 1,
+                        //})
+                        //if (updateComments) {
                             
                             // renvoie le nouveau commentaire
                                 return res.status(201).json(createComment);
-                            }
-                            else {
-                                res.status(500).json({ 'error': 'cannot update post like counter' });
-                            };
+                        //}
+                        //else {
+                        //    res.status(500).json({ 'error': 'cannot update post like counter' });
+                        //};
                     } else {
                         return res.status(500).json({ 'error': 'cannot create comment' })
                     }

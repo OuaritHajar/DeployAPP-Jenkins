@@ -2,7 +2,7 @@
 <div>
 
 <main>
-      <div class="container">
+      <div class="container home">
 
           <router-view/>
 
@@ -46,6 +46,9 @@ export default {
     box-shadow: 2px 2px 2px 2px #757575;
     margin:20px;
     padding: 20px;
+}
+.home{
+    min-height:75vh;
 }
 
 

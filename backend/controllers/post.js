@@ -95,13 +95,14 @@ module.exports = {
                     limit: (!isNaN(limit)) ? limit : null,
                     offset: (!isNaN(offset)) ? offset : null,
                     include: [{ 
-                        model: db.User , attributes: ['first_name', 'last_name','avatarUrl'] 
+                        model: db.User , attributes: ['first_name', 'last_name', 'avatarUrl'] 
                         },{
                         model: db.Like,
-                        include: [{ 
-                            model: db.User , attributes: ['first_name', 'last_name','avatarUrl'] 
-                        }] 
-                    }]
+                            include: [{ model: db.User , attributes: ['first_name', 'last_name', 'avatarUrl']}]
+                        },{
+                        model: db.Comment, attributes: ['id'] 
+                        }
+                    ]
                 })
 
                 if (allPosts) {
@@ -140,7 +141,7 @@ module.exports = {
 
                 // récupère le post
                 const postFound = await db.Post.findOne({
-                    attributes: ['id','userId', 'title', 'description', 'img_url', 'createdAt', 'updatedAt', 'likes', 'comments'],
+                    attributes: ['id','userId', 'title', 'description', 'img_url', 'createdAt', 'updatedAt'],
                     where: { id: req.params.postId },
                     include: db.User
                 })

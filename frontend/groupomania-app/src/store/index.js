@@ -12,20 +12,22 @@ instance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.token
 
 let user = localStorage.getItem('user');
 if (!user) {
- user = {
-    userId: -1,
-    token: '',
-  }; 
-} else {
-  try {
-    user = JSON.parse(user);
-    instance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
-  } catch (ex) {
     user = {
-      userId: -1,
-      token: '',
-    };
-  }
+        userId: -1,
+        token: '',
+    }; 
+} else {
+    if(user.userId != -1){
+        try {
+            user = JSON.parse(user);
+            instance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+        } catch (ex) {
+            user = {
+                userId: -1,
+                token: '',
+            };
+        }
+    }
 }
 
 const store = createStore({

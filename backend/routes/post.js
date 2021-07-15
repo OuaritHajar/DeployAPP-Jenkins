@@ -26,8 +26,8 @@ router.put('/:postId/comment/:commentId', auth, commentCtrl.updateOneComment);
 router.delete('/:postId/comment/:commentId', auth, commentCtrl.deleteOneComment);
 
 // Like routes
-router.post('/:postId/like', auth, likesCtrl.likePost);
-router.get('/:postId/like', auth, likesCtrl.getUsersLiked);
+router.post('/:postId/like', likesCtrl.likePost);
+router.get('/:postId/like', likesCtrl.getUsersLiked);
 
 //router.post('/:postId/removelike', likesCtrl.removeLike);
 

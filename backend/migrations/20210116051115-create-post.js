@@ -30,14 +30,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT('long')
       },
-      likes: {
-        allowNull: true,
-        type: Sequelize.INTEGER
-      },
-      comments: {
-        allowNull: true,
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
