@@ -27,7 +27,7 @@
             </div>
             
             <div class="text-center">
-                <button @click="creatNewPost" class="btn btn-primary">Créer</button>
+                <button @click="creatNewPost" class="btn btn-primary">Publier</button>
             </div>
             
         </fieldset>  
@@ -79,8 +79,8 @@ export default{
 
 <style scoped>
 .new-post{
-    margin: 20px 20px;
-    padding: 20px 20px;
+    margin: 10px 10px;
+    padding: 10px 20px;
 
 
     background-color:#ececec;

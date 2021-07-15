@@ -1,12 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
-import Signup from '../views/Signup.vue'
+
 import Mur from '../views/Mur'
 import Profil from '../views/Profil'
 import ProfilUser from '../views/ProfilUser'
 import Post from '../views/Post'
-import NewPost from '../components/newPost'
+
 
 const routes = [
 
@@ -57,13 +58,6 @@ const routes = [
     path: '/users/:userId',
     name: 'ProfilUser',
     component: ProfilUser
-  },
-
-  // Components
-  {
-    path: '/newPost',
-    name: 'NewPost',
-    component: NewPost
   },
 ]
 

@@ -31,34 +31,42 @@ if (!user) {
 const store = createStore({
     state: {
         user:'',
+        status:'',
         profil:'',
         userProfil:'',
-        status:'',
         posts: [],
         post:'',
         commentsPost:'',
-        idCommentPost:'',
+        idCommentPost:'',  // utilité a verifier
         commentsOfPost:''
     },
 
 
     getters: {
-        user_id(state) {
-            return state.userId
+        get_user(state) {
+            return state.user
         },
         get_status(state) {
             return state.status
         },
         get_all_posts(state) {
-            console.log("getters",state.posts)
             return state.posts
         },
         get_one_post(state) {
             return state.post
         },
-        //get_one_post_comments(state) {
-        //    return state.commentsPost
-        //},
+        get_comments_post(state) {
+            return state.commentsPost
+        },
+        get_comments_post_forum(state) {
+            return state.commentsOfPost
+        },
+        get_profil(state) {
+            return state.profil
+        },
+        get_user_profil(state) {
+            return state.userProfil
+        }
     },
 
 
@@ -67,18 +75,16 @@ const store = createStore({
 
     mutations: {
         // ----------------  CONNECTION  ----------------
-        LOG_USER(state, user) {
-            instance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+        LOG_USER: (state, user) => {
             localStorage.setItem('user', JSON.stringify(user));
             state.user = user;
-            console.log(user)
         },
 
-        STATUS: function(state, statusRetourne) {
+        STATUS: (state, statusRetourne) => {
             state.status = statusRetourne
         },
         
-        LOG_OUT: function (state) {
+        LOG_OUT: (state) => {
             state.user = {
                 userId: -1,
                 token: '',
@@ -100,7 +106,7 @@ const store = createStore({
             state.profil.first_name = profil.first_name,
             state.profil.last_name = profil.last_name
         },
-        GET_USER_PROFIL:(state, userProfil)=> {
+        GET_USER_PROFIL:(state, userProfil) => {
             state.userProfil = userProfil
         },
         
@@ -108,7 +114,7 @@ const store = createStore({
 
 
         // ---------------  POSTS  ----------------
-        ALL_POSTS: function(state, payload) {
+        ALL_POSTS: (state, payload) => {
             state.posts = payload
         },
 
@@ -185,7 +191,7 @@ const store = createStore({
     actions: {
 
     // --------------  CONNECTION  ---------
-        signup: ({commit},userInfos) => {
+        signup: ({commit}, userInfos) => {
             return new Promise((resolve,reject) => {
                 instance.post('users/signup', userInfos)
                 .then((response) => {
@@ -193,14 +199,16 @@ const store = createStore({
                     resolve(response)
                 })
                 .catch((error) => {
-                    commit('STATUS', 'Not created' )
+                    console.log('erreur : ',error)
+                    commit('STATUS', 'Erreur, vérifier vos informations' )
                     reject(error)
                 })
+                
             })
         },
 
         login: ({ commit }, userInfos) => {
-            commit('STATUS', 'loading');
+            commit('STATUS', 'Loading');
             return new Promise(( resolve,reject ) => {
                 instance.post('users/login', userInfos)
                 .then(function (response) {
@@ -210,7 +218,7 @@ const store = createStore({
                     resolve(response)
                 })
                 .catch(function (error) {
-                    commit('STATUS', 'Connection error')
+                    commit('STATUS', 'Erreur de connection')
                     reject(error)
                 });
             })
@@ -383,13 +391,7 @@ const store = createStore({
         addOrRemoveLike:({commit}, postId) => {
             instance.post('posts/' + postId + '/like')
             .then(()=> {
-                commit('ADD_REMOVE_LIKE', 
-                //{ 
-                //    'response' : response.data,
-                //    'postId': postId
-                //}
-                )
-                // console.log('response like',response.data)
+                commit('ADD_REMOVE_LIKE')
             })
             .catch((err) => {
                 console.error(err);

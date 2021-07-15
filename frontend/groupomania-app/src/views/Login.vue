@@ -3,7 +3,7 @@
     <section>
         <form>
             <fieldset>
-                <legend>Connection</legend>
+                <legend class="text-center">Connection</legend>
                 <hr>
                 <div class="form-row">
 
@@ -14,7 +14,7 @@
                             placeholder="exemple@messagerie.fr">
                     </div>
 
-                    <!-- Ville -->
+                    <!-- Mot de passe -->
                     <div class="form-group col-md-6">
                         <label for="inputPassword">Mot de passe :</label>
                         <input v-model="password" type="password" class="form-control" id="inputPassword" required>
@@ -34,7 +34,7 @@
                 <button @click="userLog()" class="btn btn-primary">
                     Entrer
                 </button>
-                <p> {{ $store.state.status }} </p>
+                <span class="status"> {{ status }} </span>
             </fieldset>
         </form>
     </section>
@@ -44,6 +44,8 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     data() {
         return{
@@ -51,9 +53,13 @@ export default {
             password:""
         }
     },
+
     computed: {
-        
+        ...mapGetters({
+            status: ['get_status']
+        })
     },
+
     methods: {
         userLog: function () {
             this.$store.dispatch("login", {
@@ -69,21 +75,25 @@ export default {
         },
     }
 }
-
-
 </script>
+
 
 
 <style scoped>
 form{
-  border:solid rgb(151, 151, 151) 1px;
-  border-radius: 5px;
-  box-shadow: 2px 2px 2px 2px #757575;
+    border:solid rgb(151, 151, 151) 1px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 2px #757575;
 
-  margin:20px 20px;
-  padding:20px 20px;
+    margin:20px 20px;
+    padding:20px 20px;
 }
 hr{
     margin-top:0;
+}
+.status{
+    margin-left:10px;
+    color: rgb(184, 0, 0);
+    font-weight: bold;
 }
 </style>

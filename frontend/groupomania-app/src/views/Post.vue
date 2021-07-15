@@ -145,37 +145,35 @@
 
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import {  mapGetters } from 'vuex'
 let moment = require("moment");
 
 export default {
     data(){
         return{
             moment:moment,
-            titlePost: this.$store.getters.get_one_post.title,
+
+            titlePost: '',
             descriptionPost: this.$store.getters.get_one_post.description,
             file: null,
 
             descriptionComment: "",
         }
     },
-    
-    computed: {
-        ...mapState({
-            user:['user'],
-            comments: ['commentsPost']
-        }),
-        ...mapGetters({
-            post:['get_one_post'],
-            //comments:['get_one_post_comments']
-        })
-    },
 
+    
     mounted(){
         this.$store.dispatch('getOnePost', this.$route.params.postId )
-        console.log('fsdfsdfdssd : ',this.post.description )
     },
+    
 
+    computed: {
+        ...mapGetters({
+            user:['get_user'],
+            post:['get_one_post'],
+            comments: ['get_comments_post']
+        }),
+    },
 
 
     methods: {
@@ -194,7 +192,7 @@ export default {
 
             this.$store.dispatch('editPost', data)
             .then(()=> {
-                this.$router.go()
+                this.$router.push('/mur')
             })
         },
 

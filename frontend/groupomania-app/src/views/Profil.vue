@@ -45,7 +45,7 @@
 
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 let moment = require("moment");
 
 export default {
@@ -58,8 +58,8 @@ export default {
     },
 
     computed: {
-        ...mapState({
-            user:['profil']
+        ...mapGetters({
+            user:['get_profil']
         }),
         sexe(){
             if(this.user.sexe) {

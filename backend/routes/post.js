@@ -13,21 +13,21 @@ const upload = require('../config/upload.config.js');
 const fileWorker = require('../controllers/image.js');
 
 // Posts routes
-router.post('/', upload.single("img_url"), fileWorker.upload, postsCtrl.createPost);
+router.post('/', auth, upload.single("img_url"), fileWorker.upload, postsCtrl.createPost);
 router.get('/', auth, postsCtrl.listPosts);
 router.get('/:postId', auth, postsCtrl.selectOnePost);
-router.put('/:postId', upload.single("img_url"), fileWorker.update, postsCtrl.updateOnePost);
-router.delete('/:postId', postsCtrl.removeOnePost);
+router.put('/:postId', auth, upload.single("img_url"), fileWorker.update, postsCtrl.updateOnePost);
+router.delete('/:postId', auth, postsCtrl.removeOnePost);
 
 // Comment routes
 router.post('/:postId/comment', auth, commentCtrl.createComment);
 router.get('/:postId/comments', auth, commentCtrl.listPostComments);
-router.put('/:postId/comment/:commentId', commentCtrl.updateOneComment);
-router.delete('/:postId/comment/:commentId', commentCtrl.deleteOneComment);
+router.put('/:postId/comment/:commentId', auth, commentCtrl.updateOneComment);
+router.delete('/:postId/comment/:commentId', auth, commentCtrl.deleteOneComment);
 
 // Like routes
-router.post('/:postId/like', likesCtrl.likePost);
-router.get('/:postId/like', likesCtrl.getUsersLiked);
+router.post('/:postId/like', auth, likesCtrl.likePost);
+router.get('/:postId/like', auth, likesCtrl.getUsersLiked);
 
 //router.post('/:postId/removelike', likesCtrl.removeLike);
 

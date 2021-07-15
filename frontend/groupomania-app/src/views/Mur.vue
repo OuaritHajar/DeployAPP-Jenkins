@@ -1,5 +1,5 @@
 <template>
-<section v-if="$store.state.user.userId != -1">
+<section v-if="user.userId != -1">
 
     <!-- Button new post -->
     <div class="text-center">
@@ -195,7 +195,7 @@
 
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import NewPost from '@/components/newPost.vue'
 let moment = require("moment");
 
@@ -220,14 +220,11 @@ export default {
 
 
     computed: {
-        ...mapState({
-            commentsPost: ["commentsOfPost"],
-            user: ['user']
-        }),
         ...mapGetters({
-            posts: ['get_all_posts']
+            posts: ['get_all_posts'],
+            user: ['get_user'],
+            commentsPost: ['get_comments_post_forum']
         }),
-
         displayedPosts () {
             return this.paginate(this.posts);
         },
@@ -253,14 +250,12 @@ export default {
 
     beforeUpdate() {
         this.posts.forEach(post => {
-            post.userAlreadyLike = false
 
+            post.userAlreadyLike = false
             post.Likes.forEach(like => {
-                
                 if(like.UserId == this.user.userId) {
                     post.userAlreadyLike = true
                 }
-
             })
         });
     },
