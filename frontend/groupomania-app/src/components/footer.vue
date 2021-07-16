@@ -56,11 +56,12 @@ export default {
 
 .footer{
     color:rgb(0, 0, 0);
-    margin:0;
+    margin-top:20px;
     padding:0;
 
     .footer-bg{
-        background-color: rgb(206, 206, 206);
+    background-color:#ececec;
+    border-top: solid 1px #cfcfcf;
     }
     .row{
         margin: 20px 0;
@@ -90,7 +91,10 @@ export default {
         padding: 0;
 
         li{
-            padding:0 1vw;
+            padding:0 1.5vw;
+        }
+        i{
+            font-size:2.5rem;
         }
         .bi-github{
             color:black;
