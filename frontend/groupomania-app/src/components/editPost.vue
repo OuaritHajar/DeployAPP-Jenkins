@@ -1,6 +1,6 @@
 <template>
 <!-- Edit post -->
-<div v-if="post.userId === user.userId || user.isAdmin" class="edit-post">
+<div class="edit-post">
     <hr>
     <form enctype="multipart/form-data">
         <fieldset>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="text-center">
-                <button @click="editPost()" class="btn btn-primary">
+                <button @click="editPost(post.id)" class="btn btn-primary">
                     Modifier
                 </button>
             </div>
@@ -43,12 +43,15 @@ export default {
             file: null,
         }
     },
+    props: ['post'],
     computed: {
         ...mapGetters({
             user:['get_user'],
-            post:['get_one_post'],
-            comments: ['get_comments_post']
         })
+    },
+    mounted(){
+        
+            console.log("route : ",this.$route.name)
     },
 
 
@@ -59,16 +62,24 @@ export default {
         },
 
 
-        editPost() {
+        editPost(postId) {
             let data = new FormData();
 
-            data.append('title', this.titlePost);
-            data.append('description', this.descriptionPost);
-            data.append('img_url', this.file); 
+            data.set('title', this.titlePost);
+            data.set('description', this.descriptionPost);
+            data.set('img_url', this.file);
+            data.append('postId', postId); 
+
 
             this.$store.dispatch('editPost', data)
             .then(()=> {
-                this.$router.push('/mur')
+                if(this.$route.name == "Post"){
+                    this.$router.push('/mur')
+                } else {
+                    this.$router.go()
+                }
+                
+                
             })
         },
     }

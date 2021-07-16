@@ -210,7 +210,7 @@ module.exports = {
 
                         // update post
                         const postUpdate = await postFound.update({
-                            title: (req.body.title ? req.body.title : postFound.title),
+                            title: (title ? title : postFound.title),
                             img_url: img_url ? `${req.protocol}://${req.get('host')}/images/static/assets/uploads/${req.file.filename}` : postFound.img_url,
                             description: (description ? description : postFound.description)
                         })

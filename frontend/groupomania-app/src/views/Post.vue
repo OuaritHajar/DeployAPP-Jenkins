@@ -24,7 +24,7 @@
             </div>
             
         </div>
-        <EditPost v-if="afficherInterfaceModification"/>
+        <EditPost v-if="afficherInterfaceModification" :post="post"/>
     </div>
     
     <NewComment :post="post"/>

@@ -171,6 +171,15 @@ const store = createStore({
             LePost.listUsersLike = false
         },
 
+        DISPLAY_EDIT_POST:(state, postId) => {
+            const LePost = state.posts.find(post => post.id === postId)
+            LePost.displayEditPost = true
+        },
+        HIDE_EDIT_POST:(state, postId) => {
+            const LePost = state.posts.find(post => post.id === postId)
+            LePost.displayEditPost = false
+        },
+
 
         //------------- AFFICHAGE POST ------------
         DISPLAY_EDIT_COMMENT:(state,commentId) => {
@@ -180,7 +189,9 @@ const store = createStore({
         HIDE_EDIT_COMMENT:(state,commentId) => {
             const leComment = state.commentsPost.find(comment => comment.id === commentId)
             leComment.editComment = false;
-        }
+        },
+        
+        
     },
 
 
@@ -270,6 +281,7 @@ const store = createStore({
                 response.data.forEach(post => {
                     post.displayComment = false
                     post.displayInputComment = false
+                    post.displayEditPost = false
                     post.listUsersLike = false
                 })
 
@@ -306,10 +318,10 @@ const store = createStore({
             });
         },
 
-        editPost: ({state, commit}, data) => {
-            instance.put(`posts/${state.post.id}`, data )
+        editPost: ({ commit }, data) => {
+            instance.put('posts/' + data.get('postId'), data )
             .then( (response) => {
-                console.log(response.data)
+                console.log('response edit post : ',response.data)
                 commit('EDIT_POST', response.data)
             })
             .catch((err) => {
@@ -398,7 +410,7 @@ const store = createStore({
             commit('HIDE_COMMENT', postId)
         },
 
-        
+
         displayInputComments:({commit}, postId) => {
             commit('DISPLAY_INPUT_COMMENT', postId)
         },
@@ -420,6 +432,13 @@ const store = createStore({
         },
         hideEditComment:({commit}, commentId) => {
             commit('HIDE_EDIT_COMMENT', commentId)
+        },
+
+        displayEditPost:({commit}, postId) => {
+            commit('DISPLAY_EDIT_POST', postId)
+        },
+        hideEditPost:({ commit }, postId) => {
+            commit('HIDE_EDIT_POST', postId)
         }
 
 

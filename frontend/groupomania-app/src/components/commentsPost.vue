@@ -46,17 +46,24 @@
             </button>
         </div>
     </div>
+    
+    <NewComment :post="post"/>
+
 </section>
 </template>
 
 
 <script>
 import { mapGetters } from 'vuex'
+import NewComment from '@/components/newComment.vue'
 
 let moment = require("moment")
 
 
 export default {
+    components: { 
+        NewComment 
+    },
     data(){
         return{
             moment:moment,
@@ -71,6 +78,7 @@ export default {
     computed:{
         ...mapGetters({
             user:['get_user'],
+            post:['get_one_post']
         })
     },
 

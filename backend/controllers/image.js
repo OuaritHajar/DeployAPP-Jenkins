@@ -73,6 +73,8 @@ module.exports = {
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
     const postId = req.params.postId;
+
+    console.log('requete : ', req.file)
     
     try {
       // récupère l'user
@@ -88,7 +90,7 @@ module.exports = {
         if (postFound) {
             
             // on vérifie s'il y a une image dans la requete
-            if (req.file == undefined) {
+            if (req.file == null) {
               console.log("pas d'image dans la requete");
               next();
 
