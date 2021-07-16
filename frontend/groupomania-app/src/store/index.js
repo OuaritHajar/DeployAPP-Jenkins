@@ -180,6 +180,16 @@ const store = createStore({
             LePost.listUsersLike = false
         },
 
+
+        //------------- AFFICHAGE POST ------------
+        DISPLAY_EDIT_COMMENT:(state,commentId) => {
+            const leComment = state.commentsPost.find(comment => comment.id === commentId)
+            leComment.editComment = true;
+        },
+        HIDE_EDIT_COMMENT:(state,commentId) => {
+            const leComment = state.commentsPost.find(comment => comment.id === commentId)
+            leComment.editComment = false;
+        }
     },
 
 
@@ -294,6 +304,9 @@ const store = createStore({
         getOnePost: ({commit}, postId) => {
             instance.get('posts/' + postId )
             .then( (response) => {
+                response.data.comments.forEach(comment => {
+                    comment.editComment = false
+                })
                 console.log("response front OnePost : ", response.data)
                 commit('GET_ONE_POST', response.data)
             })
@@ -406,8 +419,16 @@ const store = createStore({
         },
         hideListUsersLike:({commit}, postId) => {
             commit('HIDE_LIST_USERS_LIKE', postId)
-        }
+        },
 
+
+    // --------- Affichage sur post ----------
+        displayEditComment:({commit}, commentId) => {
+            commit('DISPLAY_EDIT_COMMENT', commentId)
+        },
+        hideEditComment:({commit}, commentId) => {
+            commit('HIDE_EDIT_COMMENT', commentId)
+        }
 
 
     },

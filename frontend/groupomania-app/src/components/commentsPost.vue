@@ -20,10 +20,10 @@
 
             <!-- button -->
             <div class="col-auto btn-edit" v-if="comment.UserId === user.userId || user.isAdmin" >
-                <button v-if="afficherInterfaceEditComment != true" @click="afficherInterfaceEditComment = true" class="btn btn-primary">
+                <button v-if="comment.editComment != true" @click="displayEditComment(comment.id)" class="btn btn-primary">
                     <i class="bi bi-pencil-square"></i>
                 </button>
-                <button v-if="afficherInterfaceEditComment" @click="afficherInterfaceEditComment = false" class="btn btn-primary">
+                <button v-if="comment.editComment" @click="hideEditComment(comment.id)" class="btn btn-primary">
                     <i class="bi bi-pencil-square"></i>
                 </button>
 
@@ -37,7 +37,7 @@
         <p class="description-comment"> {{ comment.description }} </p>
 
         <!-- Edit comment -->
-        <div v-if="(comment.UserId === user.userId || user.isAdmin) && afficherInterfaceEditComment" >
+        <div v-if="(comment.UserId === user.userId || user.isAdmin) && comment.editComment" >
             <form>
                 <textarea v-model="comment.editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
             </form>
@@ -75,6 +75,18 @@ export default {
     },
 
     methods:{
+        displayEditComment(commentId){
+            this.$store.dispatch('displayEditComment', commentId)
+        },
+        hideEditComment(commentId){
+            this.$store.dispatch('hideEditComment', commentId)
+        },
+
+
+
+
+
+
         editComment(commentId, description){
             let data = { 
                 'description': description,
