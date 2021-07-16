@@ -1,7 +1,7 @@
 <template>
 <section>
     <div class="post">
-        <UserHeader/>
+        <UserHeader :post="post"/>
         
         <!-- Titre / Description -->
         <div class="description-post">
@@ -10,7 +10,7 @@
             <div class="img-post">
                 <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
             </div>
-            <div class="text-center">
+            <div v-if="post.userId === user.userId || user.isAdmin" class="text-center">
                 <button v-if="afficherInterfaceModification != true" @click="afficherInterfaceModification = true" class="btn btn-primary">
                     <i class="bi bi-pencil-square"> Modifier</i> 
                 </button>
@@ -27,8 +27,8 @@
         <EditPost v-if="afficherInterfaceModification"/>
     </div>
     
-    <NewComment/>
-    <Comments/>
+    <NewComment :post="post"/>
+    <Comments :comments="comments" />
     
 </section>
 </template>
@@ -60,7 +60,9 @@ export default {
     },
     computed: {
         ...mapGetters({
-            post:['get_one_post']
+            user: ['get_user'],
+            post:['get_one_post'],
+            comments: ['get_comments_post']
         }),
     },
     methods: {

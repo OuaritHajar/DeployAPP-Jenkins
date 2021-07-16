@@ -38,8 +38,6 @@ const store = createStore({
         posts: [],
         post:'',
         commentsPost:'',
-        idCommentPost:'',  // utilité a verifier
-        commentsOfPost:''
     },
 
 
@@ -58,9 +56,6 @@ const store = createStore({
         },
         get_comments_post(state) {
             return state.commentsPost
-        },
-        get_comments_post_forum(state) {
-            return state.commentsOfPost
         },
         get_user_profil(state) {
             return state.userProfil
@@ -91,10 +86,6 @@ const store = createStore({
             console.log(localStorage)
             console.log(user)
         },
-
-
-
-        
 
         // ----------- PROFIL -----------------
 
@@ -148,7 +139,7 @@ const store = createStore({
             state.post.comments = dataComment.description
         },
         GET_COMMENTS_POST:(state, comments) => {
-            state.commentsOfPost = comments
+            state.commentsPost = comments
         },
 
 
@@ -407,12 +398,14 @@ const store = createStore({
             commit('HIDE_COMMENT', postId)
         },
 
+        
         displayInputComments:({commit}, postId) => {
             commit('DISPLAY_INPUT_COMMENT', postId)
         },
         hideInputComments:({commit}, postId) => {
             commit('HIDE_INPUT_COMMENT', postId)
         },
+
 
         displayListUsersLike:({commit}, postId) => {
             commit('DISPLAY_LIST_USERS_LIKE', postId)
@@ -422,7 +415,6 @@ const store = createStore({
         },
 
 
-    // --------- Affichage sur post ----------
         displayEditComment:({commit}, commentId) => {
             commit('DISPLAY_EDIT_COMMENT', commentId)
         },

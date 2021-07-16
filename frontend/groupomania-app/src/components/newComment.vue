@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 
 export default {
     data(){
@@ -26,12 +25,9 @@ export default {
             descriptionComment: "",
         }
     },
+    props: ['post'],
 
-    computed: {
-        ...mapGetters({
-            post: ['get_one_post']
-        })
-    },
+    computed: {},
     
     methods: {
         newComment(postId) {

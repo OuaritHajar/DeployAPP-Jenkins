@@ -63,14 +63,14 @@ export default {
             afficherInterfaceEditComment : false
         }
     },
+    props: ['comments'],
+    emits: [''],
     mounted(){
         moment.locale('fr');
     },
     computed:{
         ...mapGetters({
             user:['get_user'],
-            post:['get_one_post'],
-            comments: ['get_comments_post']
         })
     },
 

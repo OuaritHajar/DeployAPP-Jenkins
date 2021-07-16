@@ -15,39 +15,17 @@
     <div v-for="(post, index) in displayedPosts" :key="index" class="post">
 
         <router-link :to="{name: 'Post', params: {postId: post.id}}">
-          <!-- info user -->
-          <div class="row information-post">
-            
-            <div class="col-xs-3">
-              <router-link :to="{name: 'Profil', params: {userId: post.UserId }} " v-if="post.User">
-                <img :src="post.User.avatarUrl" alt="">
-              </router-link>
+          
+            <UserHeader :post="post"></UserHeader>
+    
+            <!-- Titre / Description -->
+            <div class="description-post">
+                <p class="title" v-if="post.title">  {{ post.title }} </p>
+                <p class="description"> {{ post.description }} </p>
+                <div class="img-post">
+                    <img v-if="post.img_url != null" :src="post.img_url" alt="photo" >
+                </div>
             </div>
-    
-            <div class="col-xs-9">
-              <div class="row ml-3">
-                <router-link :to="{name: 'Profil', params: {userId: post.UserId }} " v-if="post.User">
-                  <p class="post_user-name">{{ post.User.first_name }} {{ post.User.last_name }} </p>
-                </router-link>
-              </div>
-    
-              <div class="row ml-3">
-                <p v-if="post.createdAt === post.updatedAt"> il y a {{ moment(post.createdAt).fromNow(true) }} </p> 
-                <p v-else>modifié il y a {{ moment(post.updatedAt).fromNow(true) }}  </p>
-              </div>
-            </div>
-    
-          </div>
-    
-          <!-- Titre / Description -->
-          <div class="description-post">
-            <p class="title" v-if="post.title">  {{ post.title }} </p>
-            <p class="description"> {{ post.description }} </p>
-            <div class="img-post">
-              <img v-if="post.img_url != null" :src="post.img_url" alt="photo" >
-            </div>
-            
-          </div>
         </router-link>
     
         <hr>
@@ -129,32 +107,10 @@
 
 
             <!-- Commentaires -->
-            <div v-for="(comment,index) in commentsPost" :key="index">
-            
-              <!-- on affiche que sur le post -->
-              <div v-if="comment.PostId == post.id && post.displayComment">
-              
-              
-                <div class="row" v-if="comment.User">
-                  <div class="col-xs-3 comments_image-comment" >
-                    <img :src="comment.User.avatarUrl" alt="">
-                  </div>
-
-                  <div class="col-xs-9">
-                    <router-link :to="{name: 'Profil', params: {userId: comment.UserId }}">
-                      <p class="user-comment"> {{ comment.User.first_name }} {{ comment.User.last_name }}</p>
-                    </router-link>
-                    <p v-if="comment.createdAt === comment.updatedAt" class="comment-date"> il y a {{ moment(comment.createdAt).fromNow(true) }} </p> 
-                    <p v-else class="comment-date">modifié il y a {{ moment(comment.updatedAt).fromNow(true) }}  </p>
-                  </div>
-                </div>
-
-                <div>
-                  <p class="description-comment"> {{ comment.description }}</p>
-                </div>
-                <hr>
-              </div>
+            <div v-if="post.displayComment">
+                <Comments :comments="commentsPost" ></Comments>
             </div>
+            
 
             <!-- Ajouter un commentaire -->
             <div v-if="post.displayInputComment || post.displayComment" class="row new-comment">
@@ -197,11 +153,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import NewPost from '@/components/newPost.vue'
+import UserHeader from '@/components/userHeader.vue'
+import Comments from '@/components/commentsPost.vue'
+
+
 let moment = require("moment");
 
 export default {
     components: {
         NewPost,
+        UserHeader,
+        Comments
         //CommentsPost
     },
 
@@ -223,7 +185,7 @@ export default {
         ...mapGetters({
             posts: ['get_all_posts'],
             user: ['get_user'],
-            commentsPost: ['get_comments_post_forum']
+            commentsPost: ['get_comments_post']
         }),
         displayedPosts () {
             return this.paginate(this.posts);
@@ -276,6 +238,10 @@ export default {
         masquerComments(postId){
           this.$store.dispatch('hideComments', postId)
         },
+
+
+
+
 
 
         afficherInputCommentaire(postId){

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 
 let moment = require("moment");
 
@@ -35,11 +34,9 @@ export default {
             moment:moment,
         }
     },
-    computed: {
-        ...mapGetters({
-            post: ['get_one_post']
-        })
-    },
+    props: ['post'],
+    computed: {}
+    
 }
 </script>
 

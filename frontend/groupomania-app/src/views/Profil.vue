@@ -112,6 +112,9 @@ export default {
         margin-bottom:20px
     }
 }
+hr{
+    margin:0 0 30px;
+}
 
 
 </style>
