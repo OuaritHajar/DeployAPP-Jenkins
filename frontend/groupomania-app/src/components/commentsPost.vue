@@ -20,15 +20,20 @@
 
             <!-- button -->
             <div class="col-auto btn-edit" v-if="comment.UserId === user.userId || user.isAdmin" >
-                <button v-if="comment.editComment != true" @click="displayEditComment(comment.id)" class="btn btn-primary">
+                <button v-if="comment.displayEditComment != true" 
+                @click="displayEditComment(comment.id, comment.PostId)" 
+                class="btn btn-primary">
                     <i class="bi bi-pencil-square" title="Editer"></i>
                 </button>
-                <button v-if="comment.editComment" @click="hideEditComment(comment.id)" class="btn btn-primary">
+                <button v-if="comment.displayEditComment" 
+                @click="hideEditComment(comment.id, comment.PostId)" 
+                class="btn btn-primary">
                     <i class="bi bi-pencil-square" title="Cacher"></i>
                 </button>
 
                 <span class="spacer"></span>
-                <button @click="deleteComment(comment.id)" class="btn btn-danger">
+                <button @click="deleteComment(comment.id, comment.PostId)" 
+                class="btn btn-danger">
                     <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>
@@ -37,11 +42,11 @@
         <p class="description-comment"> {{ comment.description }} </p>
 
         <!-- Edit comment -->
-        <div v-if="(comment.UserId === user.userId || user.isAdmin) && comment.editComment" >
+        <div v-if="(comment.UserId === user.userId || user.isAdmin) && comment.displayEditComment" >
             <form>
                 <textarea v-model="comment.editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
             </form>
-            <button @click="editComment(comment.id, comment.editDescriptionComment)" class="btn btn-primary">
+            <button @click="editComment(comment.id, comment.editDescriptionComment, comment.PostId)" class="btn btn-primary">
                 <i class="bi bi-arrow-return-right"> Modifier</i>
             </button>
         </div>
@@ -70,7 +75,7 @@ export default {
             afficherInterfaceEditComment : false
         }
     },
-    props: ['comments'],
+    props: ['comments', 'post'],
     emits: [''],
     mounted(){
         moment.locale('fr');
@@ -78,36 +83,50 @@ export default {
     computed:{
         ...mapGetters({
             user:['get_user'],
-            post:['get_one_post']
         })
     },
 
     methods:{
-        displayEditComment(commentId){
-            this.$store.dispatch('displayEditComment', commentId)
+        displayEditComment(commentId, postId){
+            this.$store.dispatch('displayEditComment', {commentId : commentId, postId: postId, vue: this.$route.name })
         },
-        hideEditComment(commentId){
-            this.$store.dispatch('hideEditComment', commentId)
+        hideEditComment(commentId, postId){
+            this.$store.dispatch('hideEditComment', {commentId : commentId, postId: postId, vue: this.$route.name } )
         },
 
 
-        editComment(commentId, description){
+        editComment(commentId, description, postId){
             let data = { 
                 'description': description,
-                'commentId': commentId    
+                'commentId': commentId,
+                'postId': postId
             }
             this.$store.dispatch('editComment', data)
             .then(()=> {
+                //if(this.$route.name == "Post"){
+                //    this.$router.push('/mur')
+                //} else {
+                //    this.$router.go()
+                //}
                 this.$router.go()
+                
+                
             })
         },
 
-        deleteComment(commentId){
+        deleteComment(commentId, postId){
             if(confirm('Etes vous sur de vouloir supprimer le commentaire ?')){
-                let data = {'commentId': commentId }
+                let data = {
+                    'commentId': commentId,
+                    'postId': postId
+                }
                 this.$store.dispatch('deleteComment', data)
                 .then(()=> {
-                    this.$router.go()
+                    //if(this.$route.name == "Post"){
+                    //    this.$router.push('/mur')
+                    //} else {
+                        this.$router.go()
+                    //}
                 })
             }
         },

@@ -73,13 +73,8 @@ export default {
 
             this.$store.dispatch('editPost', data)
             .then(()=> {
-                if(this.$route.name == "Post"){
-                    this.$router.push('/mur')
-                } else {
-                    this.$router.go()
-                }
-                
-                
+                this.$store.dispatch('hideEditPost', { postId: postId, vue: this.$route.name })
+                this.$router.go()
             })
         },
     }

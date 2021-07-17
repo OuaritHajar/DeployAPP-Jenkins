@@ -37,7 +37,6 @@ const store = createStore({
         userProfil:'',
         posts: [],
         post:'',
-        commentsPost:'',
     },
 
 
@@ -52,10 +51,8 @@ const store = createStore({
             return state.posts
         },
         get_one_post(state) {
+            console.log("getOnePost : ",state.post)
             return state.post
-        },
-        get_comments_post(state) {
-            return state.commentsPost
         },
         get_user_profil(state) {
             return state.userProfil
@@ -72,23 +69,20 @@ const store = createStore({
             localStorage.setItem('user', JSON.stringify(user));
             state.user = user;
         },
-
         STATUS: (state, statusRetourne) => {
             state.status = statusRetourne
         },
-        
         LOG_OUT: (state) => {
             state.user = {
                 userId: -1,
                 token: '',
               }
             localStorage.clear()
-            console.log(localStorage)
-            console.log(user)
+            console.log(localStorage, user)
         },
 
-        // ----------- PROFIL -----------------
 
+        // ----------- PROFIL -----------------
         EDIT_PROFIL: (state, profil) => {
             state.userProfil.first_name = profil.first_name,
             state.userProfil.last_name = profil.last_name
@@ -98,49 +92,37 @@ const store = createStore({
         },
         
 
-
-
         // ---------------  POSTS  ----------------
         ALL_POSTS: (state, payload) => {
             state.posts = payload
         },
-
-        GET_ONE_POST: (state, payload) => {
-            state.post = payload.post,
-            state.commentsPost = payload.comments
+        GET_ONE_POST: (state, data) => {
+            state.post = data
         },
-        
         CREATE_POST: (state, newPost) => {
             state.posts.splice(0, 0, newPost)
         },
-
-        EDIT_POST: (state, dataPost) => {
-            state.post = dataPost
-        },
+        EDIT_POST: () => {},
         POST_DELETE:()=> {},
         ADD_REMOVE_LIKE:()=>{},
 
 
-        //ADD_REMOVE_LIKE:(state, data)=> {
-        //    const LePost = state.posts.find(post => post.id === data.postId)
-        //    console.log(LePost)
-        //    LePost.userAlreadyLike = data.response
-        //},
-
         // -----------------  COMMENTS  ---------------
-        NEW_COMMENT: (state, newComment) => {
-            state.commentsPost.push(newComment)
+        NEW_COMMENT: (state, data) => {
+            if(data.data.vue == "Post"){
+                state.post.Comments.push(data.newComment)
+            } else {
+                const LePost = state.posts.find(post => post.id === data.data.postId)
+                LePost.Comments.push(data.newComment)
+            }
         },
-        
-        GET_ONE_COMMENT:(state, data) => {
-            state.idCommentPost = data.commentId
+        DELETE_COMMENT: ()=> {},
+        EDIT_COMMENT: () => {
+            //state.post.comments = dataComment.description
         },
-        EDIT_COMMENT: (state, dataComment) => {
-            state.post.comments = dataComment.description
-        },
-        GET_COMMENTS_POST:(state, comments) => {
-            state.commentsPost = comments
-        },
+        //GET_ONE_COMMENT:() => {
+        //    //state.idCommentPost = data.commentId
+        //},
 
 
         // ----------------- AFFICHAGE ---------------
@@ -153,44 +135,79 @@ const store = createStore({
             LePost.displayComment = false
         },
 
-        DISPLAY_INPUT_COMMENT:(state, postId) => {
-            const LePost = state.posts.find(post => post.id === postId)
-            LePost.displayInputComment = true
+        DISPLAY_INPUT_COMMENT:(state, data) => {
+            console.log("je cherche ca : ",data)
+            if(data.vue == "Post"){
+                state.post.displayInputComment = true
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                LePost.displayInputComment = true
+            }
         },
-        HIDE_INPUT_COMMENT:(state, postId) => {
-            const LePost = state.posts.find(post => post.id === postId)
-            LePost.displayInputComment = false
-        },
-
-        DISPLAY_LIST_USERS_LIKE:(state, postId) => {
-            const LePost = state.posts.find(post => post.id === postId)
-            LePost.listUsersLike = true
-        },
-        HIDE_LIST_USERS_LIKE:(state, postId) => {
-            const LePost = state.posts.find(post => post.id === postId)
-            LePost.listUsersLike = false
-        },
-
-        DISPLAY_EDIT_POST:(state, postId) => {
-            const LePost = state.posts.find(post => post.id === postId)
-            LePost.displayEditPost = true
-        },
-        HIDE_EDIT_POST:(state, postId) => {
-            const LePost = state.posts.find(post => post.id === postId)
-            LePost.displayEditPost = false
+        HIDE_INPUT_COMMENT:(state, data) => {
+            if(data.vue == "Post"){
+                state.post.displayInputComment = false
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                LePost.displayInputComment = false
+            }
         },
 
+        DISPLAY_LIST_USERS_LIKE:(state, data) => {
+            if(data.vue == "Post"){
+                state.post.listUsersLike = true
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                LePost.listUsersLike = true
+            }
+        },
+        HIDE_LIST_USERS_LIKE:(state, data) => {
+            if(data.vue == "Post"){
+                state.post.listUsersLike = false
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                LePost.listUsersLike = false
+            }
+        },
 
-        //------------- AFFICHAGE POST ------------
-        DISPLAY_EDIT_COMMENT:(state,commentId) => {
-            const leComment = state.commentsPost.find(comment => comment.id === commentId)
-            leComment.editComment = true;
+        DISPLAY_EDIT_POST:(state, data) => {
+            if(data.vue == "Post"){
+                state.post.displayEditPost = true
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                LePost.displayEditPost = true
+            }
         },
-        HIDE_EDIT_COMMENT:(state,commentId) => {
-            const leComment = state.commentsPost.find(comment => comment.id === commentId)
-            leComment.editComment = false;
+        HIDE_EDIT_POST:(state, data) => {
+            if(data.vue == "Post"){
+                state.post.displayEditPost = false
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                LePost.displayEditPost = false
+            }
         },
-        
+
+        //------------- AFFICHAGE EDIT COMMENT ------------
+        DISPLAY_EDIT_COMMENT:(state, data) => {
+            if(data.vue == "Post"){
+                const LeComment = state.post.Comments.find(comment => comment.id == data.commentId)
+                LeComment.displayEditComment = true
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                const LeComment = LePost.Comments.find(comment => comment.id == data.commentId)
+                LeComment.displayEditComment = true
+            }
+        },
+        HIDE_EDIT_COMMENT:(state, data) => {
+            if(data.vue == "Post"){
+                const LeComment = state.post.Comments.find(comment => comment.id == data.commentId)
+                LeComment.displayEditComment = false
+            } else {
+                const LePost = state.posts.find(post => post.id === data.postId)
+                const LeComment = LePost.Comments.find(comment => comment.id == data.commentId)
+                LeComment.displayEditComment = false
+            }
+        },
         
     },
 
@@ -283,8 +300,10 @@ const store = createStore({
                     post.displayInputComment = false
                     post.displayEditPost = false
                     post.listUsersLike = false
+                    post.Comments.forEach(comment => {
+                        comment.displayEditComment = false
+                    })
                 })
-
                 console.log("response front All posts",response.data)
                 commit('ALL_POSTS', response.data)
             })
@@ -304,24 +323,25 @@ const store = createStore({
             })
         },
 
-        getOnePost: ({commit}, postId) => {
-            instance.get('posts/' + postId )
-            .then( (response) => {
-                response.data.comments.forEach(comment => {
-                    comment.editComment = false
+        getOnePost: ({ commit }, postId) => {
+            instance.get('posts/' + postId)
+            .then((response)=> {
+                response.data.displayEditPost = false
+                response.data.displayInputComment = false
+                response.data.listUsersLike = false
+
+                response.data.Comments.forEach(comment => {
+                    comment.displayEditComment = false
                 })
-                console.log("response front OnePost : ", response.data)
+
+                console.log('respose post : ', response.data)
                 commit('GET_ONE_POST', response.data)
             })
-            .catch((err) => {
-                console.error(err);
-            });
         },
 
         editPost: ({ commit }, data) => {
             instance.put('posts/' + data.get('postId'), data )
             .then( (response) => {
-                console.log('response edit post : ',response.data)
                 commit('EDIT_POST', response.data)
             })
             .catch((err) => {
@@ -339,37 +359,20 @@ const store = createStore({
         
 
 
-
     // -------------------  COMMENTS  -------------------
         newComment: ({commit}, data) => {
-            instance.post('posts/'+ data.postId + '/comment', data)
+            instance.post('posts/'+ data.postId + '/comment', data )
             .then( (response) => {
-                console.log(response.data)
-                commit('NEW_COMMENT', response.data)
+                commit('NEW_COMMENT', { newComment :response.data, data: data})
             })
             .catch((err) => {
                 console.error(err);
             });
         },
 
-        getCommentsPost: ({commit},postId) => {
-            instance.get('posts/' + postId + '/comments')
+        editComment: ({ commit }, data) => {
+            instance.put('posts/' + data.postId + '/comment/' + data.commentId, data)
             .then( (response) => {
-
-                console.log("reponse front comments du post",response.data)
-                commit('GET_COMMENTS_POST', response.data)
-
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-        },
-
-        editComment: ({state, commit}, data) => {
-            commit('GET_ONE_COMMENT', data)
-            instance.put(`posts/${state.post.id}/comment/${state.idCommentPost}`, data)
-            .then( (response) => {
-                console.log(response.data)
                 commit('EDIT_COMMENT', response.data)
             })
             .catch((err) => {
@@ -377,18 +380,17 @@ const store = createStore({
             });
         },
             
-        deleteComment:({ state, commit },data) => {
-            commit('GET_ONE_COMMENT', data)
-            instance.delete(`posts/${state.post.id}/comment/${state.idCommentPost}`)
-            .then( (response) => {
-                console.log(response)
-                //commit('DELETE_COMMENT', response.data)
+        deleteComment:({ commit }, data) => {
+            instance.delete('posts/'+ data.postId +'/comment/'+ data.commentId)
+            .then(() => {
+                commit('DELETE_COMMENT')
             })
             .catch((err) => {
                 console.error(err);
             });
         },
 
+        
     // -------------------  LIKES  -------------------
         addOrRemoveLike:({commit}, postId) => {
             instance.post('posts/' + postId + '/like')
@@ -411,8 +413,8 @@ const store = createStore({
         },
 
 
-        displayInputComments:({commit}, postId) => {
-            commit('DISPLAY_INPUT_COMMENT', postId)
+        displayInputComments:({commit}, data) => {
+            commit('DISPLAY_INPUT_COMMENT', data)
         },
         hideInputComments:({commit}, postId) => {
             commit('HIDE_INPUT_COMMENT', postId)
@@ -427,20 +429,21 @@ const store = createStore({
         },
 
 
-        displayEditComment:({commit}, commentId) => {
-            commit('DISPLAY_EDIT_COMMENT', commentId)
-        },
-        hideEditComment:({commit}, commentId) => {
-            commit('HIDE_EDIT_COMMENT', commentId)
-        },
-
-        displayEditPost:({commit}, postId) => {
-            commit('DISPLAY_EDIT_POST', postId)
+        displayEditPost:({commit}, data) => {
+            commit('DISPLAY_EDIT_POST', data)
         },
         hideEditPost:({ commit }, postId) => {
             commit('HIDE_EDIT_POST', postId)
-        }
+        },
 
+
+        
+        displayEditComment:({commit}, data) => {
+            commit('DISPLAY_EDIT_COMMENT', data)
+        },
+        hideEditComment:({commit}, data) => {
+            commit('HIDE_EDIT_COMMENT', data)
+        },
 
     },
     plugins: [createPersistedState()],

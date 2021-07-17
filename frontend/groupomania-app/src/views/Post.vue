@@ -10,25 +10,16 @@
             <div class="img-post">
                 <img v-if="post.img_url != null" :src="post.img_url" alt="photo">
             </div>
-            <div v-if="post.userId === user.userId || user.isAdmin" class="text-center">
-                <button v-if="afficherInterfaceModification != true" @click="afficherInterfaceModification = true" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"> Modifier</i> 
-                </button>
-                <button v-if="afficherInterfaceModification" @click="afficherInterfaceModification = false" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"> Cacher </i> 
-                </button>
-                
-                <button @click="deletePost(post.id)" class="btn btn-danger">
-                    <i class="bi bi-trash"> Supprimer</i>
-                </button>
-            </div>
             
+            <InteractionPost :post="post" />
+
         </div>
         <EditPost v-if="afficherInterfaceModification" :post="post"/>
+        
     </div>
     
-    <NewComment :post="post"/>
-    <Comments :comments="comments" />
+    <NewComment v-if="post.displayInputComment" :post="post"/>
+    <Comments :comments="post.Comments" />
     
 </section>
 </template>
@@ -41,6 +32,8 @@ import EditPost from '@/components/editPost.vue'
 import Comments from'@/components/commentsPost.vue'
 import NewComment from '@/components/newComment'
 import UserHeader from '@/components/userHeader.vue'
+import InteractionPost from '@/components/interactionPost.vue'
+
 
 
 export default {
@@ -53,34 +46,44 @@ export default {
         EditPost,
         Comments,
         NewComment,
-        UserHeader
+        UserHeader,
+        InteractionPost
     },
     mounted(){
         this.$store.dispatch('getOnePost', this.$route.params.postId )
     },
+    beforeUpdate() {
+        this.post.userAlreadyLike = false
+        this.post.Likes.forEach(like => {
+            if(like.UserId == this.user.userId) {
+                this.post.userAlreadyLike = true
+            }
+        })
+    },
+
     computed: {
         ...mapGetters({
             user: ['get_user'],
-            post:['get_one_post'],
-            comments: ['get_comments_post']
+            post:['get_one_post']
         }),
     },
     methods: {
         deletePost(postId) {
+            
             if(confirm('Etes vous sur ?')) {
                 this.$store.dispatch('deletePost', postId)
                 .then(()=> {
-                    this.$router.go(-1)
+                    if(this.$route.name == "Post"){
+                        this.$router.push('/mur')
+                    } else {
+                        this.$router.go()
+                    }
                 })
             }
         },
-        addLike(postId) {
-            this.$store.dispatch('addOrRemoveLike', postId)
-            .then(()=> {
-                this.$router.go()
-            })
-        }
-    },
+
+        
+    }
     
 }
 </script>

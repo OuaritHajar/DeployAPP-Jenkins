@@ -62,7 +62,7 @@ module.exports = {
 
 
 
-    listPosts: async function (req, res) {
+    listPosts: async (req, res) => {
 
         // Getting auth header
         const headerAuth = req.headers['authorization'];
@@ -81,7 +81,7 @@ module.exports = {
 
         // récupère l'user
         try {
-            var userFound = await db.User.findOne({
+            const userFound = await db.User.findOne({
                 where: { id: userId },
                 attributes: ['id', 'first_name', 'last_name', 'createdAt', 'updatedAt']
             });
@@ -89,7 +89,7 @@ module.exports = {
             if (userFound) {
                 // récupère tout les posts
             
-                var allPosts = await db.Post.findAll({
+                const allPosts = await db.Post.findAll({
                     order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
                     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
                     limit: (!isNaN(limit)) ? limit : null,
@@ -98,9 +98,10 @@ module.exports = {
                         model: db.User , attributes: ['first_name', 'last_name', 'avatarUrl'] 
                         },{
                         model: db.Like,
-                            include: [{ model: db.User , attributes: ['first_name', 'last_name', 'avatarUrl']}]
+                            include: [{ model: db.User , attributes: ['first_name', 'last_name'] }]
                         },{
-                        model: db.Comment, attributes: ['id'] 
+                        model: db.Comment,
+                            include: [{ model: db.User, attributes: ['first_name', 'last_name', 'avatarUrl'] }]
                         }
                     ]
                 })
@@ -141,22 +142,20 @@ module.exports = {
 
                 // récupère le post
                 const postFound = await db.Post.findOne({
-                    attributes: ['id','userId', 'title', 'description', 'img_url', 'createdAt', 'updatedAt'],
                     where: { id: req.params.postId },
-                    include: db.User
+                    include: [{
+                        model: db.User, attributes: ['first_name', 'last_name', 'avatarUrl'] 
+                    },{
+                        model: db.Like,
+                        include: [{ model: db.User , attributes: ['first_name', 'last_name'] }]
+                    },{
+                        model: db.Comment,
+                            include: [{ model: db.User, attributes: ['first_name', 'last_name', 'avatarUrl'] }]
+                        }
+                    ]
                 })
                 if (postFound) {
-
-                    // récup les commentaires
-                    const commentsFound = await db.Comment.findAll({
-                        where: { postId: req.params.postId },
-                        include: db.User
-                    })
-                    if (commentsFound) {
-                        res.status(200).json({ 'post': postFound, 'comments': commentsFound, 'user': userFound });
-                    } else {
-                        res.status(404).json({ error: "Comments not found" })
-                    }
+                    res.status(200).json(postFound); 
                 } else {
                     res.status(404).json({ "error": "no post fund" });
                 }

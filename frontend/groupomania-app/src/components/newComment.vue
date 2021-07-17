@@ -30,11 +30,20 @@ export default {
     methods: {
         newComment(postId) {
             let data = {
-                'description': this.descriptionComment,
-                'postId' : postId
-                }
+                description: this.descriptionComment,
+                postId : postId,
+                vue: this.$route.name
+            }
+            console.log("newComment : ",data)
+
             this.$store.dispatch('newComment', data)
             .then(()=> {
+                //if(this.$route.name == "Post"){
+                //    this.$router.go()
+                //} else {
+                //    this.$router.go()
+                //}
+                this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
                 this.$router.go()
             })
         },

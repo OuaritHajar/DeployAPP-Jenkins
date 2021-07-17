@@ -83,26 +83,26 @@ export default {
 
         // Affichage
         listUsersLike(postId){
-            this.$store.dispatch('displayListUsersLike', postId)
+            this.$store.dispatch('displayListUsersLike', { postId: postId, vue: this.$route.name })
         },
         hideListUsersLike(postId){
-            this.$store.dispatch('hideListUsersLike', postId)
+            this.$store.dispatch('hideListUsersLike', { postId: postId, vue: this.$route.name })
         },
 
 
         afficherInputCommentaire(postId){
-            this.$store.dispatch('displayInputComments', postId)
+            this.$store.dispatch('displayInputComments', { postId: postId, vue: this.$route.name } )
         },
         masquerInputCommentaire(postId){
-            this.$store.dispatch('hideInputComments', postId)
+            this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
         },
 
 
         afficherEditPost(postId){
-            this.$store.dispatch('displayEditPost', postId)
+            this.$store.dispatch('displayEditPost', { postId: postId, vue: this.$route.name })
         },
         hideEditPost(postId){
-            this.$store.dispatch('hideEditPost', postId)
+            this.$store.dispatch('hideEditPost', { postId: postId, vue: this.$route.name })
         },
 
 
@@ -140,7 +140,7 @@ export default {
         margin-bottom:-3px;
 
         .like{
-            margin-left:10px;
+            margin-left:5px;
             padding-top: -5px!important;
         }
     }

@@ -43,25 +43,38 @@
             <!-- Bouton Commentaires -->
             <div v-if="post.Comments.length == 1" class="text-center">
                 <hr>
-                <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary">
+                <button v-if="post.displayComment == false" 
+                @click="afficheComments(post.id)" 
+                class="btn btn-primary">
                     Afficher le commentaire
                 </button>
 
-                <button v-if="post.displayComment" @click="masquerComments(post.id)" class="btn btn-primary">
+                <button v-if="post.displayComment" 
+                @click="masquerComments(post.id)" 
+                class="btn btn-primary">
                     Masquer le commentaire
                 </button>
             </div>
 
             <div v-else-if="post.Comments.length > 1" class="text-center">
-              <hr>
-              <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary">Afficher les {{ post.Comments.length }} commentaires</button>
-              <button v-if="post.displayComment" @click="masquerComments(post.id)" class="btn btn-primary" >Masquer les commentaires</button>
+                <hr>
+                <button v-if="post.displayComment == false" 
+                @click="afficheComments(post.id)" 
+                class="btn btn-primary">
+                    Afficher les {{ post.Comments.length }} commentaires
+                </button>
+                
+                <button v-if="post.displayComment" 
+                @click="masquerComments(post.id)" 
+                class="btn btn-primary">
+                    Masquer les commentaires
+                </button>
             </div>
 
 
 
             <!-- Commentaires -->
-            <Comments v-if="post.displayComment" :comments="commentsPost" ></Comments>
+            <Comments v-if="post.displayComment" :comments="post.Comments" :post="post" ></Comments>
 
         </div>
     </div>
@@ -106,7 +119,6 @@ export default {
         Comments,
         InteractionPost,
         NewComment
-        //CommentsPost
     },
 
     data() {
@@ -127,7 +139,6 @@ export default {
         ...mapGetters({
             posts: ['get_all_posts'],
             user: ['get_user'],
-            commentsPost: ['get_comments_post']
         }),
         displayedPosts () {
             return this.paginate(this.posts);
@@ -138,17 +149,6 @@ export default {
     mounted(){
         moment.locale('fr');
         this.$store.dispatch('getAllPosts')
-        //this.posts.forEach(post => {
-        //    post.Likes.forEach(like => {
-        //        
-        //        if(like.UserId == this.user.userId) {
-        //            post.userAlreadyLike = true
-        //        } else {
-        //            post.userAlreadyLike = false
-        //        }
-        //    })
-        //});
-
     },
 
 
@@ -172,10 +172,7 @@ export default {
         },
 
         afficheComments(postId) {
-          this.$store.dispatch('getCommentsPost', postId)
-          .then(()=> {
-              this.$store.dispatch('displayComments', postId)
-          })
+            this.$store.dispatch('displayComments', postId)
         },
         masquerComments(postId){
           this.$store.dispatch('hideComments', postId)
@@ -215,7 +212,8 @@ export default {
 	watch: {
 		posts () {
 			this.setPages();
-		}
+		},
+
 	},
 }
 </script>
@@ -264,7 +262,8 @@ export default {
     }
 
     .img-post{
-        margin-bottom:10px;
+        margin-bottom:20px;
+        display: flex;
 
         img{
             max-width: 500px;
