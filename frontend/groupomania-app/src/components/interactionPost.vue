@@ -4,8 +4,8 @@
 
         <div class="col-3 text-center">
             <button @click="addLike(post.id)" @mouseover="listUsersLike(post.id)" @mouseleave="hideListUsersLike(post.id)" class="btn btn-like">
-                <i v-if="post.userAlreadyLike" class="bi bi-hand-thumbs-up-fill"></i>
-                <i v-else-if="post.userAlreadyLike == false || undefined" class="bi bi-hand-thumbs-up"></i>
+                <i v-if="post.userAlreadyLike" class="bi bi-hand-thumbs-up-fill" title="Dislike"></i>
+                <i v-else-if="post.userAlreadyLike == false || undefined" class="bi bi-hand-thumbs-up" title="Like"></i>
                 <span v-if="post.Likes">
                     <span v-if="post.Likes.length > 0" class="like"> {{ post.Likes.length }} </span>
                 </span>
@@ -13,18 +13,18 @@
         </div>
 
         <div class="col-3 text-center">
-            <button v-if="post.displayInputComment == false" @click="afficherInputCommentaire(post.id)"  class="btn btn-personnaliser"><i class="bi bi-reply"></i></button>
-            <button v-if="post.displayInputComment" @click="masquerInputCommentaire(post.id) "  class="btn btn-personnaliser"><i class="bi bi-reply-fill"></i></button>
+            <button v-if="post.displayInputComment == false" @click="afficherInputCommentaire(post.id)" class="btn btn-personnaliser"><i class="bi bi-reply" title="Commenter"></i></button>
+            <button v-if="post.displayInputComment" @click="masquerInputCommentaire(post.id)" class="btn btn-personnaliser"><i class="bi bi-reply-fill" title="Cacher les commentaires"></i></button>
         </div>
 
         <div class="col-3 text-center">
             
             <div v-if="post.UserId">
                 <button v-if="(post.UserId == user.userId || user.isAdmin) && post.displayEditPost != true" @click="afficherEditPost(post.id)" class="btn">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-pencil-square" title="Editer"></i>
                 </button>
                 <button v-if="(post.UserId == user.userId || user.isAdmin)&& post.displayEditPost" @click="hideEditPost(post.id)" class="btn">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-pencil-square" title="Cacher l'interface"></i>
                 </button>
             </div>
             
@@ -33,7 +33,7 @@
         <div class="col-3 text-center">
             <div v-if="post.UserId">
                 <button v-if="post.UserId == user.userId || user.isAdmin" @click="(deletePost(post.id))" class="btn">
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>
         </div>

@@ -15,7 +15,6 @@
     <div v-for="(post, index) in displayedPosts" :key="index" class="post">
 
         <router-link :to="{name: 'Post', params: {postId: post.id}}">
-          
             <UserHeader :post="post"></UserHeader>
     
             <!-- Titre / Description -->
@@ -31,63 +30,40 @@
         <hr>
     
         <!-- Likes / Btn commentaire / editer -->
-
         <InteractionPost :post="post"></InteractionPost>
         
-
-
-
         
         <!-- Espace commentaires -->
         <div class="comments" v-if="post.Comments">
 
             <!-- Afficher input commentaire -->
-            <div v-if="post.displayInputComment" class="row new-comment">
-                <div class="col-md-10 col-sm-9">
-                    <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="2"></textarea>
-                </div>
-                <div class="col-md-2 col-sm-3 text-center">
-                    <button @click="newComment(post.id)" class="btn btn-primary mt-2">
-                        Envoyer
-                    </button>
-                </div>
-            </div>
-
+            <NewComment v-if="post.displayInputComment" :post="post" />
+                
 
             <!-- Bouton Commentaires -->
             <div v-if="post.Comments.length == 1" class="text-center">
                 <hr>
-                <button 
-                v-if="post.displayComment == false" 
-                @click="afficheComments(post.id)" 
-                class="btn btn-primary btn-comment">
+                <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary">
                     Afficher le commentaire
                 </button>
 
-                <button 
-                v-if="post.displayComment"
-                @click="masquerComments(post.id)"
-                class="btn btn-primary btn-comment">
+                <button v-if="post.displayComment" @click="masquerComments(post.id)" class="btn btn-primary">
                     Masquer le commentaire
                 </button>
             </div>
 
             <div v-else-if="post.Comments.length > 1" class="text-center">
               <hr>
-              <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary btn-comment">Afficher les {{ post.Comments.length }} commentaires</button>
-              <button v-if="post.displayComment" @click="masquerComments(post.id)" class="btn btn-primary btn-comment" >Masquer les commentaires</button>
+              <button v-if="post.displayComment == false" @click="afficheComments(post.id)" class="btn btn-primary">Afficher les {{ post.Comments.length }} commentaires</button>
+              <button v-if="post.displayComment" @click="masquerComments(post.id)" class="btn btn-primary" >Masquer les commentaires</button>
             </div>
-
 
 
 
             <!-- Commentaires -->
             <Comments v-if="post.displayComment" :comments="commentsPost" ></Comments>
-            
-            
+
         </div>
-        
-      
     </div>
 
     <!-- pagination -->
@@ -118,6 +94,7 @@ import NewPost from '@/components/newPost.vue'
 import UserHeader from '@/components/userHeader.vue'
 import Comments from '@/components/commentsPost.vue'
 import InteractionPost from '@/components/interactionPost.vue'
+import NewComment from '@/components/newComment.vue'
 
 
 let moment = require("moment");
@@ -127,7 +104,8 @@ export default {
         NewPost,
         UserHeader,
         Comments,
-        InteractionPost
+        InteractionPost,
+        NewComment
         //CommentsPost
     },
 
@@ -268,6 +246,12 @@ export default {
 }
 
 
+.comments{
+    button{
+        margin:10px;
+    }
+}
+
 
 
 
@@ -295,43 +279,6 @@ export default {
         text-align: justify;
     }
 
-}
-
-
-
-
-/* Comments */
-.comments {
-    margin-left:10px;
-
-    img{
-        height:40px;
-        width:40px;
-        margin-top:20px;
-    }
-    .comments_image-comment{
-        margin-right:20px;
-    }
-    .user-comment{
-        margin-top:22px;
-        margin-bottom:0;
-        font-size:0.8rem;
-    }
-    .comment-date{
-        font-size:0.8rem;
-        margin-bottom:0
-    }
-    .btn-comment{
-        margin-top:5px;
-        margin-bottom: 5px;
-    }
-    .description-comment{
-        margin: 15px 10px 20px;
-    }
-    .new-comment{
-        margin-top:20px;
-        margin-bottom: 10px;
-    }
 }
 
 

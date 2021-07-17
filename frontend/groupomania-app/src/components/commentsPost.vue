@@ -21,15 +21,15 @@
             <!-- button -->
             <div class="col-auto btn-edit" v-if="comment.UserId === user.userId || user.isAdmin" >
                 <button v-if="comment.editComment != true" @click="displayEditComment(comment.id)" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-pencil-square" title="Editer"></i>
                 </button>
                 <button v-if="comment.editComment" @click="hideEditComment(comment.id)" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-pencil-square" title="Cacher"></i>
                 </button>
 
                 <span class="spacer"></span>
                 <button @click="deleteComment(comment.id)" class="btn btn-danger">
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>
         </div>
@@ -91,10 +91,6 @@ export default {
         },
 
 
-
-
-
-
         editComment(commentId, description){
             let data = { 
                 'description': description,
@@ -124,7 +120,7 @@ export default {
     background-color:#f0f0f0;
     border-radius: 5px;
     border: solid 1px #e6e6e6;
-    margin:0px 20px;
+    margin:0px 10px;
     padding:10px 20px;
 
     img{

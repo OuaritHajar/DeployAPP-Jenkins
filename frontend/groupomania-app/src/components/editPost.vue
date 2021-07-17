@@ -13,7 +13,7 @@
                 <!-- Message -->
                 <div class="form-group">
                     <label for="inputMessage">Message:</label>
-                    <textarea v-model="descriptionPost" type="text" class="form-control gray" rows="2" id="inputMessage">  </textarea>
+                    <textarea v-model="descriptionPost" type="text" class="form-control gray" rows="3" id="inputMessage">  </textarea>
                 </div>
                 <!-- Image-->
                 <div class="form-group">
@@ -98,7 +98,11 @@ export default {
     hr{
         margin: 10px 0 10px 0;
     }
+    button{
+        margin-bottom:20px;
+    }
 }
+
 
 
 </style>

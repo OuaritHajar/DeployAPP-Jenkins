@@ -5,7 +5,7 @@
             <form class="form-inline">  
 
                 <div class="col-sm-10">
-                    <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="3"></textarea>
+                    <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="2"></textarea>
                 </div>
                 <div class="col-sm-2 text-center">
                     <button @click="newComment(post.id)" class="btn btn-primary ">
@@ -27,8 +27,6 @@ export default {
     },
     props: ['post'],
 
-    computed: {},
-    
     methods: {
         newComment(postId) {
             let data = {
