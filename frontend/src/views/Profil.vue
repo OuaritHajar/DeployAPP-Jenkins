@@ -12,8 +12,8 @@
                         <img :src="user.avatarUrl" alt="avatar">
                     </div>
                     <div class="text-center">
-                        <button v-if="modifAvatar != true" class="btn btn-secondary" @click="modifAvatar = true ">Modifier</button>
-                        <button v-if="modifAvatar" class="btn btn-secondary" @click="modifAvatar = false">Annuler</button>
+                        <button v-if="modifAvatar != true" class="btn btn-secondary btn-avatar" @click="modifAvatar = true ">Modifier</button>
+                        <button v-if="modifAvatar" class="btn btn-secondary btn-avatar" @click="modifAvatar = false">Annuler</button>
                     </div>
                 </div>
 
@@ -87,83 +87,81 @@
 
 
             <!-- Interface de modification -->
-            <div v-if="modifAvatar" class="row interfaceAvatar">
-                <div class="col-sm-12">
+            <div v-if="modifAvatar" class="row interface-image">
 
-
-
-                    <p class="text-center">Choisir un avatar</p>
+                <div class="col-sm-12 interface-avatar">
+                    <p class="text-center interface-title">Choisir un avatar</p>
                     <form>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar1.png">
                                 </label>
                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value=" 1">
                             </div>
 
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar2.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "2">
                             </div>
 
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar3.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "3">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar4.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "4">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar5.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "5">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar6.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "6">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar7.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "7">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar8.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "8">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar9.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "9">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar10.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "10">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar11.png">
                                 </label>
                                  <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "11">
                             </div>
-                            <div class="col-2">
+                            <div class="col-3 col-sm-2 col-lg-1 text-center">
                                 <label class="" for="inlineRadio1">
                                     <img src="http://localhost:3000/images/static/avatar/avatar12.png">
                                 </label>
@@ -173,9 +171,13 @@
                     </form>
                 </div>
                 
-                <div class="col-sm-12">
-                    <p class="text-center">Choisir une photo</p>
-                    <input type="file">
+                <div class="col-sm-12 interface-photo">
+                    <p class="text-center interface-title">Choisir une photo</p>
+                    <form action="">
+                        <input type="file">
+                    </form>
+                    
+                    
                 </div>
             </div>
 
@@ -266,8 +268,8 @@ export default {
 
 <style scoped lang="scss">
 form{
-    margin: 20px 20px;
-    padding:20px 20px;
+    margin: 10px 10px;
+    padding: 10px 10px 0;
 }
 .avatar {
     display: flex;
@@ -280,6 +282,9 @@ form{
         margin-bottom:20px
     }
 }
+.btn-avatar{
+    margin-bottom:20px;
+}
 hr{
     margin:0 0 30px;
 }
@@ -290,7 +295,7 @@ hr{
         padding:0;
     }
 }
-.interfaceAvatar{
+.interface-image{
     margin-top:30px;
 
     img{
@@ -302,10 +307,27 @@ hr{
     }
     .inputAvatar{
         display: flex;
-        margin-left:29px;
+        margin-left:auto;
+        margin-right:auto;
         margin-bottom:20px;
 
     }
+}
+.interface-title{
+    margin-top:10px;
+    margin-bottom:0;
+    font-size:1.2rem;
+}
+
+.interface-avatar{
+    background-color:#ececec;
+    border: solid 1px #cfcfcf;
+    border-radius: 10px;
+}
+.interface-photo{
+    background-color:#ececec;
+    border: solid 1px #cfcfcf;
+    border-radius: 10px;
 }
 
 </style>
