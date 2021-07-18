@@ -29,6 +29,7 @@ module.exports = {
     } else {
       avatarUrl = pathAvatar + 'avatar' + getRandomInt(7) + '.png'
     }
+    console.log(avatarUrl)
 
 
 
@@ -161,6 +162,16 @@ module.exports = {
     //Params
     const firstName = req.body.first_name;
     const lastName = req.body.last_name;
+ 
+
+    if(req.body.avatarUrl == 'http://localhost:3000/images/static/avatar/avatar.png'){
+      avatarUrl = null
+    } else{
+      avatarUrl = req.body.avatarUrl
+    }
+
+
+    console.log('avatarUrl : ',avatarUrl)
 
     try {
 
@@ -184,7 +195,8 @@ module.exports = {
             // si on le trouve on met a jour la base de donnée
             const updateProfil = await userCible.update({
               first_name: (firstName ? firstName : userCible.first_name),
-              last_name: (lastName ? lastName : userCible.last_name)
+              last_name: (lastName ? lastName : userCible.last_name),
+              avatarUrl: avatarUrl ? avatarUrl : userCible.avatarUrl
             })
 
             if (updateProfil) {

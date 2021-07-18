@@ -1,103 +1,119 @@
 <template>
-<section v-if="user.userId != -1" class="container">
-
-    <!-- Button new post -->
-    <div class="text-center">
-        <button v-if="afficheNewPost == false" @click="afficheNewPost = true" class="btn btn-primary">Ajouter un post</button>
-        <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Masquer</button>
-    </div>
-    <div v-if="afficheNewPost">
-        <NewPost @post-created="updateDisplayBtn"/>
-    </div>
-
-  
-    <!-- Affiche tout les posts -->
-    <div v-for="(post, index) in displayedPosts" :key="index" class="post">
-
-        <router-link :to="{name: 'Post', params: {postId: post.id}}">
-            <UserHeader :post="post"></UserHeader>
+<div v-if="user.userId != -1" class="row">
     
-            <!-- Titre / Description -->
-            <div class="description-post">
-                <p class="title" v-if="post.title">  {{ post.title }} </p>
-                <p class="description"> {{ post.description }} </p>
-                <div class="img-post">
-                    <img v-if="post.img_url != null" :src="post.img_url" alt="photo" >
-                </div>
-            </div>
-        </router-link>
-    
-        <hr>
-    
-        <!-- Likes / Btn commentaire / editer -->
-        <InteractionPost :post="post"></InteractionPost>
-        
-        
-        <!-- Espace commentaires -->
-        <div class="comments" v-if="post.Comments">
-
-            <!-- Afficher input commentaire -->
-            <NewComment v-if="post.displayInputComment" :post="post" />
-                
-
-            <!-- Bouton Commentaires -->
-            <div v-if="post.Comments.length == 1" class="text-center">
-                <hr>
-                <button v-if="post.displayComment == false" 
-                @click="afficheComments(post.id)" 
-                class="btn btn-primary">
-                    Afficher le commentaire
-                </button>
-
-                <button v-if="post.displayComment" 
-                @click="masquerComments(post.id)" 
-                class="btn btn-primary">
-                    Masquer le commentaire
-                </button>
-            </div>
-
-            <div v-else-if="post.Comments.length > 1" class="text-center">
-                <hr>
-                <button v-if="post.displayComment == false" 
-                @click="afficheComments(post.id)" 
-                class="btn btn-primary">
-                    Afficher les {{ post.Comments.length }} commentaires
-                </button>
-                
-                <button v-if="post.displayComment" 
-                @click="masquerComments(post.id)" 
-                class="btn btn-primary">
-                    Masquer les commentaires
-                </button>
-            </div>
+    <aside class="col-md-3">
+        <AsideMur :profil="profil" />
+    </aside>
 
 
 
-            <!-- Commentaires -->
-            <Comments v-if="post.displayComment" :comments="post.Comments" :post="post" ></Comments>
+    <main class="col-md-9">
 
+        <!-- Button new post -->
+        <div class="text-center">
+            <button v-if="afficheNewPost == false" @click="afficheNewPost = true" class="btn btn-primary">Ajouter un post</button>
+            <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Masquer</button>
         </div>
-    </div>
+        <div v-if="afficheNewPost">
+            <NewPost @post-created="updateDisplayBtn"/>
+        </div>
 
-    <!-- pagination -->
     
-    <nav aria-label="pagination">
-		<ul class="pagination">
-			<li class="page-item">
-				<button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
-			</li>
-			<li class="page-item">
-				<button type="button" class="page-link" v-for="(pageNumber, index) in pages.slice(page-1, page+10)" :key="index" @click="page = pageNumber"> {{pageNumber}} </button>
-			</li>
-			<li class="page-item">
-				<button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
-			</li>
-		</ul>
-	</nav>
+        <!-- Affiche tout les posts -->
+        <div v-for="(post, index) in displayedPosts" :key="index" class="post">
+
+            <router-link :to="{name: 'Post', params: {postId: post.id}}">
+                <UserHeader :post="post"></UserHeader>
+
+                <!-- Titre / Description -->
+                <div class="description-post">
+                    <p class="title" v-if="post.title">  {{ post.title }} </p>
+                    <p class="description"> {{ post.description }} </p>
+                    <div class="img-post">
+                        <img v-if="post.img_url != null" :src="post.img_url" alt="photo" >
+                    </div>
+                </div>
+            </router-link>
+
+            <hr>
+
+            <!-- Likes / Btn commentaire / editer -->
+            <InteractionPost :post="post"></InteractionPost>
 
 
-</section> 
+            <!-- Espace commentaires -->
+            <div class="comments" v-if="post.Comments">
+
+                <!-- Afficher input commentaire -->
+                <NewComment v-if="post.displayInputComment" :post="post" />
+
+
+                <!-- Bouton Commentaires -->
+                <div v-if="post.Comments.length == 1" class="text-center">
+                    <hr>
+                    <button v-if="post.displayComment == false" 
+                    @click="afficheComments(post.id)" 
+                    class="btn btn-primary">
+                        Afficher le commentaire
+                    </button>
+
+                    <button v-if="post.displayComment" 
+                    @click="masquerComments(post.id)" 
+                    class="btn btn-primary">
+                        Masquer le commentaire
+                    </button>
+                </div>
+
+                <div v-else-if="post.Comments.length > 1" class="text-center">
+                    <hr>
+                    <button v-if="post.displayComment == false" 
+                    @click="afficheComments(post.id)" 
+                    class="btn btn-primary">
+                        Afficher les {{ post.Comments.length }} commentaires
+                    </button>
+
+                    <button v-if="post.displayComment" 
+                    @click="masquerComments(post.id)" 
+                    class="btn btn-primary">
+                        Masquer les commentaires
+                    </button>
+                </div>
+
+
+
+                <!-- Commentaires -->
+                <Comments v-if="post.displayComment" :comments="post.Comments" :post="post" ></Comments>
+
+            </div>
+        </div>
+
+        <!-- pagination -->
+
+        <nav aria-label="pagination">
+            <ul class="pagination">
+                <li class="page-item">
+                    <button type="button" class="page-link" v-if="page != 1" @click="page--"> Previous </button>
+                </li>
+                <li class="page-item">
+                    <button type="button" class="page-link" v-for="(pageNumber, index) in pages.slice(page-1, page+10)" :key="index" @click="page = pageNumber"> {{pageNumber}} </button>
+                </li>
+                <li class="page-item">
+                    <button type="button" @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
+                </li>
+            </ul>
+        </nav>
+
+
+    </main> 
+
+
+</div>
 </template>
+
+
+
+
+
 
 
 
@@ -108,6 +124,7 @@ import UserHeader from '@/components/userHeader.vue'
 import Comments from '@/components/commentsPost.vue'
 import InteractionPost from '@/components/interactionPost.vue'
 import NewComment from '@/components/newComment.vue'
+import AsideMur from'@/components/aside-mur.vue'
 
 
 let moment = require("moment");
@@ -118,7 +135,8 @@ export default {
         UserHeader,
         Comments,
         InteractionPost,
-        NewComment
+        NewComment,
+        AsideMur
     },
 
     data() {
@@ -133,24 +151,21 @@ export default {
         }
     },
 
-
-
     computed: {
         ...mapGetters({
             posts: ['get_all_posts'],
             user: ['get_user'],
+            profil: ['get_user_profil']
         }),
         displayedPosts () {
             return this.paginate(this.posts);
         },
     },
 
-
     mounted(){
         moment.locale('fr');
         this.$store.dispatch('getAllPosts')
     },
-
 
     beforeUpdate() {
         this.posts.forEach(post => {
@@ -166,7 +181,7 @@ export default {
 
     methods:{
 
-    // Affichage
+        // Affichage
         updateDisplayBtn() {
             this.afficheNewPost = false
         },
@@ -178,28 +193,13 @@ export default {
           this.$store.dispatch('hideComments', postId)
         },
 
-
-
-    //// Interaction
-    //    newComment(postId) {
-    //        let data = {
-    //            'description': this.descriptionComment,
-    //            'postId' : postId
-    //        }
-    //        this.$store.dispatch('newComment', data)
-    //        .then(()=> {
-    //            this.$router.go()
-    //        })
-    //    },
-
-    // Pagination
+        // Pagination
         setPages () {
             let numberOfPages = Math.ceil(this.posts.length / this.perPage);
             for (let index = 1; index <= numberOfPages; index++) {
                 this.pages.push(index);
             }
         },
-
         paginate (posts) {
             let page = this.page;
             let perPage = this.perPage;
@@ -213,7 +213,6 @@ export default {
 		posts () {
 			this.setPages();
 		},
-
 	},
 }
 </script>
@@ -223,8 +222,12 @@ export default {
 
 <style scoped lang="scss">
 
+aside{
+    margin-bottom:10px;
+    padding-right:0;
+}
 .post{
-    margin: 10px 10px;
+    margin: 10px 0px;
     padding:20px 20px 0 20px;
     background-color:#ececec;
     border: solid 1px #cfcfcf;
@@ -296,5 +299,6 @@ export default {
         font-weight: 500;
     }
 }
+
 
 </style>

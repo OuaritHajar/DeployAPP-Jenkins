@@ -1,38 +1,181 @@
 <template>
     <section>
-        <form class="form">
+        <form>
         <fieldset>
             <legend>Votre profil utilisateur</legend>
             <hr />
-
-            <!-- Nom / Prenom -->
             <div class="row">
-                <div class="avatar col-sm-4">
-                    <img :src="user.avatarUrl" alt="avatar">
+
+                <!-- Avatar -->
+                <div class="col-sm-5">
+                    <div class="avatar">
+                        <img :src="user.avatarUrl" alt="avatar">
+                    </div>
+                    <div class="text-center">
+                        <button v-if="modifAvatar != true" class="btn btn-secondary" @click="modifAvatar = true ">Modifier</button>
+                        <button v-if="modifAvatar" class="btn btn-secondary" @click="modifAvatar = false">Annuler</button>
+                    </div>
                 </div>
 
-                <div class="col-sm-7 offset-sm-1">
-                    <div class="form-group">
-                        <label for="inputLastName">Prénom : {{ user.last_name }}</label>
-                        <input v-if="thisUser.userId === user.id || thisUser.isAdmin" v-model="lastName" type="text" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputFirstName">Nom : {{ user.first_name }} </label>
-                        <input v-if="user.id === thisUser.userId || thisUser.isAdmin" v-model="firstName" type="text" class="form-control">  
+
+                <!-- Information -->
+                <div class="col-sm-7 information">
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="inputLastName">Prénom: </label>
+                        </div>
+                        <div class="col-3 mr-auto">
+                            <span>{{ user.last_name }}</span>
+                        </div>
+                        <button class="btn btn-primary" v-if="inputLastName != true" @click="inputLastName = true"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-primary" v-if="inputLastName" @click="inputLastName = false"><i class="bi bi-pencil-fill"></i></button>
+
+                        <input v-if="(thisUser.userId === user.id || thisUser.isAdmin) && inputLastName" v-model="lastName" type="text" class="form-control">
                     </div>
 
-                    <div>
-                        <p>Email : {{ user.email }} </p>
-                        <p>Crée le {{ moment(user.createdAt).format("DD-MM-YYYY HH:mm") }} </p>
-                        <p>Sexe : {{ sexe }}</p>
-                        
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="inputFirstName">Nom:  </label>
+                        </div>
+                        <div class="col-3 mr-auto">
+                            <span>{{ user.first_name }}</span>
+                        </div>
+                        <button class="btn btn-primary" v-if="inputFirstName != true" @click="inputFirstName = true"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-primary" v-if="inputFirstName" @click="inputFirstName = false"><i class="bi bi-pencil-fill"></i></button>
+
+                        <input v-if="( thisUser.userId === user.id || thisUser.isAdmin ) && inputFirstName" v-model="firstName" type="text" class="form-control">  
                     </div>
-                    <button @click="editUser()" class="btn btn-primary">
-                        Modifier
-                    </button>
-                    <button @click="deleteUser()" class="btn btn-danger">
-                        Supprimer
-                    </button>
+
+                    <div class="row">
+                        <div class="col-3">
+                            <p>Email :  </p>
+                        </div>
+                        <div class="col-auto">
+                            <span>{{ user.email }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3">
+                            <p>Crée le  </p>
+                        </div>
+                        <div class="col-auto">
+                            <span>{{ moment(user.createdAt).format("DD-MM-YYYY HH:mm") }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3">
+                            <p>Sexe :</p>
+                        </div>
+                        <div class="col-auto">
+                            <span>{{ sexe }}</span>
+                        </div>
+                    </div>
+
+
+                    <div class="text-center">
+                        <button @click="editUser()" class="btn btn-primary">
+                            Modifier
+                        </button>
+                        <button @click="deleteUser()" class="btn btn-danger">
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Interface de modification -->
+            <div v-if="modifAvatar" class="row interfaceAvatar">
+                <div class="col-sm-12">
+
+
+
+                    <p class="text-center">Choisir un avatar</p>
+                    <form>
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar1.png">
+                                </label>
+                                <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value=" 1">
+                            </div>
+
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar2.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "2">
+                            </div>
+
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar3.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "3">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar4.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "4">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar5.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "5">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar6.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "6">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar7.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "7">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar8.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "8">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar9.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "9">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar10.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "10">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar11.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "11">
+                            </div>
+                            <div class="col-2">
+                                <label class="" for="inlineRadio1">
+                                    <img src="http://localhost:3000/images/static/avatar/avatar12.png">
+                                </label>
+                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "12">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="col-sm-12">
+                    <p class="text-center">Choisir une photo</p>
+                    <input type="file">
                 </div>
             </div>
 
@@ -50,9 +193,16 @@ let moment = require("moment");
 export default {
     data(){
         return{
+            moment: moment,
+
             lastName:'',
             firstName: '',
-            moment: moment
+            
+            inputFirstName: false,
+            inputLastName: false,
+            modifAvatar:false,
+
+            avatarValue: ''
         }
     },
 
@@ -61,6 +211,14 @@ export default {
             user:['get_user_profil'],
             thisUser: ['get_user']
         }),
+
+        avatarUrl() {
+            if(this.avatarValue != null) {
+                return 'http://localhost:3000/images/static/avatar/avatar' + this.avatarValue + '.png'
+            } else {
+                return null
+            }
+        },
 
         sexe(){
             if(this.user.sexe) {
@@ -76,13 +234,22 @@ export default {
     },
 
     methods: {
+
         editUser() {
             let data = {
                 first_name: this.firstName,
                 last_name: this.lastName,
+                avatarUrl:  this.avatarUrl,
                 userId: this.$route.params.userId
             }
             this.$store.dispatch('editUser', data)
+            .then(()=> {
+                this.inputFirstName = false
+                this.inputLastName = false
+                this.modifAvatar = false
+                //this.$router.go()
+                
+            })
         },
 
         deleteUser() {
@@ -98,13 +265,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.form{
+form{
     margin: 20px 20px;
     padding:20px 20px;
 }
 .avatar {
     display: flex;
     justify-content: center;
+    margin: 0 5px;
 
     img{
         width: 200px;
@@ -115,6 +283,29 @@ export default {
 hr{
     margin:0 0 30px;
 }
+.information{
+    padding-left:30px;
 
+    .col-3, .col-auto{
+        padding:0;
+    }
+}
+.interfaceAvatar{
+    margin-top:30px;
+
+    img{
+        width:70px;
+    }
+    .col-sm-2, .col-2{
+        margin:0;
+        padding:0;
+    }
+    .inputAvatar{
+        display: flex;
+        margin-left:29px;
+        margin-bottom:20px;
+
+    }
+}
 
 </style>
