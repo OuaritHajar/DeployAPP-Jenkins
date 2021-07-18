@@ -3,25 +3,30 @@
     <section>
         <form>
             <fieldset>
-                <legend class="text-center">Connection</legend>
+                <legend>Connexion</legend>
                 <hr>
                 <div class="form-row">
 
                     <!-- Email-->
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail">Email :</label>
+                    <div class="form-group col-sm-6">
                         <input v-model="email" type="email" class="form-control" id="inputEmail" required
-                            placeholder="exemple@messagerie.fr">
+                            placeholder="Adresse email">
                     </div>
 
                     <!-- Mot de passe -->
-                    <div class="form-group col-md-6">
-                        <label for="inputPassword">Mot de passe :</label>
-                        <input v-model="password" type="password" class="form-control" id="inputPassword" required>
+                    <div class="form-group col-sm-4">
+                        <input v-model="password" type="password" class="form-control" id="inputPassword" placeholder="Mot de passe" required>
+                    </div>
+
+                    <!-- Bouton -->
+                    <div class="col-sm-2 text-center">
+                        <button @click="userLog()" class="btn btn-primary">
+                            Connexion
+                        </button>
                     </div>
                 </div>
 
-                <!-- sauvegarde donné-->
+                <!-- sauvegarde donné
                 <div class="form-group">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="gridCheck">
@@ -29,12 +34,11 @@
                             Sauvegardez les informations
                         </label>
                     </div>
-                </div>
+                </div>-->
 
-                <button @click="userLog()" class="btn btn-primary">
-                    Entrer
-                </button>
+                
                 <span class="status"> {{ status }} </span>
+                <hr>
             </fieldset>
         </form>
     </section>
@@ -81,12 +85,9 @@ export default {
 
 <style scoped>
 form{
-    border:solid rgb(151, 151, 151) 1px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 2px 2px #757575;
 
-    margin:20px 20px;
-    padding:20px 20px;
+    margin:0px 10vw;
+    padding:0px 0px;
 }
 hr{
     margin-top:0;
@@ -95,4 +96,5 @@ hr{
     margin-left:10px;
     font-weight: bold;
 }
+
 </style>

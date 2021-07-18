@@ -30,30 +30,14 @@
           </li>
 
           <li class="nav-item">
-            <router-link to="/logout" class="nav-link">
-              Déconnection
+            <router-link to="/" @click="logout" class="nav-link">
+                Déconnection
             </router-link>
           </li>
 
         </ul>
       </div>
 
-      <div v-else>
-        <ul class="navbar-nav">
-            <li class="nav-item">
-            <router-link to="/login" class="nav-link">
-              Se connecter
-            </router-link>
-          </li>
-
-          <li class="nav-item" >
-            <router-link to="/signup" class="nav-link">
-              S'enregistrer 
-            </router-link>
-          </li>
-        
-        </ul>
-      </div>
     </div>
   </nav>
 </template>
@@ -71,8 +55,13 @@ export default {
         ...mapGetters({
             user : ['get_user']
         })
+    },
+    methods: {
+        logout(){
+            this.$store.dispatch('logout')
+            console.log(localStorage)
+        }
     }
-
 }
 </script>
 

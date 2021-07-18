@@ -69,8 +69,8 @@ const store = createStore({
             localStorage.setItem('user', JSON.stringify(user));
             state.user = user;
         },
-        STATUS: (state, statusRetourne) => {
-            state.status = statusRetourne
+        STATUS: (state, status) => {
+            state.status = status
         },
         LOG_OUT: (state) => {
             state.user = {

@@ -1,5 +1,5 @@
 <template>
-<section v-if="user.userId != -1">
+<section v-if="user.userId != -1" class="container">
 
     <!-- Button new post -->
     <div class="text-center">
@@ -180,17 +180,17 @@ export default {
 
 
 
-    // Interaction
-        newComment(postId) {
-            let data = {
-                'description': this.descriptionComment,
-                'postId' : postId
-            }
-            this.$store.dispatch('newComment', data)
-            .then(()=> {
-                this.$router.go()
-            })
-        },
+    //// Interaction
+    //    newComment(postId) {
+    //        let data = {
+    //            'description': this.descriptionComment,
+    //            'postId' : postId
+    //        }
+    //        this.$store.dispatch('newComment', data)
+    //        .then(()=> {
+    //            this.$router.go()
+    //        })
+    //    },
 
     // Pagination
         setPages () {
