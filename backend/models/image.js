@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
                   allowNull: false
                 }
             });
+            Image.belongsTo(models.Post, {
+                foreignKey: {
+                  allowNull: false
+                }
+            });
         }
     };
     Image.init({

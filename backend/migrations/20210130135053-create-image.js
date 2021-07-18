@@ -16,6 +16,14 @@ module.exports = {
           key:'id'
         }
       },
+      postId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model:'Posts',
+          key:'id'
+        }
+      },
       type: {
         allowNull: false,
         type: Sequelize.STRING

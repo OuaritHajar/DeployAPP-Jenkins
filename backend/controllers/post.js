@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // Routes
 module.exports = {
-    createPost: async function (req, res) {
+    createPost: async function (req, res, next) {
 
         // Getting auth header
         const headerAuth = req.headers['authorization'];
@@ -44,7 +44,9 @@ module.exports = {
                 });
 
                 if (newPost) {
-                    return res.status(201).json(newPost);
+                    res.locals.newPost = newPost
+                    next()
+                    //return res.status(201).json(newPost);
                 } else {
                     return res.status(500).json({ 'error': 'cannot create post' })
                 }
@@ -173,7 +175,7 @@ module.exports = {
 
 
 
-    updateOnePost: async (req, res) => {
+    updateOnePost: async (req, res, next) => {
 
         // Getting auth header
         const headerAuth = req.headers['authorization'];
@@ -214,7 +216,9 @@ module.exports = {
                             description: (description ? description : postFound.description)
                         })
                         if (postUpdate) {
-                            return res.status(201).json(postUpdate);
+                            res.locals.postUpdate = postUpdate
+                            next()
+                            //return res.status(201).json(postUpdate);
                         }
                     } else {
                         return res.status(201).json({ 'error': 'non autorisé' })

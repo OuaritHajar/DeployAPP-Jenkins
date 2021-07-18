@@ -13,10 +13,10 @@ const upload = require('../config/upload.config.js');
 const fileWorker = require('../controllers/image.js');
 
 // Posts routes
-router.post('/', auth, upload.single("img_url"), fileWorker.upload, postsCtrl.createPost);
+router.post('/', auth, upload.single("img_url"),postsCtrl.createPost, fileWorker.upload);
 router.get('/', auth, postsCtrl.listPosts);
 router.get('/:postId', auth, postsCtrl.selectOnePost);
-router.put('/:postId', auth, upload.single("img_url"), fileWorker.update, postsCtrl.updateOnePost);
+router.put('/:postId', auth, upload.single("img_url"), postsCtrl.updateOnePost, fileWorker.update);
 router.delete('/:postId', auth, postsCtrl.removeOnePost);
 
 // Comment routes

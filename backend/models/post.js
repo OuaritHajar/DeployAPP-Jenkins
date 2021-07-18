@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       
       Post.hasMany(models.Comment)
       Post.hasMany(models.Like)
+      Post.hasMany(models.Image)
 
     }
   };

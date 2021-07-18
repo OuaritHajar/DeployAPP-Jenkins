@@ -7,11 +7,13 @@ var jwtUtils = require('../utils/jwt.utils');
 // Upload a Multipart-File then saving it to MySQL database
 module.exports = {
 
-  upload: async (req, res, next) => {
+  upload: async (req, res) => {
 
     // Getting auth header
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
+
+    console.log("response locale : ",res.locals.newPost.dataValues)
 
     try {
       // récupère l'user
@@ -29,11 +31,11 @@ module.exports = {
             data: '',
             url: null,
             UserId: userFound.id,
-            // PostId: 
+            PostId: res.locals.newPost.dataValues.id
 
           })
           if(createImageVide) {
-            next();
+            return res.status(200).json(res.locals.newPost.dataValues);
           }
         } else {
           console.log("image dans la requete")
@@ -44,12 +46,12 @@ module.exports = {
             data: fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename),
             url: req.file.path,
             UserId: userFound.id,
-            // PostId: 
+            PostId: res.locals.newPost.dataValues.id 
           })
           if (createImage) {
             fs.writeFileSync(__basedir + '/resources/static/assets/tmp/' + createImage.name, createImage.data);
   
-            next();
+            return res.status(200).json(res.locals.newPost.dataValues);
           }
         }
       } else {
@@ -67,14 +69,14 @@ module.exports = {
 
 
 
-  update: async (req, res, next) => {
+  update: async (req, res) => {
 
     // Getting auth header
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
     const postId = req.params.postId;
 
-    console.log('requete : ', req.file)
+    console.log("response local update : ",res.locals.postUpdate)
     
     try {
       // récupère l'user
@@ -92,7 +94,7 @@ module.exports = {
             // on vérifie s'il y a une image dans la requete
             if (req.file == null) {
               console.log("pas d'image dans la requete");
-              next();
+              return res.status(201).json(res.locals.postUpdate);
 
 
 
@@ -100,18 +102,20 @@ module.exports = {
             } else {
               // vérifie si il y a déjà une image
               const imageFound = await db.Image.findOne({
-                where: {id: postId}
+                where: {postId: postId}
               })
               if(imageFound.url != null) {
 
-                  // supprime ancienne image
-                  fs.unlink(imageFound.url,(err) =>{
-                    if (err) {
-                      console.error(err)
-                    } else {
-                      console.log('image supprimé')
-                    }
-                  })
+                  
+                    // supprime ancienne image
+                      fs.unlink(imageFound.url,(err) =>{
+                        if (err) {
+                          console.error(err)
+                        } else {
+                          console.log('image supprimé')
+                        }
+                      })
+                  
 
                   // update image dans la bdd
                   const updateImage = await imageFound.update({              
@@ -120,10 +124,9 @@ module.exports = {
                     data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
                     url: (req.file.path? req.file.path : imageFound.path),
                     UserId: userFound.id,
-                    // PostId: 
                   })
                   if (updateImage) {
-                    next()
+                    return res.status(201).json(res.locals.postUpdate);
                   }
 
               } else {
@@ -134,12 +137,12 @@ module.exports = {
                   name: (req.file.originalname? req.file.originalname : imageFound.originalname) ,
                   data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
                   url: (req.file.path? req.file.path : imageFound.path),
-                  UserId: userFound.id,
-                  // PostId: 
+                  
                 })
 
                 if (updateImage) {
-                  next()
+                  return res.status(201).json(res.locals.postUpdate);
+                  
                 }
               }
             }
