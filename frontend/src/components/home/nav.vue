@@ -59,7 +59,7 @@ export default {
     methods: {
         logout(){
             this.$store.dispatch('logout')
-            console.log(localStorage)
+            this.$router.go()
         }
     }
 }

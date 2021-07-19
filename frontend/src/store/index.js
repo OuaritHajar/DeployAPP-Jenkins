@@ -76,7 +76,9 @@ const store = createStore({
             state.user = {
                 userId: -1,
                 token: '',
-              }
+                isAdmin: false
+            }
+            state.userProfil = ""
             localStorage.clear()
             console.log(localStorage, user)
         },
@@ -285,7 +287,7 @@ const store = createStore({
         getProfilUsers:({ commit },userId) => {
             instance.get('users/'+ userId)
             .then((response) => {
-                console.log(response.data)
+                console.log("response profil user : ",response.data)
 
 
 

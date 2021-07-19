@@ -60,7 +60,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import NewComment from '@/components/newComment.vue'
+import NewComment from '@/components/comment/newComment.vue'
 
 let moment = require("moment")
 

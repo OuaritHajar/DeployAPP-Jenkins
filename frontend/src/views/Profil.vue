@@ -7,12 +7,12 @@
             <div class="row">
 
                 <!-- Avatar -->
-                <div class="col-sm-5">
+                <div class="col-sm-5 interface-avatar">
                     <div class="avatar">
                         <img :src="user.avatarUrl" alt="avatar">
                     </div>
-                    <div class="text-center">
-                        <button v-if="modifAvatar != true" class="btn btn-secondary btn-avatar" @click="modifAvatar = true ">Modifier</button>
+                    <div v-if="thisUser.userId == user.id || thisUser.isAdmin" class="text-center">
+                        <button v-if="modifAvatar != true" class="btn btn-secondary btn-avatar" @click="modifAvatar = true ">Changer l'avatar</button>
                         <button v-if="modifAvatar" class="btn btn-secondary btn-avatar" @click="modifAvatar = false">Annuler</button>
                     </div>
                 </div>
@@ -27,9 +27,11 @@
                         <div class="col-3 mr-auto">
                             <span>{{ user.last_name }}</span>
                         </div>
-                        <button class="btn btn-primary" v-if="inputLastName != true" @click="inputLastName = true"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-primary" v-if="inputLastName" @click="inputLastName = false"><i class="bi bi-pencil-fill"></i></button>
-
+                        <span v-if="(thisUser.userId === user.id || thisUser.isAdmin)">
+                            <button class="btn btn-primary" v-if="inputLastName != true" @click="inputLastName = true"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-primary" v-if="inputLastName" @click="inputLastName = false"><i class="bi bi-pencil-fill"></i></button>
+                        </span>
+                        
                         <input v-if="(thisUser.userId === user.id || thisUser.isAdmin) && inputLastName" v-model="lastName" type="text" class="form-control">
                     </div>
 
@@ -40,9 +42,11 @@
                         <div class="col-3 mr-auto">
                             <span>{{ user.first_name }}</span>
                         </div>
-                        <button class="btn btn-primary" v-if="inputFirstName != true" @click="inputFirstName = true"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-primary" v-if="inputFirstName" @click="inputFirstName = false"><i class="bi bi-pencil-fill"></i></button>
-
+                        <span v-if="(thisUser.userId === user.id || thisUser.isAdmin)">
+                            <button class="btn btn-primary" v-if="inputFirstName != true" @click="inputFirstName = true"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-primary" v-if="inputFirstName" @click="inputFirstName = false"><i class="bi bi-pencil-fill"></i></button>
+                        </span>
+                        
                         <input v-if="( thisUser.userId === user.id || thisUser.isAdmin ) && inputFirstName" v-model="firstName" type="text" class="form-control">  
                     </div>
 
@@ -75,7 +79,7 @@
 
 
                     <div class="text-center">
-                        <button @click="editUser(user.id)" class="btn btn-primary">
+                        <button v-if="inputLastName || inputFirstName" @click="editUser(user.id)" class="btn btn-primary">
                             Modifier
                         </button>
                         <button @click="deleteUser()" class="btn btn-danger">
@@ -83,103 +87,55 @@
                         </button>
                     </div>
                 </div>
+
+                
+
             </div>
 
 
             <!-- Interface de modification -->
-            <div v-if="modifAvatar" class="row interface-image">
+            <EditAvatar v-if="modifAvatar" :user="user"></EditAvatar>
+            <hr>
 
-                <div class="col-sm-12 interface-avatar">
-                    <p class="text-center interface-title">Choisir un avatar</p>
-                    <form>
-                        <div class="row">
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar1.png">
-                                </label>
-                                <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value=" 1">
-                            </div>
-
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar2.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "2">
-                            </div>
-
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar3.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "3">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar4.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "4">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar5.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "5">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar6.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "6">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar7.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "7">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar8.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "8">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar9.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "9">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar10.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "10">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar11.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "11">
-                            </div>
-                            <div class="col-3 col-sm-2 col-lg-1 text-center">
-                                <label class="" for="inlineRadio1">
-                                    <img src="http://localhost:3000/images/static/avatar/avatar12.png">
-                                </label>
-                                 <input v-model="avatarValue" class="inputAvatar" type="radio" name="inlineRadioOptions" id="inlineRadio1" value= "12">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                
-                <div class="col-sm-12 interface-photo">
-                    <p class="text-center interface-title">Choisir une photo</p>
-                    <form action="">
-                        <input type="file" @change="uploadImage($event)">
-                    </form>
-                    
-                    
+            <div class="col-sm-12 activity">
+                <div class="row text-center">
+                    <div class="col-4 activity-posts">
+                        <p v-if="user.Posts" class="text-overflowe"> {{ user.Posts.length }}&nbsp;Post(s) </p>
+                    </div>
+                    <div class="col-4 activity-comments">
+                        <p v-if="user.Comments" class="text-overflowe">{{ user.Comments.length }}&nbsp;Commentaire(s)  </p>
+                    </div>
+                    <div class="col-4 activity-likes">
+                        <p v-if="user.Likes" class="text-overflowe">{{ user.Likes.length }}&nbsp;Like(s)  </p>
+                    </div>
                 </div>
             </div>
+
+
+
+            <div v-for="activity in allActivity" :key="activity.createdAt" class="activities">
+                <p > 
+                    le {{ moment(activity.createdAt).format("DD/MM") }}
+                    à {{ moment(activity.createdAt).format("hh:mm") }},
+                    {{ user.first_name }}
+                    a
+                    {{ activity.activityType }}
+                    <span v-if="activity.Post">
+                        <router-link :to="{name: 'Post', params: {postId: activity.Post.id}}" class="nav-link">
+                            le post 
+                        </router-link>
+                        de 
+                        <router-link  :to="{name: 'Profil', params: {userId: activity.Post.User.id}}" class="nav-link">
+                          {{ activity.Post.User.first_name }} {{ activity.Post.User.last_name }}
+                        </router-link>
+                    </span>
+                    
+                </p>
+            </div>
+                
+
+            
+                
 
         </fieldset>
     </form>
@@ -190,23 +146,25 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import EditAvatar from '@/components/user/editAvatar.vue'
 let moment = require("moment");
 
 export default {
+    components:{
+        EditAvatar
+    },
     data(){
         return{
             moment: moment,
 
             lastName:'',
             firstName: '',
-            file:'',
+
+            modifAvatar:false,
             
             inputFirstName: false,
             inputLastName: false,
-            modifAvatar:false,
 
-            avatarValue: '',
-            useAvatar : true
         }
     },
 
@@ -216,12 +174,27 @@ export default {
             thisUser: ['get_user']
         }),
 
-        avatarUrl() {
-            if(this.avatarValue != null) {
-                return 'http://localhost:3000/images/static/avatar/avatar' + this.avatarValue + '.png'
-            } else {
-                return null
-            }
+        allActivity() {
+            let activities = []
+            this.user.Comments.forEach(comment => {
+                comment.activityType = 'commenté'
+                activities.push(comment)
+            })
+            this.user.Posts.forEach(post => {
+                post.activityType = 'ajouté un post'
+                activities.push(post)
+            })
+            this.user.Likes.forEach(like => {
+                like.activityType = 'aimé'
+                activities.push(like)
+            })
+            console.log("activities : ",activities)
+            activities.sort(function(a, b) {
+                a = new Date(a.createdAt);
+                b = new Date(b.createdAt);
+                return a>b ? -1 : a<b ? 1 : 0;
+            });
+            return activities 
         },
 
         sexe(){
@@ -238,45 +211,19 @@ export default {
     },
 
     methods: {
-        uploadImage(event) {
-            this.file = event.target.files[0]
-            this.useAvatar = false
-            console.log(this.file)
-        },
 
         editUser(userId) {
             let formData = new FormData()
 
-            if(this.useAvatar){
-                formData.append('avatarUrl', this.avatarUrl);
-                
-            } else {
-                formData.append('avatarUrl', this.file);
-            }
-//
             formData.append('first_name', this.firstName);
             formData.append('last_name', this.lastName);
             formData.append('userId', userId); 
-
-
-
-            //let data = {
-            //    first_name: this.firstName,
-            //    last_name: this.lastName,
-            //    userId: userId
-            //}
-            //console.log("data get : ",data.get('avatarUrl'))
-            //console.log("data values: ",data.values())
-            //console.log("data entrise : ",data.entries())
-
 
             this.$store.dispatch('editUser', formData )
             .then(()=> {
                 this.inputFirstName = false
                 this.inputLastName = false
                 this.modifAvatar = false
-                //this.$router.go()
-                
             })
         },
 
@@ -297,63 +244,69 @@ form{
     margin: 10px 10px;
     padding: 10px 10px 0;
 }
-.avatar {
-    display: flex;
-    justify-content: center;
-    margin: 0 5px;
+.activities .nav-link{
+    margin:0;
+    padding:0;
+    display: inline;
+    
+}
 
-    img{
-        width: 200px;
-        height: 200px;
-        margin-bottom:20px
+
+.interface-avatar{
+    margin-top:20px;
+
+    .avatar {
+        display: flex;
+        justify-content: center;
+        margin: 0 5px;
+
+        img{
+            width: 200px;
+            height: 200px;
+            margin-bottom:20px
+        }
+    }
+    .btn-avatar{
+        margin-bottom:20px;
     }
 }
-.btn-avatar{
-    margin-bottom:20px;
-}
-hr{
-    margin:0 0 30px;
-}
+
+
+
 .information{
+    margin-top:20px;
     padding-left:30px;
 
     .col-3, .col-auto{
         padding:0;
     }
 }
-.interface-image{
-    margin-top:30px;
 
-    img{
-        width:70px;
-    }
-    .col-sm-2, .col-2{
-        margin:0;
-        padding:0;
-    }
-    .inputAvatar{
-        display: flex;
-        margin-left:auto;
-        margin-right:auto;
-        margin-bottom:20px;
-
-    }
-}
-.interface-title{
-    margin-top:10px;
-    margin-bottom:0;
-    font-size:1.2rem;
-}
-
-.interface-avatar{
+.activity{
     background-color:#ececec;
     border: solid 1px #cfcfcf;
     border-radius: 10px;
+
+    margin: 15px 0 15px 0;
+    .activity-posts, .activity-likes{
+        margin-top:15px;
+    }
+    .activity-comments{
+        border-right:solid 1px #cfcfcf;
+        border-left:solid 1px #cfcfcf;
+        padding-top:15px;
+    }
+    .text-overflowe{
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
-.interface-photo{
-    background-color:#ececec;
-    border: solid 1px #cfcfcf;
-    border-radius: 10px;
-}
+
+
+
+
+
+
+
 
 </style>

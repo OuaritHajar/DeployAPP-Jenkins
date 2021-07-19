@@ -139,7 +139,23 @@ module.exports = {
     try {
       const userFound = await db.User.findOne({
         attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt', 'avatarUrl', 'sexe', 'isAdmin'],
-        where: { id: req.params.userId }
+        where: { id: req.params.userId },
+        include: [{ 
+            model: db.Post,
+            },{
+            model: db.Like,
+                include: [{ model: db.Post ,
+                    include: [{
+                        model: db.User
+                    }] 
+                }]
+            },{
+            model: db.Comment,
+                include: [{ model: db.Post ,
+                    include: db.User
+                }]
+            }
+        ]
       })
       if (userFound) {
         res.status(201).json(userFound);

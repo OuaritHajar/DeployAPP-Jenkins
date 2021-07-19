@@ -11,8 +11,8 @@
 
 <script>
 import Home from '@/views/Home.vue'
-import Nav from '@/components/nav.vue'
-import Footer from '@/components/footer.vue'
+import Nav from '@/components/home/nav.vue'
+import Footer from '@/components/home/footer.vue'
 
 export default {
   name: "App",

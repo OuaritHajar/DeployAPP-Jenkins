@@ -4,6 +4,7 @@
     <hr>
     <form enctype="multipart/form-data">
         <fieldset>
+            <legend class="text-center"> Modifier le post</legend>
             <div >
                 <!-- Titre-->
                 <div class="form-group ">

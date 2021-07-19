@@ -64,7 +64,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import EditPost from '@/components/editPost.vue'
+import EditPost from '@/components/post/editPost.vue'
 
 
 export default {

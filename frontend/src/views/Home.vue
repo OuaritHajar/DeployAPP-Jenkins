@@ -32,8 +32,8 @@
 
 <script>
 import { mapGetters} from 'vuex'
-import Login from '@/components/login.vue'
-import Signup from '@/components/signup.vue'
+import Login from '@/components/user/login.vue'
+import Signup from '@/components/user/signup.vue'
 
 export default {
     components: {

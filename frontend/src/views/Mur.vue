@@ -119,12 +119,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import NewPost from '@/components/newPost.vue'
-import UserHeader from '@/components/userHeader.vue'
-import Comments from '@/components/commentsPost.vue'
-import InteractionPost from '@/components/interactionPost.vue'
-import NewComment from '@/components/newComment.vue'
-import AsideMur from'@/components/aside-mur.vue'
+import NewPost from '@/components/post/newPost.vue'
+import UserHeader from '@/components/user/userHeader.vue'
+import Comments from '@/components/comment/commentsPost.vue'
+import InteractionPost from '@/components/post/interactionPost.vue'
+import NewComment from '@/components/comment/newComment.vue'
+import AsideMur from'@/components/home/aside-mur.vue'
 
 
 let moment = require("moment");
@@ -164,7 +164,9 @@ export default {
 
     mounted(){
         moment.locale('fr');
-        this.$store.dispatch('getAllPosts')
+            this.$store.dispatch('getAllPosts')
+            this.$store.dispatch('getProfilUsers', this.user.userId )
+        
     },
 
     beforeUpdate() {

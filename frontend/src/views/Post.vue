@@ -28,11 +28,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import EditPost from '@/components/editPost.vue'
-import Comments from'@/components/commentsPost.vue'
-import NewComment from '@/components/newComment'
-import UserHeader from '@/components/userHeader.vue'
-import InteractionPost from '@/components/interactionPost.vue'
+import EditPost from '@/components/post/editPost.vue'
+import Comments from'@/components/comment/commentsPost.vue'
+import NewComment from '@/components/comment/newComment'
+import UserHeader from '@/components/user/userHeader.vue'
+import InteractionPost from '@/components/post/interactionPost.vue'
 
 
 
