@@ -63,12 +63,6 @@ module.exports = {
     };
   },
 
-
-
-
-
-
-
   update: async (req, res) => {
 
     // Getting auth header
@@ -77,6 +71,7 @@ module.exports = {
     const postId = req.params.postId;
 
     console.log("response local update : ",res.locals.postUpdate)
+    
     
     try {
       // récupère l'user
@@ -156,5 +151,102 @@ module.exports = {
     catch (err) {
       console.error(err)
     }
+  },
+
+
+  
+  updatePhoto: async (req, res) => {
+
+    // Getting auth header
+    var headerAuth = req.headers['authorization'];
+    var userId = jwtUtils.getUserId(headerAuth);
+    const userCibleId = req.params.userId;
+    console.log("response local update profil : ",res.locals.updateProfil)
+
+    //console.log("response local update : ",res.locals.postUpdate)
+    
+    try {
+      // récupère l'user
+      const userFound = await db.User.findOne({
+        where: { id: userId }
+      })
+      if (userFound) {
+
+        // récupère l'user cible
+        const userCibleFound = await db.User.findOne({
+          where: { id: userCibleId }
+        })
+        if (userCibleFound) {
+            
+            // on vérifie s'il y a une image dans la requete
+            if (req.file == null) {
+              console.log("pas d'image dans la requete");
+              return res.status(201).json(res.locals.updateProfil);
+
+
+            // image dans la requete
+            } else {
+              // vérifie si il y a déjà une image
+              const photoFound = await db.Photo.findOne({
+                where: {userId : userCibleId}
+              })
+              if(photoFound) {
+
+                  
+                    // supprime ancienne image
+                      fs.unlink(photoFound.url,(err) =>{
+                        if (err) {
+                          console.error(err)
+                        } else {
+                          console.log('ancienne photo supprimé si existe')
+                        }
+                      })
+                  
+
+                  // update image dans la bdd
+                  const updatePhoto = await photoFound.update({              
+                    type: (req.file.mimetype? req.file.mimetype : photoFound.mimetype) ,
+                    name: (req.file.originalname? req.file.originalname : photoFound.originalname) ,
+                    data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/photos/' + req.file.filename) : photoFound.data),
+                    url:  (req.file.path? req.file.path : photoFound.path)
+                  })
+                  if (updatePhoto) {
+                    return res.status(201).json(res.locals.updateProfil);
+                  }
+
+              } else {
+                console.log('Created new photo')
+                // update image dans la bdd
+                const createPhoto = await db.Photo.create({
+
+                  type: req.file.mimetype,
+                  name: req.file.originalname,
+                  data: fs.readFileSync(__basedir + '/resources/static/assets/photos/' + req.file.filename),
+                  url:  req.file.path,
+                  UserId: userCibleId
+                })
+
+                if (createPhoto) {
+                  return res.status(201).json(res.locals.updateProfil);
+                  
+                }
+              }
+            }
+        } else {
+          return res.status(404).json({ 'error': 'post not found' });
+        }
+      } else {
+        return res.status(404).json({ 'error': 'user not found' });
+      }
+    }
+    catch (err) {
+      console.error(err)
+    }
   }
+
+
+
+
+
+  
 }

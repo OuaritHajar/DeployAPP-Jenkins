@@ -75,7 +75,7 @@
 
 
                     <div class="text-center">
-                        <button @click="editUser()" class="btn btn-primary">
+                        <button @click="editUser(user.id)" class="btn btn-primary">
                             Modifier
                         </button>
                         <button @click="deleteUser()" class="btn btn-danger">
@@ -174,7 +174,7 @@
                 <div class="col-sm-12 interface-photo">
                     <p class="text-center interface-title">Choisir une photo</p>
                     <form action="">
-                        <input type="file">
+                        <input type="file" @change="uploadImage($event)">
                     </form>
                     
                     
@@ -199,12 +199,14 @@ export default {
 
             lastName:'',
             firstName: '',
+            file:'',
             
             inputFirstName: false,
             inputLastName: false,
             modifAvatar:false,
 
-            avatarValue: ''
+            avatarValue: '',
+            useAvatar : true
         }
     },
 
@@ -236,15 +238,39 @@ export default {
     },
 
     methods: {
+        uploadImage(event) {
+            this.file = event.target.files[0]
+            this.useAvatar = false
+            console.log(this.file)
+        },
 
-        editUser() {
-            let data = {
-                first_name: this.firstName,
-                last_name: this.lastName,
-                avatarUrl:  this.avatarUrl,
-                userId: this.$route.params.userId
+        editUser(userId) {
+            let formData = new FormData()
+
+            if(this.useAvatar){
+                formData.append('avatarUrl', this.avatarUrl);
+                
+            } else {
+                formData.append('avatarUrl', this.file);
             }
-            this.$store.dispatch('editUser', data)
+//
+            formData.append('first_name', this.firstName);
+            formData.append('last_name', this.lastName);
+            formData.append('userId', userId); 
+
+
+
+            //let data = {
+            //    first_name: this.firstName,
+            //    last_name: this.lastName,
+            //    userId: userId
+            //}
+            //console.log("data get : ",data.get('avatarUrl'))
+            //console.log("data values: ",data.values())
+            //console.log("data entrise : ",data.entries())
+
+
+            this.$store.dispatch('editUser', formData )
             .then(()=> {
                 this.inputFirstName = false
                 this.inputLastName = false

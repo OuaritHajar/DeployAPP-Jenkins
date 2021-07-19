@@ -182,6 +182,8 @@ module.exports = {
         const userId = jwtUtils.getUserId(headerAuth);
         const postId = JSON.parse(req.params.postId);
 
+        console.log('req.body est : :', req.body)
+
         //Params
         const title = req.body.title;
         let img_url;

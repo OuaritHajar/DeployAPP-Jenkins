@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post, {onDelete: 'CASCADE', hooks:true})
       User.hasMany(models.Comment, {onDelete: 'CASCADE', hooks:true}),
       User.hasMany(models.Like,{onDelete: 'CASCADE', hooks:true}),
-      User.hasMany(models.Image)
+      User.hasMany(models.Image),
+      User.hasOne(models.Photo)
     }
   };
   User.init({

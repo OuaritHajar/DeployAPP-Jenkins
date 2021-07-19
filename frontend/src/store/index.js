@@ -84,8 +84,7 @@ const store = createStore({
 
         // ----------- PROFIL -----------------
         EDIT_PROFIL: (state, profil) => {
-            state.userProfil.first_name = profil.first_name,
-            state.userProfil.last_name = profil.last_name
+            state.userProfil = profil
         },
         GET_USER_PROFIL:(state, userProfil) => {
             state.userProfil = userProfil
@@ -259,7 +258,13 @@ const store = createStore({
     // --------------  PROFIL  ---------------
 
         editUser:({ commit }, data) => {
-            instance.put('users/' + data.userId, data) 
+            instance.put('users/' + data.get('userId'),  data
+
+
+
+            
+            ) 
+            
             .then( (response) => {
                 commit('EDIT_PROFIL', response.data)
             })
@@ -281,6 +286,9 @@ const store = createStore({
             instance.get('users/'+ userId)
             .then((response) => {
                 console.log(response.data)
+
+
+
                 commit('GET_USER_PROFIL', response.data)
                 
             })

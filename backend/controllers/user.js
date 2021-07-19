@@ -154,24 +154,18 @@ module.exports = {
 
 
 
-  updateUserProfile: async (req, res) => {
+  updateUserProfile: async (req, res, next) => {
     // Getting auth header
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
+    const userCibleId = req.params.userId
 
     //Params
     const firstName = req.body.first_name;
     const lastName = req.body.last_name;
- 
+    let avatarUrl
+    console.log("req.body est : ",req.body ,"req.file est : ", req.file)
 
-    if(req.body.avatarUrl == 'http://localhost:3000/images/static/avatar/avatar.png'){
-      avatarUrl = null
-    } else{
-      avatarUrl = req.body.avatarUrl
-    }
-
-
-    console.log('avatarUrl : ',avatarUrl)
 
     try {
 
@@ -181,27 +175,59 @@ module.exports = {
       })
       if (userFound) {
 
+
         // on cherche l'utilisateur ciblé
         const userCible = await db.User.findOne({
-          attributes: ['id', 'first_name', 'last_name'],
-          where: { id: req.params.userId }
+          where: { id: userCibleId }
         })
-
         if (userCible) {
 
-          //son propre profil 
+          //légitimité
           if (userCible.id == userId || userFound.isAdmin) {
 
-            // si on le trouve on met a jour la base de donnée
-            const updateProfil = await userCible.update({
-              first_name: (firstName ? firstName : userCible.first_name),
-              last_name: (lastName ? lastName : userCible.last_name),
-              avatarUrl: avatarUrl ? avatarUrl : userCible.avatarUrl
-            })
+            // si y a file image
+            if(req.file) {
 
-            if (updateProfil) {
-              res.status(201).json(updateProfil)
+                const updateProfil = await userCible.update({
+                  first_name: (firstName ? firstName : userCible.first_name),
+                  last_name: (lastName ? lastName : userCible.last_name),
+                  avatarUrl: (req.file.path ? `${req.protocol}://${req.get('host')}/images/static/assets/photos/${req.file.filename}` : userCible.avatarUrl)
+                })
+                if (updateProfil) {
+                    res.locals.updateProfil = updateProfil
+                    next()
+                    //return res.status(201).json(updateProfil)
+                }
+
+            // sans file image
+            } else {
+                // si avatar sélectionné
+                if(req.body.avatarUrl != 'http://localhost:3000/images/static/avatar/avatar.png'){
+                    const updateProfil = await userCible.update({
+                      first_name: (firstName ? firstName : userCible.first_name),
+                      last_name: (lastName ? lastName : userCible.last_name),
+                      avatarUrl: (req.body.avatarUrl ? req.body.avatarUrl : userCible.avatarUrl)
+                    })
+                    if (updateProfil) {
+                        res.locals.updateProfil = updateProfil
+                        next()
+                        //return res.status(201).json(updateProfil)
+                    }
+                
+                // sans avatar ni image
+                } else  {
+                    const updateProfil = await userCible.update({
+                      first_name: (firstName ? firstName : userCible.first_name),
+                      last_name: (lastName ? lastName : userCible.last_name),
+                    })
+                    if (updateProfil) {
+                      res.locals.updateProfil = updateProfil
+                      next()
+                      //return res.status(201).json(updateProfil)
+                    }
+                } 
             }
+            
           } else {
             return res.status(404).json({ 'error': 'no authorized, modifier votre propre profil ou augmenter vos privilège' })
           }

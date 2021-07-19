@@ -70,7 +70,6 @@ export default {
             data.set('img_url', this.file);
             data.append('postId', postId); 
 
-
             this.$store.dispatch('editPost', data)
             .then(()=> {
                 this.$store.dispatch('hideEditPost', { postId: postId, vue: this.$route.name })
