@@ -13,7 +13,7 @@ module.exports = {
     var headerAuth = req.headers['authorization'];
     var userId = jwtUtils.getUserId(headerAuth);
 
-    console.log("response locale : ",res.locals.newPost.dataValues)
+    console.log("response locale : ",res.locals.newPost.dataValues.id)
 
     try {
       // récupère l'user

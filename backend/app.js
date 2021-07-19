@@ -5,7 +5,6 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 const app = express();
 global.__basedir = __dirname;
-const dbImage = require('./config/db.config.js');
 const db = require('./models/index.js');
 const path = require('path')
 

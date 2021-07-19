@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const usersCtrl = require('../controllers/user');
 // Multer
-const uploadPhoto = require('../config/upload.config.js');
+const uploadPhoto = require('../config/uploadPhoto.config.js');
 const fileWorker = require('../controllers/image.js');
 
 
