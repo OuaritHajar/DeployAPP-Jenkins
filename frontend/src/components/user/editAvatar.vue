@@ -147,6 +147,7 @@ export default {
 
 
             this.$store.dispatch('editUser', formData )
+            this.$store.dispatch('getProfilUsers',userId)
             .then(()=> {
                 //this.inputFirstName = false
                 //this.inputLastName = false

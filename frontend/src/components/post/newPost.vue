@@ -27,7 +27,7 @@
             </div>
             
             <div class="text-center">
-                <button @click="creatNewPost" class="btn btn-primary">Publier</button>
+                <button @click="creatNewPost(user)" class="btn btn-primary">Publier</button>
             </div>
             
         </fieldset>  
@@ -49,21 +49,26 @@ export default{
             file: null
         }
     },
+    props: ['user'],
     methods: {
         uploadImage(event) {
             this.file = event.target.files[0]
             console.log(this.file)
         },
-        creatNewPost() {
+        creatNewPost(user) {
             
             let data = new FormData();
             data.append('title', this.title);
             data.append('description', this.description);
             data.append('img_url', this.file); 
+            
+            console.log("haaaaaaaaa",user.first_name)
+            
+            
 
             this.$store.dispatch('createPost', data)
             .then(() => {
-              this.$router.go();
+              //this.$router.go();
             })
             .catch(function (error) {
               console.log(error);

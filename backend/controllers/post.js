@@ -41,6 +41,9 @@ module.exports = {
                     likes: 0,
                     comments: 0,
                     UserId: userFound.id,
+                    include: [{ 
+                        model: db.User , attributes: ['first_name', 'last_name', 'avatarUrl'] 
+                    }]
                 });
 
                 if (newPost) {

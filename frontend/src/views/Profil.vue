@@ -113,13 +113,15 @@
 
 
 
+<!--
             <div v-for="activity in allActivity" :key="activity.createdAt" class="activities">
                 <p > 
                     le {{ moment(activity.createdAt).format("DD/MM") }}
-                    à {{ moment(activity.createdAt).format("hh:mm") }},
+                    à {{ moment(activity.createdAt).format("HH:mm") }},
                     {{ user.first_name }}
                     a
                     {{ activity.activityType }}
+
                     <span v-if="activity.Post">
                         <router-link :to="{name: 'Post', params: {postId: activity.Post.id}}" class="nav-link">
                             le post 
@@ -132,7 +134,7 @@
                     
                 </p>
             </div>
-                
+                -->
 
             
                 
@@ -153,6 +155,7 @@ export default {
     components:{
         EditAvatar
     },
+    //props:['test'],
     data(){
         return{
             moment: moment,
@@ -174,28 +177,27 @@ export default {
             thisUser: ['get_user']
         }),
 
-        allActivity() {
-            let activities = []
-            this.user.Comments.forEach(comment => {
-                comment.activityType = 'commenté'
-                activities.push(comment)
-            })
-            this.user.Posts.forEach(post => {
-                post.activityType = 'ajouté un post'
-                activities.push(post)
-            })
-            this.user.Likes.forEach(like => {
-                like.activityType = 'aimé'
-                activities.push(like)
-            })
-            console.log("activities : ",activities)
-            activities.sort(function(a, b) {
-                a = new Date(a.createdAt);
-                b = new Date(b.createdAt);
-                return a>b ? -1 : a<b ? 1 : 0;
-            });
-            return activities 
-        },
+        //allActivity() {
+        //    let activities = []
+        //    this.user.Comments.forEach(comment => {
+        //        comment.activityType = 'commenté'
+        //        activities.push(comment)
+        //    })
+        //    this.user.Posts.forEach(post => {
+        //        post.activityType = 'ajouté un post'
+        //        activities.push(post)
+        //    })
+        //    this.user.Likes.forEach(like => {
+        //        like.activityType = 'aimé'
+        //        activities.push(like)
+        //    })
+        //    activities.sort(function(a, b) {
+        //        a = new Date(a.createdAt);
+        //        b = new Date(b.createdAt);
+        //        return a>b ? -1 : a<b ? 1 : 0;
+        //    });
+        //    return activities 
+        //},
 
         sexe(){
             if(this.user.sexe) {

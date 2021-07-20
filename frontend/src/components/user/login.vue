@@ -71,7 +71,7 @@ export default {
                 password: this.password,
             })
             .then(() => {
-              this.$router.push("/Mur");
+              this.$router.push('/home/limit=:limit');
             })
             .catch((error) =>{
               console.log(error);

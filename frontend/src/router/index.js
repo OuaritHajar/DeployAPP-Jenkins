@@ -10,20 +10,23 @@ const routes = [
 
   // nav before connection
   {
-    path: '/',
-    name: '/',
-    component: Mur
+    path: '/home/limit=:limit',
+    name: 'Home',
+    component: Mur,
+    props: route => ({ limit: route.query.limit })
   },
   {
-    path: '/mur',
+    path: '/home/limit=:limit',
     name: 'Mur',
-    component: Mur
+    component: Mur,
+    //props: route => ({ query: route.query.offset })
   },
 
   {
     path: '/user/:userId',
     name: 'Profil',
-    component: Profil
+    component: Profil,
+    //props: route => ({ test: route.query.test })
   },
 
   // post

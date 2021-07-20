@@ -8,7 +8,6 @@ let instance = axios.create({
     baseURL: 'http://localhost:3000/api/',
 });
 
-instance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.token}`;
 
 let user = localStorage.getItem('user');
 if (!user) {
@@ -101,6 +100,7 @@ const store = createStore({
             state.post = data
         },
         CREATE_POST: (state, newPost) => {
+            console.log("Nexpost : ", newPost)
             state.posts.splice(0, 0, newPost)
         },
         EDIT_POST: () => {},
@@ -260,13 +260,7 @@ const store = createStore({
     // --------------  PROFIL  ---------------
 
         editUser:({ commit }, data) => {
-            instance.put('users/' + data.get('userId'),  data
-
-
-
-            
-            ) 
-            
+            instance.put('users/' + data.get('userId'),  data)
             .then( (response) => {
                 commit('EDIT_PROFIL', response.data)
             })
@@ -302,8 +296,8 @@ const store = createStore({
         
 
     // ---------------- POSTS  ------------------
-        getAllPosts: ({commit}) => {
-            instance.get('posts')
+        getAllPosts: ({commit}, offset) => {
+            instance.get('posts?limit='+ 5 +"&offset="+ offset)
             .then((response) => {
                 response.data.forEach(post => {
                     post.displayComment = false
@@ -326,6 +320,7 @@ const store = createStore({
             instance.post('posts', data)
             .then( (response) => {
                 console.log(response.data)
+                
                 commit('CREATE_POST', response.data)
             })
             .catch((error) => {

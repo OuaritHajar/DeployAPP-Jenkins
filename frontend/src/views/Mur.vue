@@ -15,7 +15,7 @@
             <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Masquer</button>
         </div>
         <div v-if="afficheNewPost">
-            <NewPost @post-created="updateDisplayBtn"/>
+            <NewPost @post-created="updateDisplayBtn" :user="profil" />
         </div>
 
     
@@ -87,7 +87,7 @@
             </div>
         </div>
 
-        <!-- pagination -->
+        <!-- pagination 
 
         <nav aria-label="pagination">
             <ul class="pagination">
@@ -102,6 +102,22 @@
                 </li>
             </ul>
         </nav>
+        -->
+
+        <nav aria-label="pagination">
+            <ul class="pagination">
+                <li class="page-item">
+                    <button type="button" class="page-link" @click="previousPage(offset)"> Previous </button>
+                </li>
+                <li class="page-item">
+                    <button type="button" class="page-link" > {{ pageNumber }} </button>
+                </li>
+                <li class="page-item">
+                    <button type="button" @click="nextPage(offset)" class="page-link"> Next </button>
+                </li>
+            </ul>
+        </nav>
+        <p> coucou :  {{ $route.params.limit }}</p>
 
 
     </main> 
@@ -138,18 +154,23 @@ export default {
         NewComment,
         AsideMur
     },
+    //props:[{query: '10'}],
 
     data() {
         return{
             moment: moment,
+
+            offset:0,
             page: 1,
-            perPage: 10,
-            pages: [],
+
+            perPage: 5,
+
             afficheNewPost: false,
             afficherLesCommentaires: false,
             descriptionComment:'',
         }
     },
+    props:['limit'],
 
     computed: {
         ...mapGetters({
@@ -158,14 +179,19 @@ export default {
             profil: ['get_user_profil']
         }),
         displayedPosts () {
-            return this.paginate(this.posts);
+            return this.posts;
         },
+        pageNumber(){
+            return this.page
+        }
+        
+
     },
 
     mounted(){
         moment.locale('fr');
-            this.$store.dispatch('getAllPosts')
-            this.$store.dispatch('getProfilUsers', this.user.userId )
+        this.$store.dispatch('getProfilUsers', this.user.userId );
+        this.$store.dispatch('getAllPosts',this.offset);
         
     },
 
@@ -173,11 +199,13 @@ export default {
         this.posts.forEach(post => {
 
             post.userAlreadyLike = false
-            post.Likes.forEach(like => {
-                if(like.UserId == this.user.userId) {
-                    post.userAlreadyLike = true
-                }
-            })
+            if(post.Likes) {
+                post.Likes.forEach(like => {
+                    if(like.UserId == this.user.userId) {
+                        post.userAlreadyLike = true
+                    }
+                })
+            }
         });
     },
 
@@ -195,27 +223,41 @@ export default {
           this.$store.dispatch('hideComments', postId)
         },
 
-        // Pagination
-        setPages () {
-            let numberOfPages = Math.ceil(this.posts.length / this.perPage);
-            for (let index = 1; index <= numberOfPages; index++) {
-                this.pages.push(index);
-            }
+
+        nextPage(){
+            this.page ++
+            this.offset = this.perPage*this.page
+            this.$store.dispatch('getAllPosts',this.offset);
         },
-        paginate (posts) {
-            let page = this.page;
-            let perPage = this.perPage;
-            let from = (page * perPage) - perPage;
-            let to = (page * perPage);
-            return  posts.slice(from, to);
+
+        previousPage(){
+            this.page --
+            this.offset = this.perPage*this.page
+            this.$store.dispatch('getAllPosts',this.offset);
         },
+
+
+        //// Pagination
+        //setPages () {
+        //    let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+        //    for (let index = 1; index <= numberOfPages; index++) {
+        //        this.pages.push(index);
+        //    }
+        //},
+        //paginate (posts) {
+        //    let page = this.page;
+        //    let perPage = this.perPage;
+        //    let from = (page * perPage) - perPage;
+        //    let to = (page * perPage);
+        //    return  posts.slice(from, to);
+        //},
     },       
 
-	watch: {
-		posts () {
-			this.setPages();
-		},
-	},
+	//watch: {
+	//	posts () {
+	//		this.setPages();
+	//	},
+	//},
 }
 </script>
 
