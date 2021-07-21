@@ -19,7 +19,7 @@
             </div>
 
             <!-- button -->
-            <div class="col-auto btn-edit" v-if="comment.UserId === user.userId || user.isAdmin" >
+            <div class="col-auto btn-edit" v-if="user.id === comment.UserId || user.isAdmin" >
                 <button v-if="comment.displayEditComment != true" 
                 @click="displayEditComment(comment.id, comment.PostId)" 
                 class="btn btn-primary">
@@ -42,7 +42,7 @@
         <p class="description-comment"> {{ comment.description }} </p>
 
         <!-- Edit comment -->
-        <div v-if="(comment.UserId === user.userId || user.isAdmin) && comment.displayEditComment" >
+        <div v-if="(user.id === comment.UserId || user.isAdmin) && comment.displayEditComment" >
             <form>
                 <textarea v-model="comment.editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
             </form>
@@ -99,8 +99,10 @@ export default {
             let data = { 
                 'description': description,
                 'commentId': commentId,
-                'postId': postId
+                'postId': postId,
+                'vue': this.$route.name,
             }
+            console.log('vue : ', this.$route.name)
             this.$store.dispatch('editComment', data)
             .then(()=> {
                 //if(this.$route.name == "Post"){
@@ -108,7 +110,7 @@ export default {
                 //} else {
                 //    this.$router.go()
                 //}
-                this.$router.go()
+                //this.$router.go()
                 
                 
             })
@@ -118,14 +120,15 @@ export default {
             if(confirm('Etes vous sur de vouloir supprimer le commentaire ?')){
                 let data = {
                     'commentId': commentId,
-                    'postId': postId
+                    'postId': postId,
+                    'vue': this.$route.name,
                 }
                 this.$store.dispatch('deleteComment', data)
                 .then(()=> {
                     //if(this.$route.name == "Post"){
                     //    this.$router.push('/mur')
                     //} else {
-                        this.$router.go()
+                        //this.$router.go()
                     //}
                 })
             }

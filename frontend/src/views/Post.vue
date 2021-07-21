@@ -19,7 +19,7 @@
     </div>
     
     <NewComment v-if="post.displayInputComment" :post="post"/>
-    <Comments :comments="post.Comments" />
+    <Comments :comments="post.Comments" :post="post"/>
     
 </section>
 </template>
@@ -52,14 +52,14 @@ export default {
     mounted(){
         this.$store.dispatch('getOnePost', this.$route.params.postId )
     },
-    beforeUpdate() {
-        this.post.userAlreadyLike = false
-        this.post.Likes.forEach(like => {
-            if(like.UserId == this.user.userId) {
-                this.post.userAlreadyLike = true
-            }
-        })
-    },
+    //beforeUpdate() {
+    //    this.post.userAlreadyLike = false
+    //    this.post.Likes.forEach(like => {
+    //        if(like.UserId == this.user.id) {
+    //            this.post.userAlreadyLike = true
+    //        }
+    //    })
+    //},
 
     computed: {
         ...mapGetters({

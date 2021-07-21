@@ -40,7 +40,7 @@ export default {
     data(){
         return{
             titlePost: '',
-            descriptionPost: this.$store.getters.get_one_post.description,
+            descriptionPost: '',
             file: null,
         }
     },
@@ -70,11 +70,12 @@ export default {
             data.set('description', this.descriptionPost);
             data.set('img_url', this.file);
             data.append('postId', postId); 
+            data.append('vue', this.$route.name)
 
             this.$store.dispatch('editPost', data)
             .then(()=> {
                 this.$store.dispatch('hideEditPost', { postId: postId, vue: this.$route.name })
-                this.$router.go()
+                
             })
         },
     }

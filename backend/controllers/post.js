@@ -2,6 +2,7 @@
 const db = require('../models');
 const jwtUtils = require('../utils/jwt.utils');
 const fs = require('fs');
+const user = require('./user');
 
 // Routes
 module.exports = {
@@ -28,8 +29,11 @@ module.exports = {
 
         try {
             // récupère l'user
-            const userFound = await db.User.findOne(
-                { where: { id: userId } }
+            const userFound = await db.User.findOne({ 
+                where: { id: userId },
+                attributes: ['id', 'first_name', 'last_name', 'createdAt', 'avatarUrl', 'sexe', 'isAdmin'],
+            }
+                
             );
             if (userFound) {
                 console.log("requete body :",req.body,"requete file :", req.file)
@@ -41,9 +45,13 @@ module.exports = {
                     likes: 0,
                     comments: 0,
                     UserId: userFound.id,
+                    //firstName: userFound.first_name,
+                    //lastName: userFound.last_name,
+                    //avatarUrl: userFound.avatarUrl
                 });
 
                 if (newPost) {
+                    console.log("nouveau post : ", newPost)
                     res.locals.newPost = newPost
                     next()
                     //return res.status(201).json(newPost);
@@ -109,7 +117,7 @@ module.exports = {
                 })
 
                 if (allPosts) {
-                    res.status(200).json(allPosts);
+                    res.status(200).json({allPosts: allPosts, user: userFound});
                 } else {
                     return res.status(404).json({ "error": "no post fund" });
                 }
@@ -157,7 +165,7 @@ module.exports = {
                     ]
                 })
                 if (postFound) {
-                    res.status(200).json(postFound); 
+                    res.status(200).json({post : postFound, user: userFound}); 
                 } else {
                     res.status(404).json({ "error": "no post fund" });
                 }

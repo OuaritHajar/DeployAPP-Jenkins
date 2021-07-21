@@ -113,7 +113,8 @@
 
 
 
-<!--
+
+            <!--
             <div v-for="activity in allActivity" :key="activity.createdAt" class="activities">
                 <p > 
                     le {{ moment(activity.createdAt).format("DD/MM") }}
@@ -134,7 +135,7 @@
                     
                 </p>
             </div>
-                -->
+            -->
 
             
                 
@@ -179,15 +180,15 @@ export default {
 
         //allActivity() {
         //    let activities = []
-        //    this.user.Comments.forEach(comment => {
+        //    this.theUser.Comments.forEach(comment => {
         //        comment.activityType = 'commenté'
         //        activities.push(comment)
         //    })
-        //    this.user.Posts.forEach(post => {
+        //    this.theUser.Posts.forEach(post => {
         //        post.activityType = 'ajouté un post'
         //        activities.push(post)
         //    })
-        //    this.user.Likes.forEach(like => {
+        //    this.theUser.Likes.forEach(like => {
         //        like.activityType = 'aimé'
         //        activities.push(like)
         //    })

@@ -68,15 +68,22 @@ import EditPost from '@/components/post/editPost.vue'
 
 
 export default {
+    data() {
+        return {
+        }
+    },
     components:{
         EditPost
     },
     props: ['post'],
 
+    mounted() {
+    },
+
     computed:{
         ...mapGetters({
             user: ['get_user']
-        })
+        }),
     },
 
     methods: {
@@ -111,14 +118,16 @@ export default {
             if(confirm('Etes vous sur ?')) {
                 this.$store.dispatch('deletePost', postId)
                 .then(()=> {
-                    this.$router.go()
+                    if(this.$route.name === "Post"){
+                        this.$router.push('/mur')
+                    }
                 })
             }
         },
         addLike(postId) {
             this.$store.dispatch('addOrRemoveLike', postId)
             .then(()=> {
-                this.$router.go()
+                
             })
         },
     },

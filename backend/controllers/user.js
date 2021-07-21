@@ -106,16 +106,16 @@ module.exports = {
         bcrypt.compare(password, userFound.password, function (errBycrypt, resBycrypt) {
           if (resBycrypt) {
             return res.status(200).json({
-              'id': userFound.id,
-              'token': jwtUtils.generateTokenForUser(userFound),
+              'id':          userFound.id,
+              'token':       jwtUtils.generateTokenForUser(userFound),
               'first_name' : userFound.first_name,
-              'last_name': userFound.last_name,
-              'avatarUrl': userFound.avatarUrl,
-              'sexe': userFound.sexe,
-              'createdAt' : userFound.createdAt,
-              'updatedAt': userFound.updatedAt,
-              'email': userFound.updatedAt,
-              'isAdmin': userFound.isAdmin,
+              'last_name':   userFound.last_name,
+              'avatarUrl':   userFound.avatarUrl,
+              'sexe':        userFound.sexe,
+              'createdAt' :  userFound.createdAt,
+              'updatedAt':   userFound.updatedAt,
+              'email':       userFound.updatedAt,
+              'isAdmin':     userFound.isAdmin,
 
             })
           } else {

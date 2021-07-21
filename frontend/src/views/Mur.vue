@@ -171,13 +171,11 @@ export default {
             descriptionComment:'',
         }
     },
-    props:['limit'],
 
     computed: {
         ...mapGetters({
             posts: ['get_all_posts'],
             user: ['get_user'],
-            profil: ['get_user_profil']
         }),
         displayedPosts () {
             return this.posts;
@@ -191,24 +189,11 @@ export default {
 
     mounted(){
         moment.locale('fr');
-        this.$store.dispatch('getProfilUsers', this.user.id );
         this.$store.dispatch('getAllPosts');
         
     },
 
-    beforeUpdate() {
-        this.posts.forEach(post => {
-
-            post.userAlreadyLike = false
-            if(post.Likes) {
-                post.Likes.forEach(like => {
-                    if(like.id == this.user.id) {
-                        post.userAlreadyLike = true
-                    }
-                })
-            }
-        });
-    },
+    
 
     methods:{
 

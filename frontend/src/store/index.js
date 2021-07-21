@@ -100,10 +100,21 @@ const store = createStore({
             state.post = data
         },
         CREATE_POST: (state, newPost) => {
+            console.log('new post : ',newPost)
             state.posts.splice(0, 0, newPost)
         },
-        EDIT_POST: () => {},
-        POST_DELETE:()=> {},
+        EDIT_POST: (state, data) => {
+            console.log("mutation : edit post vue = ",data.vue)
+            if(data.vue == "Post"){
+                state.post = data.newPost
+            } else {
+                const LePost = state.posts.find(post => post.id === data.newPost.id)
+
+                LePost.description = data.newPost.description
+                LePost.title= data.newPost.title
+                LePost.img_url = data.newPost.img_url
+            }
+        },
         ADD_REMOVE_LIKE:()=>{},
 
 
@@ -116,9 +127,21 @@ const store = createStore({
                 LePost.Comments.push(data.newComment)
             }
         },
-        DELETE_COMMENT: ()=> {},
-        EDIT_COMMENT: () => {
-            //state.post.comments = dataComment.description
+        DELETE_COMMENT: (state, data)=> {
+            if(data.data.vue == "Post"){
+                state.post.Comments = data.newComments
+            } else {
+                const LePost = state.posts.find(post => post.id === data.data.postId)
+                LePost.Comments = data.newComments
+            }
+        },
+        EDIT_COMMENT: (state, data) => {
+            if(data.data.vue == "Post"){
+                state.post.Comments = data.newComments
+            } else {
+                const LePost = state.posts.find(post => post.id === data.data.postId)
+                LePost.Comments = data.newComments
+            }
         },
         //GET_ONE_COMMENT:() => {
         //    //state.idCommentPost = data.commentId
@@ -301,7 +324,7 @@ const store = createStore({
         getAllPosts: ({commit}) => {
             instance.get('posts')
             .then((response) => {
-                response.data.forEach(post => {
+                response.data.allPosts.forEach(post => {
                     post.displayComment = false
                     post.displayInputComment = false
                     post.displayEditPost = false
@@ -309,9 +332,15 @@ const store = createStore({
                     post.Comments.forEach(comment => {
                         comment.displayEditComment = false
                     })
+                    post.userAlreadyLike = false
+                    post.Likes.forEach(like => {
+                        if (like.UserId === response.data.user.id) {
+                            post.userAlreadyLike = true
+                        }
+                    })
                 })
                 console.log("response front All posts",response.data)
-                commit('ALL_POSTS', response.data)
+                commit('ALL_POSTS', response.data.allPosts)
             })
             .catch((error) => {
                 console.error(error);
@@ -320,9 +349,21 @@ const store = createStore({
 
         createPost:({commit},data) => {
             instance.post('posts', data)
-            .then( (response) => {
-                console.log(response.data)
-                commit('CREATE_POST', response.data)
+            .then( (createResponse) => {
+                console.log(createResponse.data)
+                
+                instance.get('posts/' + createResponse.data.id)
+                .then((getResponse) => {
+                    console.log("postResponse : ",getResponse)
+                    
+                    getResponse.data.displayComment = false
+                    getResponse.data.displayInputComment = false
+                    getResponse.data.displayEditPost = false
+                    getResponse.data.listUsersLike = false
+                    getResponse.data.userAlreadyLike = false
+
+                    commit('CREATE_POST', getResponse.data)
+                })
             })
             .catch((error) => {
                 console.error(error)
@@ -332,23 +373,48 @@ const store = createStore({
         getOnePost: ({ commit }, postId) => {
             instance.get('posts/' + postId)
             .then((response)=> {
-                response.data.displayEditPost = false
-                response.data.displayInputComment = false
-                response.data.listUsersLike = false
+                response.data.post.displayEditPost = false
+                response.data.post.displayInputComment = false
+                response.data.post.listUsersLike = false
 
-                response.data.Comments.forEach(comment => {
+                response.data.post.Comments.forEach(comment => {
                     comment.displayEditComment = false
                 })
 
+                response.data.post.userAlreadyLike = false
+                response.data.post.Likes.forEach(like => {
+                    if (like.UserId === response.data.user.id) {
+                        response.data.post.userAlreadyLike = true
+                    }
+                })
+
                 console.log('respose post : ', response.data)
-                commit('GET_ONE_POST', response.data)
+                commit('GET_ONE_POST', response.data.post)
             })
         },
 
         editPost: ({ commit }, data) => {
             instance.put('posts/' + data.get('postId'), data )
-            .then( (response) => {
-                commit('EDIT_POST', response.data)
+            .then( () => {
+                instance.get('posts/' + data.get('postId'))
+                .then((response) => {
+                    
+                        response.data.displayComment = false
+                        response.data.displayInputComment = false
+                        response.data.displayEditPost = false
+                        response.data.listUsersLike = false
+                        response.data.userAlreadyLike = false
+                        
+                        response.data.Comments.forEach(comment => {
+                            comment.displayEditComment = false
+                        })
+                    
+                    console.log("response front All posts",response.data)
+                    commit('EDIT_POST', {newPost :response.data, vue: data.get('vue')})
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
             })
             .catch((err) => {
                 console.error(err);
@@ -358,7 +424,24 @@ const store = createStore({
         deletePost:({commit}, postId) => {
             instance.delete('posts/'+ postId )
             .then(()=>{
-                commit('POST_DELETE')
+                instance.get('posts')
+                .then((response) => {
+                    response.data.forEach(post => {
+                        post.displayComment = false
+                        post.displayInputComment = false
+                        post.displayEditPost = false
+                        post.listUsersLike = false
+                        
+                        post.Comments.forEach(comment => {
+                            comment.displayEditComment = false
+                        })
+                    })
+                    console.log("response front All posts",response.data)
+                    commit('ALL_POSTS', response.data)
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
             })
         },
 
@@ -368,8 +451,22 @@ const store = createStore({
     // -------------------  COMMENTS  -------------------
         newComment: ({commit}, data) => {
             instance.post('posts/'+ data.postId + '/comment', data )
-            .then( (response) => {
-                commit('NEW_COMMENT', { newComment :response.data, data: data})
+            .then( (createResponse) => {
+                console.log("create Comment response : ",createResponse)
+
+                let addUser = {
+                    User : {
+                        'first_name' : data.user.first_name,
+                        'last_name' : data.user.last_name,
+                        'avatarUrl' : data.user.avatarUrl
+                    }
+                }
+                    
+                
+                const newComment = Object.assign(createResponse.data, addUser)
+
+
+                commit('NEW_COMMENT', { newComment :newComment, data: data})
             })
             .catch((err) => {
                 console.error(err);
@@ -378,8 +475,14 @@ const store = createStore({
 
         editComment: ({ commit }, data) => {
             instance.put('posts/' + data.postId + '/comment/' + data.commentId, data)
-            .then( (response) => {
-                commit('EDIT_COMMENT', response.data)
+            .then( () => {
+                instance.get('posts/' + data.postId + '/comments')
+                .then((getResponse) => {
+                    console.log("get response comments of post", getResponse.data)
+                
+                    commit('EDIT_COMMENT', { newComments : getResponse.data, data: data})
+                
+                })
             })
             .catch((err) => {
                 console.error(err);
@@ -389,7 +492,10 @@ const store = createStore({
         deleteComment:({ commit }, data) => {
             instance.delete('posts/'+ data.postId +'/comment/'+ data.commentId)
             .then(() => {
-                commit('DELETE_COMMENT')
+                instance.get('posts/' + data.postId + '/comments')
+                .then((getResponse) => {
+                    commit('DELETE_COMMENT', { newComments : getResponse.data, data: data})
+                })
             })
             .catch((err) => {
                 console.error(err);

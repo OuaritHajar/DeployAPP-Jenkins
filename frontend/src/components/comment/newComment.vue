@@ -18,12 +18,18 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
     data(){
         return{
             descriptionComment: "",
         }
+    },
+    computed: {
+        ...mapGetters({
+            user:['get_user']
+        })
     },
     props: ['post'],
 
@@ -32,7 +38,8 @@ export default {
             let data = {
                 description: this.descriptionComment,
                 postId : postId,
-                vue: this.$route.name
+                vue: this.$route.name,
+                user: this.user
             }
             console.log("newComment : ",data)
 
@@ -44,7 +51,7 @@ export default {
                 //    this.$router.go()
                 //}
                 this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
-                this.$router.go()
+                
             })
         },
     }

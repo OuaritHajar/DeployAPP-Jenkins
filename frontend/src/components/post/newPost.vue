@@ -52,7 +52,7 @@ export default{
     },
     computed: {
         ...mapGetters({
-            user: ['user']
+            user: ['get_user']
         })
     },
     methods: {
