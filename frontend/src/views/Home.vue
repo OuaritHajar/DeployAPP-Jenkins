@@ -1,14 +1,20 @@
 <template>
 
 <div class="container-fluid home">
-    <router-view/>
-    <div class="row" v-if="user.userId == -1">
+    <p> user : {{user}} </p>
+    <p> est connecté ?{{ userIsConnected }} </p>
+    <button @click="deco">deco</button>
+
+
+
+
+    
+    <div v-if="userIsConnected == false" class="row">
 
         <div class="col-sm-12">
-            <Login/>
+            <Login @userConnected="userIsConnected = true" />
         </div>
-        
-
+       
         <section class="col-md-6">
             <div class="text-center">
                 <h1>Bienvenue sur le réseau social de groupomania</h1>
@@ -18,12 +24,16 @@
             <p class="text-presentation">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus nam eos hic nobis blanditiis pariatur natus a harum, quos consectetur aperiam dolore ratione libero deleniti nemo numquam soluta dicta porro.</p>
         </section>
 
-
         <section class="col-md-6">
             <Signup />
         </section>
-        
     </div>
+
+
+    
+    
+
+
 </div>
 
 
@@ -31,21 +41,33 @@
 
 
 <script>
-import { mapGetters} from 'vuex'
 import Login from '@/components/user/login.vue'
 import Signup from '@/components/user/signup.vue'
+import { mapGetters } from 'vuex'
 
 export default {
+    data() {
+        return {
+            userIsConnected : false
+        }
+    },
+        
+    
     components: {
         Login,
         Signup
     },
 
     computed: {
-        ...mapGetters({
-            user: ['get_user']
+        ...mapGetters({ 
+            user:['get_user']
         })
-    }
+    },
+    methods: {
+        deco() {
+            this.$store.dispatch('logout')
+        }
+    },
 }
   
 </script>

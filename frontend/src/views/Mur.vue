@@ -1,6 +1,7 @@
 <template>
-<div v-if="user.userId != -1" class="row">
+<div v-if="user.id != -1" class="row">
     
+
     <aside class="col-md-3">
         <AsideMur :profil="profil" />
     </aside>
@@ -190,8 +191,8 @@ export default {
 
     mounted(){
         moment.locale('fr');
-        this.$store.dispatch('getProfilUsers', this.user.userId );
-        this.$store.dispatch('getAllPosts',this.offset);
+        this.$store.dispatch('getProfilUsers', this.user.id );
+        this.$store.dispatch('getAllPosts');
         
     },
 
@@ -201,7 +202,7 @@ export default {
             post.userAlreadyLike = false
             if(post.Likes) {
                 post.Likes.forEach(like => {
-                    if(like.UserId == this.user.userId) {
+                    if(like.id == this.user.id) {
                         post.userAlreadyLike = true
                     }
                 })

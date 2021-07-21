@@ -71,11 +71,13 @@ export default {
                 password: this.password,
             })
             .then(() => {
-              this.$router.push('/home/limit=:limit');
+                this.$router.push('/mur')
             })
             .catch((error) =>{
               console.log(error);
             });
+
+            this.$emit('userConnected')
         },
     }
 }

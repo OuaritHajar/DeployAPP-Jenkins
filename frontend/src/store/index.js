@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import createPersistedState from "vuex-persistedstate";
+//import createPersistedState from "vuex-persistedstate";
 
 const axios = require('axios');
 
@@ -8,25 +8,26 @@ let instance = axios.create({
     baseURL: 'http://localhost:3000/api/',
 });
 
-
 let user = localStorage.getItem('user');
+
+//si token encore valide
 if (!user) {
     user = {
-        userId: -1,
+        id: -1,
         token: '',
     }; 
 } else {
-    if(user.userId != -1){
+    
         try {
             user = JSON.parse(user);
             instance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
         } catch (ex) {
             user = {
-                userId: -1,
+                id: -1,
                 token: '',
             };
         }
-    }
+    
 }
 
 const store = createStore({
@@ -65,7 +66,6 @@ const store = createStore({
     mutations: {
         // ----------------  CONNECTION  ----------------
         LOG_USER: (state, user) => {
-            localStorage.setItem('user', JSON.stringify(user));
             state.user = user;
         },
         STATUS: (state, status) => {
@@ -73,7 +73,7 @@ const store = createStore({
         },
         LOG_OUT: (state) => {
             state.user = {
-                userId: -1,
+                id: -1,
                 token: '',
                 isAdmin: false
             }
@@ -100,7 +100,6 @@ const store = createStore({
             state.post = data
         },
         CREATE_POST: (state, newPost) => {
-            console.log("Nexpost : ", newPost)
             state.posts.splice(0, 0, newPost)
         },
         EDIT_POST: () => {},
@@ -237,7 +236,8 @@ const store = createStore({
             return new Promise(( resolve,reject ) => {
                 instance.post('users/login', userInfos)
                 .then(function (response) {
-                    localStorage.setItem('token', response.data.token);
+                    instance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+                    
                     commit('STATUS', '' )
                     commit('LOG_USER', response.data);
                     resolve(response)
@@ -260,7 +260,9 @@ const store = createStore({
     // --------------  PROFIL  ---------------
 
         editUser:({ commit }, data) => {
-            instance.put('users/' + data.get('userId'),  data)
+            instance.put('users/' + data.get('id'),  data
+            ) 
+            
             .then( (response) => {
                 commit('EDIT_PROFIL', response.data)
             })
@@ -296,8 +298,8 @@ const store = createStore({
         
 
     // ---------------- POSTS  ------------------
-        getAllPosts: ({commit}, offset) => {
-            instance.get('posts?limit='+ 5 +"&offset="+ offset)
+        getAllPosts: ({commit}) => {
+            instance.get('posts')
             .then((response) => {
                 response.data.forEach(post => {
                     post.displayComment = false
@@ -320,7 +322,6 @@ const store = createStore({
             instance.post('posts', data)
             .then( (response) => {
                 console.log(response.data)
-                
                 commit('CREATE_POST', response.data)
             })
             .catch((error) => {
@@ -451,7 +452,7 @@ const store = createStore({
         },
 
     },
-    plugins: [createPersistedState()],
+    //plugins: [createPersistedState()],
 });
 
 export default store;

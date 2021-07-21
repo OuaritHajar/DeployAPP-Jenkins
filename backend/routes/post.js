@@ -13,17 +13,17 @@ const upload = require('../config/upload.config.js');
 const fileWorker = require('../controllers/image.js');
 
 // Posts routes
-router.post('/', auth, upload.single("img_url"),postsCtrl.createPost, fileWorker.upload);
-router.get('/', auth, postsCtrl.listPosts);
-router.get('/:postId', auth, postsCtrl.selectOnePost);
-router.put('/:postId', auth, upload.single("img_url"), postsCtrl.updateOnePost, fileWorker.update);
-router.delete('/:postId', auth, postsCtrl.removeOnePost);
+router.post('/', upload.single("img_url"),postsCtrl.createPost, fileWorker.upload);
+router.get('/',  postsCtrl.listPosts);
+router.get('/:postId', postsCtrl.selectOnePost);
+router.put('/:postId', upload.single("img_url"), postsCtrl.updateOnePost, fileWorker.update);
+router.delete('/:postId', postsCtrl.removeOnePost);
 
 // Comment routes
-router.post('/:postId/comment', auth, commentCtrl.createComment);
-router.get('/:postId/comments', auth, commentCtrl.listPostComments);
-router.put('/:postId/comment/:commentId', auth, commentCtrl.updateOneComment);
-router.delete('/:postId/comment/:commentId', auth, commentCtrl.deleteOneComment);
+router.post('/:postId/comment', commentCtrl.createComment);
+router.get('/:postId/comments', commentCtrl.listPostComments);
+router.put('/:postId/comment/:commentId', commentCtrl.updateOneComment);
+router.delete('/:postId/comment/:commentId', commentCtrl.deleteOneComment);
 
 // Like routes
 router.post('/:postId/like', likesCtrl.likePost);

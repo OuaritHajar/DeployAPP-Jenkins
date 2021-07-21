@@ -4,19 +4,19 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Mur from '../views/Mur'
 import Profil from '../views/Profil'
 import Post from '../views/Post'
+import Home from '../views/Home'
 
 
 const routes = [
 
   // nav before connection
   {
-    path: '/home/limit=:limit',
+    path: '/',
     name: 'Home',
-    component: Mur,
-    props: route => ({ limit: route.query.limit })
+    component: Home,
   },
   {
-    path: '/home/limit=:limit',
+    path: '/mur',
     name: 'Mur',
     component: Mur,
     //props: route => ({ query: route.query.offset })

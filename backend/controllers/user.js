@@ -68,7 +68,7 @@ module.exports = {
           if (newUser) {
             console.log(newUser.dataValues);
             return res.status(201).json({
-              'userId': newUser.id,
+              'id': newUser.id,
             })
           }
         });
@@ -106,9 +106,17 @@ module.exports = {
         bcrypt.compare(password, userFound.password, function (errBycrypt, resBycrypt) {
           if (resBycrypt) {
             return res.status(200).json({
-              'userId': userFound.id,
+              'id': userFound.id,
               'token': jwtUtils.generateTokenForUser(userFound),
-              'isAdmin': userFound.isAdmin
+              'first_name' : userFound.first_name,
+              'last_name': userFound.last_name,
+              'avatarUrl': userFound.avatarUrl,
+              'sexe': userFound.sexe,
+              'createdAt' : userFound.createdAt,
+              'updatedAt': userFound.updatedAt,
+              'email': userFound.updatedAt,
+              'isAdmin': userFound.isAdmin,
+
             })
           } else {
             return res.status(403).json({ 'error': 'Invalide password' })
@@ -140,22 +148,22 @@ module.exports = {
       const userFound = await db.User.findOne({
         attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt', 'avatarUrl', 'sexe', 'isAdmin'],
         where: { id: req.params.userId },
-        include: [{ 
-            model: db.Post,
-            },{
-            model: db.Like,
-                include: [{ model: db.Post ,
-                    include: [{
-                        model: db.User
-                    }] 
-                }]
-            },{
-            model: db.Comment,
-                include: [{ model: db.Post ,
-                    include: db.User
-                }]
-            }
-        ]
+        //include: [{ 
+        //    model: db.Post,
+        //    },{
+        //    model: db.Like,
+        //        include: [{ model: db.Post ,
+        //            include: [{
+        //                model: db.User , attributes: ['first_name', 'last_name','id']
+        //            }] 
+        //        }]
+        //    },{
+        //    model: db.Comment,
+        //        include: [{ model: db.Post ,
+        //            include: db.User, attributes: ['first_name', 'last_name','id']
+        //        }]
+        //    }
+        //]
       })
       if (userFound) {
         res.status(201).json(userFound);
