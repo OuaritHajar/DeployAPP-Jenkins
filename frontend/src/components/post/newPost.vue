@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 export default{
     
@@ -49,7 +50,11 @@ export default{
             file: null
         }
     },
-    props: ['user'],
+    computed: {
+        ...mapGetters({
+            user: ['user']
+        })
+    },
     methods: {
         uploadImage(event) {
             this.file = event.target.files[0]

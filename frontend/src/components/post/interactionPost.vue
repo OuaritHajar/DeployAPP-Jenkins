@@ -20,10 +20,10 @@
         <div class="col-3 text-center">
             
             <div v-if="post.UserId">
-                <button v-if="(post.UserId == user.userId || user.isAdmin) && post.displayEditPost != true" @click="afficherEditPost(post.id)" class="btn">
+                <button v-if="(post.UserId == user.id || user.isAdmin) && post.displayEditPost != true" @click="afficherEditPost(post.id)" class="btn">
                     <i class="bi bi-pencil-square" title="Editer"></i>
                 </button>
-                <button v-if="(post.UserId == user.userId || user.isAdmin)&& post.displayEditPost" @click="hideEditPost(post.id)" class="btn">
+                <button v-if="(post.UserId == user.id || user.isAdmin)&& post.displayEditPost" @click="hideEditPost(post.id)" class="btn">
                     <i class="bi bi-pencil-square" title="Cacher l'interface"></i>
                 </button>
             </div>
@@ -32,7 +32,7 @@
 
         <div class="col-3 text-center">
             <div v-if="post.UserId">
-                <button v-if="post.UserId == user.userId || user.isAdmin" @click="(deletePost(post.id))" class="btn">
+                <button v-if="post.UserId == user.id || user.isAdmin" @click="(deletePost(post.id))" class="btn">
                     <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>

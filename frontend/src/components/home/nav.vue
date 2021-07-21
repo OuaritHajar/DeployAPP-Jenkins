@@ -17,7 +17,7 @@
       <div v-if="user.id > -1 ">
         <ul class="navbar-nav">
           <li>
-            <p> user : {{user.id}} {{user.token}} </p>
+            <p> user : {{user.id}} </p>
           </li>
 
           <li class="nav-item">
@@ -27,14 +27,14 @@
           </li>
 
           <li class="nav-item">
-            <router-link :to="{name: 'Profil', params: {userId: user.userId}}" class="nav-link">
+            <router-link :to="{name: 'Profil', params: {userId: user.id}}" class="nav-link">
               Profil
             </router-link>
           </li>
 
           <li class="nav-item">
             <router-link to="/" @click="logout" class="nav-link">
-                Déconnection
+                Déconnexion
             </router-link>
           </li>
 

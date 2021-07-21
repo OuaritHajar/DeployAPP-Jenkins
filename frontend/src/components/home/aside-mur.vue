@@ -2,7 +2,7 @@
 <div class="aside row">
     
     <div class="col-4 col-md-12 text-center image">
-        <img :src="profil.avatarUrl">
+        <img :src="user.avatarUrl">
     </div>
     
     <div class="col-8 col-md-12">
@@ -13,11 +13,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
+
 export default {
-    props: ['profil'],
+
+
     computed:{
+        ...mapGetters({
+            user:['get_user']
+        }),
+
         name(){
-            return this.profil.first_name +' '+ this.profil.last_name
+            return this.user.first_name +' '+ this.user.last_name
         }
     }
 }

@@ -3,7 +3,8 @@
     
 
     <aside class="col-md-3">
-        <AsideMur :profil="profil" />
+        <!--<AsideMur :user="user" />-->
+        <AsideMur/>
     </aside>
 
 
@@ -16,7 +17,7 @@
             <button v-if="afficheNewPost" @click="afficheNewPost = false" class="btn btn-primary">Masquer</button>
         </div>
         <div v-if="afficheNewPost">
-            <NewPost @post-created="updateDisplayBtn" :user="profil" />
+            <NewPost @post-created="updateDisplayBtn" />
         </div>
 
     
@@ -118,7 +119,6 @@
                 </li>
             </ul>
         </nav>
-        <p> coucou :  {{ $route.params.limit }}</p>
 
 
     </main> 

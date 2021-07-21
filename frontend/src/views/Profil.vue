@@ -9,9 +9,9 @@
                 <!-- Avatar -->
                 <div class="col-sm-5 interface-avatar">
                     <div class="avatar">
-                        <img :src="user.avatarUrl" alt="avatar">
+                        <img :src="theUser.avatarUrl" alt="avatar">
                     </div>
-                    <div v-if="thisUser.userId == user.id || thisUser.isAdmin" class="text-center">
+                    <div v-if="user.id == theUser.id || user.isAdmin" class="text-center">
                         <button v-if="modifAvatar != true" class="btn btn-secondary btn-avatar" @click="modifAvatar = true ">Changer l'avatar</button>
                         <button v-if="modifAvatar" class="btn btn-secondary btn-avatar" @click="modifAvatar = false">Annuler</button>
                     </div>
@@ -25,14 +25,14 @@
                             <label for="inputLastName">Prénom: </label>
                         </div>
                         <div class="col-3 mr-auto">
-                            <span>{{ user.last_name }}</span>
+                            <span>{{ theUser.last_name }}</span>
                         </div>
-                        <span v-if="(thisUser.userId === user.id || thisUser.isAdmin)">
+                        <span v-if="(user.id === theUser.id || user.isAdmin)">
                             <button class="btn btn-primary" v-if="inputLastName != true" @click="inputLastName = true"><i class="bi bi-pencil"></i></button>
                             <button class="btn btn-primary" v-if="inputLastName" @click="inputLastName = false"><i class="bi bi-pencil-fill"></i></button>
                         </span>
                         
-                        <input v-if="(thisUser.userId === user.id || thisUser.isAdmin) && inputLastName" v-model="lastName" type="text" class="form-control">
+                        <input v-if="(user.id === theUser.id || user.isAdmin) && inputLastName" v-model="lastName" type="text" class="form-control">
                     </div>
 
                     <div class="row">
@@ -40,14 +40,14 @@
                             <label for="inputFirstName">Nom:  </label>
                         </div>
                         <div class="col-3 mr-auto">
-                            <span>{{ user.first_name }}</span>
+                            <span>{{ theUser.first_name }}</span>
                         </div>
-                        <span v-if="(thisUser.userId === user.id || thisUser.isAdmin)">
+                        <span v-if="(user.id === theUser.id || user.isAdmin)">
                             <button class="btn btn-primary" v-if="inputFirstName != true" @click="inputFirstName = true"><i class="bi bi-pencil"></i></button>
                             <button class="btn btn-primary" v-if="inputFirstName" @click="inputFirstName = false"><i class="bi bi-pencil-fill"></i></button>
                         </span>
                         
-                        <input v-if="( thisUser.userId === user.id || thisUser.isAdmin ) && inputFirstName" v-model="firstName" type="text" class="form-control">  
+                        <input v-if="( user.id === theUser.id || user.isAdmin ) && inputFirstName" v-model="firstName" type="text" class="form-control">  
                     </div>
 
                     <div class="row">
@@ -55,7 +55,7 @@
                             <p>Email :  </p>
                         </div>
                         <div class="col-auto">
-                            <span>{{ user.email }}</span>
+                            <span>{{ theUser.email }}</span>
                         </div>
                     </div>
 
@@ -64,7 +64,7 @@
                             <p>Crée le  </p>
                         </div>
                         <div class="col-auto">
-                            <span>{{ moment(user.createdAt).format("DD-MM-YYYY HH:mm") }}</span>
+                            <span>{{ moment(theUser.createdAt).format("DD-MM-YYYY HH:mm") }}</span>
                         </div>
                     </div>
 
@@ -79,7 +79,7 @@
 
 
                     <div class="text-center">
-                        <button v-if="inputLastName || inputFirstName" @click="editUser(user.id)" class="btn btn-primary">
+                        <button v-if="inputLastName || inputFirstName" @click="editUser(theUser.id)" class="btn btn-primary">
                             Modifier
                         </button>
                         <button @click="deleteUser()" class="btn btn-danger">
@@ -94,19 +94,19 @@
 
 
             <!-- Interface de modification -->
-            <EditAvatar v-if="modifAvatar" :user="user"></EditAvatar>
+            <EditAvatar v-if="modifAvatar" :user="theUser"></EditAvatar>
             <hr>
 
             <div class="col-sm-12 activity">
                 <div class="row text-center">
                     <div class="col-4 activity-posts">
-                        <p v-if="user.Posts" class="text-overflowe"> {{ user.Posts.length }}&nbsp;Post(s) </p>
+                        <p v-if="theUser.Posts" class="text-overflowe"> {{ theUser.Posts.length }}&nbsp;Post(s) </p>
                     </div>
                     <div class="col-4 activity-comments">
-                        <p v-if="user.Comments" class="text-overflowe">{{ user.Comments.length }}&nbsp;Commentaire(s)  </p>
+                        <p v-if="theUser.Comments" class="text-overflowe">{{ theUser.Comments.length }}&nbsp;Commentaire(s)  </p>
                     </div>
                     <div class="col-4 activity-likes">
-                        <p v-if="user.Likes" class="text-overflowe">{{ user.Likes.length }}&nbsp;Like(s)  </p>
+                        <p v-if="theUser.Likes" class="text-overflowe">{{ theUser.Likes.length }}&nbsp;Like(s)  </p>
                     </div>
                 </div>
             </div>
@@ -173,8 +173,8 @@ export default {
 
     computed: {
         ...mapGetters({
-            user:['get_user_profil'],
-            thisUser: ['get_user']
+            theUser:['get_user_profil'],
+            user: ['get_user']
         }),
 
         //allActivity() {
@@ -200,7 +200,7 @@ export default {
         //},
 
         sexe(){
-            if(this.user.sexe) {
+            if(this.theUser.sexe) {
                 return 'Femme'
             }else {
                 return 'Homme'
@@ -233,7 +233,10 @@ export default {
             if(confirm("Voulez vous vraiment supprimer votre compte ?")){
                 this.$store.dispatch('deleteUser', this.$route.params.userId)
                 .then(()=> {
-                    this.$router.push("/logout")
+                    this.$store.dispatch('logout')
+                    .then(()=> {
+                        this.$router.push('/')
+                    })
                 })
             }
         },
