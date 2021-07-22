@@ -64,7 +64,7 @@ const store = createStore({
 
 
     mutations: {
-        // ----------------  CONNECTION  ----------------
+        // ----------------  CONNEXION  ----------------
         LOG_USER: (state, user) => {
             state.user = user;
         },
@@ -84,11 +84,12 @@ const store = createStore({
 
 
         // ----------- PROFIL -----------------
-        EDIT_PROFIL: (state, profil) => {
-            state.userProfil = profil
-        },
         GET_USER_PROFIL:(state, userProfil) => {
             state.userProfil = userProfil
+        },
+        
+        EDIT_PROFIL: (state, profil) => {
+            state.userProfil = profil
         },
         
 
@@ -109,13 +110,26 @@ const store = createStore({
                 state.post = data.newPost
             } else {
                 const LePost = state.posts.find(post => post.id === data.newPost.id)
+                console.log('LePost : ', LePost)
 
                 LePost.description = data.newPost.description
                 LePost.title= data.newPost.title
                 LePost.img_url = data.newPost.img_url
             }
         },
-        ADD_REMOVE_LIKE:()=>{},
+        EDIT_LIKE:(state, data ) => {
+            console.log('edit like data : ', data)
+
+            if(data.data.vue == "Post"){
+                state.post.userAlreadyLike = data.newPost.userAlreadyLike
+                state.post.Likes = data.newPost.Likes
+            } else {
+                const LePost = state.posts.find(post => post.id === data.newPost.id)
+
+                LePost.userAlreadyLike = data.newPost.userAlreadyLike
+                LePost.Likes = data.newPost.Likes
+            }
+        },
 
 
         // -----------------  COMMENTS  ---------------
@@ -281,11 +295,19 @@ const store = createStore({
 
         
     // --------------  PROFIL  ---------------
+        getProfilUsers:({ commit },userId) => {
+            instance.get('users/'+ userId)
+            .then((response) => {
+                console.log("response profil user : ",response.data)
+                commit('GET_USER_PROFIL', response.data)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        },
 
         editUser:({ commit }, data) => {
-            instance.put('users/' + data.get('id'),  data
-            ) 
-            
+            instance.put('users/' + data.get('userId'),  data) 
             .then( (response) => {
                 commit('EDIT_PROFIL', response.data)
             })
@@ -302,21 +324,6 @@ const store = createStore({
         },
 
 
-    //------------------  PROFIL USERS  ------------------
-        getProfilUsers:({ commit },userId) => {
-            instance.get('users/'+ userId)
-            .then((response) => {
-                console.log("response profil user : ",response.data)
-
-
-
-                commit('GET_USER_PROFIL', response.data)
-                
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-        },
 
         
 
@@ -350,19 +357,19 @@ const store = createStore({
         createPost:({commit},data) => {
             instance.post('posts', data)
             .then( (createResponse) => {
-                console.log(createResponse.data)
+                console.log("response create : ",createResponse.data)
                 
                 instance.get('posts/' + createResponse.data.id)
                 .then((getResponse) => {
                     console.log("postResponse : ",getResponse)
                     
-                    getResponse.data.displayComment = false
-                    getResponse.data.displayInputComment = false
-                    getResponse.data.displayEditPost = false
-                    getResponse.data.listUsersLike = false
-                    getResponse.data.userAlreadyLike = false
+                    getResponse.data.post.displayComment = false
+                    getResponse.data.post.displayInputComment = false
+                    getResponse.data.post.displayEditPost = false
+                    getResponse.data.post.listUsersLike = false
+                    getResponse.data.post.userAlreadyLike = false
 
-                    commit('CREATE_POST', getResponse.data)
+                    commit('CREATE_POST', getResponse.data.post)
                 })
             })
             .catch((error) => {
@@ -399,18 +406,17 @@ const store = createStore({
                 instance.get('posts/' + data.get('postId'))
                 .then((response) => {
                     
-                        response.data.displayComment = false
-                        response.data.displayInputComment = false
-                        response.data.displayEditPost = false
-                        response.data.listUsersLike = false
-                        response.data.userAlreadyLike = false
+                        response.data.post.displayComment = false
+                        response.data.post.displayInputComment = false
+                        response.data.post.displayEditPost = false
+                        response.data.post.listUsersLike = false
+                        response.data.post.userAlreadyLike = false
                         
-                        response.data.Comments.forEach(comment => {
+                        response.data.post.Comments.forEach(comment => {
                             comment.displayEditComment = false
                         })
-                    
                     console.log("response front All posts",response.data)
-                    commit('EDIT_POST', {newPost :response.data, vue: data.get('vue')})
+                    commit('EDIT_POST', {newPost :response.data.post, vue: data.get('vue')})
                 })
                 .catch((error) => {
                     console.error(error);
@@ -426,7 +432,7 @@ const store = createStore({
             .then(()=>{
                 instance.get('posts')
                 .then((response) => {
-                    response.data.forEach(post => {
+                    response.data.allPosts.forEach(post => {
                         post.displayComment = false
                         post.displayInputComment = false
                         post.displayEditPost = false
@@ -437,12 +443,15 @@ const store = createStore({
                         })
                     })
                     console.log("response front All posts",response.data)
-                    commit('ALL_POSTS', response.data)
+                    commit('ALL_POSTS', response.data.allPosts)
                 })
                 .catch((error) => {
                     console.error(error);
                 });
             })
+            .catch((error) => {
+                console.error(error);
+            });
         },
 
         
@@ -461,11 +470,7 @@ const store = createStore({
                         'avatarUrl' : data.user.avatarUrl
                     }
                 }
-                    
-                
                 const newComment = Object.assign(createResponse.data, addUser)
-
-
                 commit('NEW_COMMENT', { newComment :newComment, data: data})
             })
             .catch((err) => {
@@ -479,9 +484,7 @@ const store = createStore({
                 instance.get('posts/' + data.postId + '/comments')
                 .then((getResponse) => {
                     console.log("get response comments of post", getResponse.data)
-                
                     commit('EDIT_COMMENT', { newComments : getResponse.data, data: data})
-                
                 })
             })
             .catch((err) => {
@@ -502,12 +505,37 @@ const store = createStore({
             });
         },
 
-        
+
+
+
+
     // -------------------  LIKES  -------------------
-        addOrRemoveLike:({commit}, postId) => {
-            instance.post('posts/' + postId + '/like')
-            .then(()=> {
-                commit('ADD_REMOVE_LIKE')
+        addOrRemoveLike:({commit}, data) => {
+            instance.post('posts/' + data.postId + '/like')
+            .then((responseLike)=> {
+                console.log("response Like : ", responseLike.data)
+
+                instance.get('posts/' + data.postId)
+                .then((response)=> {
+                    console.log('response get post after like/dislike : ',response.data)
+
+                    response.data.post.displayEditPost = false
+                    response.data.post.displayInputComment = false
+                    response.data.post.listUsersLike = false
+
+                    response.data.post.Comments.forEach(comment => {
+                        comment.displayEditComment = false
+                    })
+
+                    if (responseLike.data) {
+                        response.data.post.userAlreadyLike = true
+                    } else {
+                        response.data.post.userAlreadyLike = false
+                    }
+
+                    console.log('respose after modif : ', response.data)
+                    commit('EDIT_LIKE', { newPost : response.data.post, data:data})
+                })
             })
             .catch((err) => {
                 console.error(err);
@@ -524,14 +552,12 @@ const store = createStore({
             commit('HIDE_COMMENT', postId)
         },
 
-
         displayInputComments:({commit}, data) => {
             commit('DISPLAY_INPUT_COMMENT', data)
         },
         hideInputComments:({commit}, postId) => {
             commit('HIDE_INPUT_COMMENT', postId)
         },
-
 
         displayListUsersLike:({commit}, postId) => {
             commit('DISPLAY_LIST_USERS_LIKE', postId)
@@ -540,7 +566,6 @@ const store = createStore({
             commit('HIDE_LIST_USERS_LIKE', postId)
         },
 
-
         displayEditPost:({commit}, data) => {
             commit('DISPLAY_EDIT_POST', data)
         },
@@ -548,8 +573,6 @@ const store = createStore({
             commit('HIDE_EDIT_POST', postId)
         },
 
-
-        
         displayEditComment:({commit}, data) => {
             commit('DISPLAY_EDIT_COMMENT', data)
         },

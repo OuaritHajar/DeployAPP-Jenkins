@@ -51,7 +51,7 @@ module.exports = {
                             //})
                             //if (updatePost) {
 
-                                return res.status(201).json({ 'message' : 'user liked post'});
+                                return res.status(201).json(true);
                             
                             //} else {
                             //    res.status(500).json({ 'error': 'cannot update post like counter' });
@@ -75,7 +75,7 @@ module.exports = {
                             //})
                             //if (updatePost) {
 
-                                return res.status(201).json({ 'message' : 'user removed like'});
+                                return res.status(201).json(false);
                             //}
                             //else {
                             //    res.status(500).json({ 'error': 'cannot update post like counter' });

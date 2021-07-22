@@ -68,17 +68,10 @@ import EditPost from '@/components/post/editPost.vue'
 
 
 export default {
-    data() {
-        return {
-        }
-    },
     components:{
         EditPost
     },
     props: ['post'],
-
-    mounted() {
-    },
 
     computed:{
         ...mapGetters({
@@ -96,7 +89,6 @@ export default {
             this.$store.dispatch('hideListUsersLike', { postId: postId, vue: this.$route.name })
         },
 
-
         afficherInputCommentaire(postId){
             this.$store.dispatch('displayInputComments', { postId: postId, vue: this.$route.name } )
         },
@@ -104,14 +96,12 @@ export default {
             this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
         },
 
-
         afficherEditPost(postId){
             this.$store.dispatch('displayEditPost', { postId: postId, vue: this.$route.name })
         },
         hideEditPost(postId){
             this.$store.dispatch('hideEditPost', { postId: postId, vue: this.$route.name })
         },
-
 
         // Interaction
         deletePost(postId) {
@@ -125,7 +115,12 @@ export default {
             }
         },
         addLike(postId) {
-            this.$store.dispatch('addOrRemoveLike', postId)
+            let data = {
+                'postId': postId,
+                'userId': this.user.id,
+                'vue': this.$route.name
+            }
+            this.$store.dispatch('addOrRemoveLike', data)
             .then(()=> {
                 
             })

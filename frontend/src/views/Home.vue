@@ -1,14 +1,6 @@
 <template>
 
 <div class="container-fluid home">
-    <p> user : {{user}} </p>
-    <p> est connecté ?{{ userIsConnected }} </p>
-    <button @click="deco">deco</button>
-
-
-
-
-    
     <div v-if="userIsConnected == false" class="row">
 
         <div class="col-sm-12">

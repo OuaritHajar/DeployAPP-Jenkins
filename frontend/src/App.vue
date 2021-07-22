@@ -2,9 +2,7 @@
     <div id="app">
       <Nav/>
       <router-view/>
-      
       <Footer/>
-        
     </div>
 </template>
 
@@ -19,7 +17,6 @@ export default {
   components: {
     Nav,
     Footer,
-    
   },
 }
 </script>
