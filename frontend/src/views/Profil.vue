@@ -195,6 +195,12 @@ export default {
     mounted(){
         this.$store.dispatch('getProfilUsers', this.userId )
     },
+    beforeRouteUpdate(to, from, next)  {
+        this.$store.dispatch('getProfilUsers', to.params.userId);
+        console.log("tot : ", to," from : ", from)
+        next()
+
+    },
 
     computed: {
         ...mapGetters({
