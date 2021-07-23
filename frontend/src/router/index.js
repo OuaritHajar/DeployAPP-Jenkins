@@ -5,6 +5,7 @@ import Mur from '../views/Mur'
 import Profil from '../views/Profil'
 import Post from '../views/Post'
 import Home from '../views/Home'
+import Posts from '../views/Posts'
 
 
 const routes = [
@@ -16,24 +17,26 @@ const routes = [
     component: Home,
   },
   {
-    path: '/mur',
+    path: '/mur/',
     name: 'Mur',
     component: Mur,
-    //props: route => ({ query: route.query.offset })
+    children: [{
+      path: '/posts/:page',
+      name: 'Posts',
+      component: Posts
+    }]
   },
-
   {
     path: '/user/:userId',
     name: 'Profil',
     component: Profil,
-    //props: route => ({ test: route.query.test })
+    props: true
   },
-
-  // post
   {
     path: '/post/:postId',
     name: 'Post',
-    component: Post
+    component: Post,
+    props: true
   },
 
   //profils

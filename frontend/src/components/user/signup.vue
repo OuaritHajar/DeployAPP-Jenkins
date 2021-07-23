@@ -40,11 +40,11 @@
             <div class="form-group col-md-12">
                 <label class="mr-2">Sexe : </label>
                 <div class="form-check-inline">
-                  <input v-model="sexe" class="form-check-input" type="radio" value="0" id="inlineCheckbox1">
+                  <input v-model="sexe" class="form-check-input" type="radio" value="0" id="inlineCheckbox1" >
                   <label class="form-check-label" for="inlineCheckbox1"> Homme</label>
                 </div>
                 <div class="form-check-inline">
-                  <input v-model="sexe" class="form-check-input" type="radio" value="1" id="inlineCheckbox2">
+                  <input v-model="sexe" class="form-check-input" type="radio" value="1" id="inlineCheckbox2" >
                   <label class="form-check-label" for="inlineCheckbox2">Femme</label>
                 </div>
             </div>
@@ -54,7 +54,7 @@
         <!-- Accepter les conditions -->
         <div class="form-group">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="invalidCheck1" required>
+                <input class="form-check-input" type="checkbox" value="" id="invalidCheck1">
                 <label class="form-check-label" for="invalidCheck1">
                     Accepter les termes et conditions.
                 </label>
@@ -95,7 +95,7 @@ export default {
     },
     computed:{
         ...mapGetters({
-            status : ['get_status']
+            status : ['get_status_signup']
         })
     },
 

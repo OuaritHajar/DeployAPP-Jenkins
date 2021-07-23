@@ -152,16 +152,18 @@ module.exports = {
             model: db.Post,
             },{
             model: db.Like,
-                //include: [{ model: db.Post ,
-                //    include: [{
-                //        model: db.User , attributes: ['first_name', 'last_name','id']
-                //    }] 
-                //}]
+                include: [{ model: db.Post ,
+                    include: [{
+                        model: db.User , attributes: ['first_name', 'last_name','id']
+                    }] 
+                }]
             },{
             model: db.Comment,
-                //include: [{ model: db.Post ,
-                //    include: db.User, attributes: ['first_name', 'last_name','id']
-                //}]
+                include: [{ model: db.Post ,
+                    include:[{
+                      model : db.User, attributes: ['first_name', 'last_name','id']
+                    }] 
+                }]
             }
         ]
       })
@@ -365,6 +367,63 @@ module.exports = {
 
 
 
+            
+
+
+
+
+            // on cherche les images
+            const imageFound = await db.Image.findAll({
+              where: { userId: userTargetFound.id }
+            })
+            if (imageFound) {
+              console.log( 'images found : ',imageFound)
+                // supprime les images
+                for ( image in imageFound) {
+                  
+                  if (`${imageFound[image].url}` != null) {
+                    fs.unlink(`${imageFound[image].url}`, (err) => {
+                      if (err) {
+                        console.error(err)
+                      } else {
+                        console.log('image ' + `${imageFound[image].name}` + ' supprimé')
+                      }
+                    })
+                  }
+                }
+                // on supprime l'image de la database
+              const destroyImage = await db.Image.destroy({
+                where: { userId: userTargetFound.id }
+              })
+            }
+              
+            
+            // on cherche l'avatar
+            const avatarFound = await db.Photo.findOne({
+              where: { userId: userTargetFound.id }
+            })
+            if (avatarFound) {
+              console.log('avavar found : ', avatarFound)
+
+              // supprime l'avatar
+              fs.unlink(`${avatarFound.url}`, (err) => {
+                if (err) {
+                  console.error(err)
+                } else {
+                  console.log('image ' + avatarFound.name + ' supprimé')
+                }
+              })
+                
+              // on supprime l'avatar de la database
+              const destroyAvatar = await db.Photo.destroy({
+                where: { userId: userTargetFound.id }
+              })
+            }
+
+
+
+
+
             // on cherche les posts
 
             const postsFound = await db.Post.findAll({
@@ -420,39 +479,14 @@ module.exports = {
 
 
 
-            // on cherche les images
-            const imageFound = await db.Image.findAll({
-              where: { userId: userTargetFound.id }
-            })
-            if (imageFound) {
-
-                // supprime les images
-                for ( image in imageFound) {
-                  if (`${imageFound[image].url}` != null) {
-                    fs.unlink(`${imageFound[image].url}`, (err) => {
-                      if (err) {
-                        console.error(err)
-                      } else {
-                        console.log('image ' + `${imageFound[image].url}` + ' supprimé')
-                      }
-                    })
-                  }
-                }
 
 
-                // on supprime l'image de la database
-              const destroyImage = await db.Image.destroy({
-                where: { userId: userTargetFound.id }
-              })
-            }
-              
-
-
-
-            // on supprimer l'user
+            // on supprimer l'utilisateur snif
             const deleteUserTarget = await db.User.destroy({
               where: { id: userTargetFound.id }
             })
+
+
 
             if (deleteUserTarget)
               res.status(201).json({ 'message': 'User deleted' })

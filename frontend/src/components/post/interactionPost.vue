@@ -1,7 +1,8 @@
 <template>
 <section>
-    <div class="row interaction-post">
 
+    <!-- icon d'interaction post -->
+    <div class="row interaction-post">
         <div class="col-3 text-center">
             <button @click="addLike(post.id)" @mouseover="listUsersLike(post.id)" @mouseleave="hideListUsersLike(post.id)" class="btn btn-like">
                 <i v-if="post.userAlreadyLike" class="bi bi-hand-thumbs-up-fill" title="Dislike"></i>
@@ -32,7 +33,7 @@
 
         <div class="col-3 text-center">
             <div v-if="post.UserId">
-                <button v-if="post.UserId == user.id || user.isAdmin" @click="(deletePost(post.id))" class="btn">
+                <button v-if="post.UserId == user.id || user.isAdmin" class="btn" data-toggle="modal" data-target="#exampleModal">
                     <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>
@@ -51,7 +52,33 @@
         </p>
     </span>
 
+
     <EditPost v-if="post.displayEditPost" :post="post"/>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Etes vous sur de vouloir supprimer ce post ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-danger" @click="(deletePost(post.id))" data-dismiss="modal">Supprimer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
 
 </section>
 </template>
@@ -105,14 +132,12 @@ export default {
 
         // Interaction
         deletePost(postId) {
-            if(confirm('Etes vous sur ?')) {
-                this.$store.dispatch('deletePost', postId)
-                .then(()=> {
-                    if(this.$route.name === "Post"){
-                        this.$router.push('/mur')
-                    }
-                })
-            }
+            this.$store.dispatch('deletePost', postId)
+            .then(()=> {
+                if(this.$route.name === "Post"){
+                    this.$router.push('/mur')
+                }
+            })
         },
         addLike(postId) {
             let data = {

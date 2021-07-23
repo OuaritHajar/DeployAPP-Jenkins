@@ -42,6 +42,7 @@ export default {
             afficherInterfaceModification: false
         }
     },
+    props:['postId'],
     components:{
         EditPost,
         Comments,
@@ -50,7 +51,7 @@ export default {
         InteractionPost
     },
     mounted(){
-        this.$store.dispatch('getOnePost', this.$route.params.postId )
+        this.$store.dispatch('getOnePost', this.postId )
     },
     //beforeUpdate() {
     //    this.post.userAlreadyLike = false
@@ -67,23 +68,23 @@ export default {
             post:['get_one_post']
         }),
     },
-    methods: {
-        deletePost(postId) {
-            
-            if(confirm('Etes vous sur ?')) {
-                this.$store.dispatch('deletePost', postId)
-                .then(()=> {
-                    if(this.$route.name == "Post"){
-                        this.$router.push('/mur')
-                    } else {
-                        this.$router.go()
-                    }
-                })
-            }
-        },
-
-        
-    }
+    //methods: {
+    //    deletePost(postId) {
+    //        
+    //        if(confirm('Etes vous sur ?')) {
+    //            this.$store.dispatch('deletePost', postId)
+    //            .then(()=> {
+    //                if(this.$route.name == "Post"){
+    //                    this.$router.push('/mur')
+    //                } else {
+    //                    this.$router.go()
+    //                }
+    //            })
+    //        }
+    //    },
+//
+    //    
+    //}
     
 }
 </script>

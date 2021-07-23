@@ -1,11 +1,13 @@
 <template>
 <section>
+
+    <!-- Commentaires -->
     <div v-for="(comment, index) in comments" :key="index" class="comments">
 
         <div class="row" v-if="comment.User">
 
             <!-- Avatar -->
-            <div class="col-xs-1 comments_image-comment" >
+            <div class="col-xs-1 comments_image-comment">
               <img :src="comment.User.avatarUrl" alt="">
             </div>
 
@@ -25,6 +27,7 @@
                 class="btn btn-primary">
                     <i class="bi bi-pencil-square" title="Editer"></i>
                 </button>
+
                 <button v-if="comment.displayEditComment" 
                 @click="hideEditComment(comment.id, comment.PostId)" 
                 class="btn btn-primary">
@@ -32,8 +35,10 @@
                 </button>
 
                 <span class="spacer"></span>
-                <button @click="deleteComment(comment.id, comment.PostId)" 
-                class="btn btn-danger">
+
+                <button  
+                class="btn btn-danger"
+                data-toggle="modal" data-target="#deleteComment">
                     <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>
@@ -50,6 +55,32 @@
                 <i class="bi bi-arrow-return-right"> Modifier</i>
             </button>
         </div>
+
+
+
+        <!-- Modal delete comment -->
+        <div class="modal fade" id="deleteComment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" >
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Etes vous sur de vouloir supprimer ce commentaire ?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" @click="deleteComment(comment.id, comment.PostId)" data-dismiss="modal">Supprimer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
     </div>
     
     <NewComment :post="post"/>
@@ -117,21 +148,15 @@ export default {
         },
 
         deleteComment(commentId, postId){
-            if(confirm('Etes vous sur de vouloir supprimer le commentaire ?')){
-                let data = {
-                    'commentId': commentId,
-                    'postId': postId,
-                    'vue': this.$route.name,
-                }
-                this.$store.dispatch('deleteComment', data)
-                .then(()=> {
-                    //if(this.$route.name == "Post"){
-                    //    this.$router.push('/mur')
-                    //} else {
-                        //this.$router.go()
-                    //}
-                })
+        
+            let data = {
+                'commentId': commentId,
+                'postId': postId,
+                'vue': this.$route.name,
             }
+            this.$store.dispatch('deleteComment', data)
+            .then(()=> {
+            })
         },
     }
 }

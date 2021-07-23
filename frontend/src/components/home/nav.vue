@@ -16,19 +16,16 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarToggler">
       <div v-if="user.id > -1 ">
         <ul class="navbar-nav">
-          <li>
-            <p> user : {{user.id}} </p>
-          </li>
 
           <li class="nav-item">
-            <router-link to="/mur" class="nav-link">
+            <router-link :to="{ name :'Posts', params: { page : 1 } }" class="nav-link">
               Forum
             </router-link>
           </li>
 
           <li class="nav-item">
             <router-link :to="{name: 'Profil', params: {userId: user.id}}" class="nav-link">
-              Profil
+              {{user.id}}: Profil 
             </router-link>
           </li>
 

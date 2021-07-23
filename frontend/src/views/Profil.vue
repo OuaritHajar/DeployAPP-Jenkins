@@ -78,11 +78,12 @@
                     </div>
 
 
+                    <!-- Btn modifier/suprrimer -->
                     <div class="text-center">
                         <button v-if="inputLastName || inputFirstName" @click="editUser(theUser.id)" class="btn btn-primary">
                             Modifier
                         </button>
-                        <button @click="deleteUser()" class="btn btn-danger">
+                        <button data-toggle="modal" data-target="#deleteUser" class="btn btn-danger">
                             Supprimer
                         </button>
                     </div>
@@ -114,12 +115,12 @@
 
 
 
-            <!--
+            
             <div v-for="activity in allActivity" :key="activity.createdAt" class="activities">
-                <p > 
+                <p v-if="activity"> 
                     le {{ moment(activity.createdAt).format("DD/MM") }}
                     à {{ moment(activity.createdAt).format("HH:mm") }},
-                    {{ user.first_name }}
+                    {{ theUser.first_name }}
                     a
                     {{ activity.activityType }}
 
@@ -128,20 +129,41 @@
                             le post 
                         </router-link>
                         de 
-                        <router-link  :to="{name: 'Profil', params: {userId: activity.Post.User.id}}" class="nav-link">
-                          {{ activity.Post.User.first_name }} {{ activity.Post.User.last_name }}
-                        </router-link>
+                        <span v-if="activity.Post.User" >
+                            <router-link  :to="{name: 'Profil', params: {userId: activity.Post.User.id}}" class="nav-link">
+                                {{ activity.Post.User.first_name }} {{ activity.Post.User.last_name }}
+                            </router-link>
+                        </span>
+                        
                     </span>
-                    
                 </p>
             </div>
-            -->
-
-            
-                
 
         </fieldset>
     </form>
+
+    <!-- Modal delete user -->
+    <div class="modal fade" id="deleteUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Etes vous sur de vouloir supprimer votre compte ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-danger"  @click="deleteUser()" data-dismiss="modal" >Supprimer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     </section>
 </template>
 
@@ -156,7 +178,7 @@ export default {
     components:{
         EditAvatar
     },
-    //props:['test'],
+    props:['userId'],
     data(){
         return{
             moment: moment,
@@ -168,8 +190,10 @@ export default {
             
             inputFirstName: false,
             inputLastName: false,
-
         }
+    },
+    mounted(){
+        this.$store.dispatch('getProfilUsers', this.userId )
     },
 
     computed: {
@@ -178,27 +202,35 @@ export default {
             user: ['get_user']
         }),
 
-        //allActivity() {
-        //    let activities = []
-        //    this.theUser.Comments.forEach(comment => {
-        //        comment.activityType = 'commenté'
-        //        activities.push(comment)
-        //    })
-        //    this.theUser.Posts.forEach(post => {
-        //        post.activityType = 'ajouté un post'
-        //        activities.push(post)
-        //    })
-        //    this.theUser.Likes.forEach(like => {
-        //        like.activityType = 'aimé'
-        //        activities.push(like)
-        //    })
-        //    activities.sort(function(a, b) {
-        //        a = new Date(a.createdAt);
-        //        b = new Date(b.createdAt);
-        //        return a>b ? -1 : a<b ? 1 : 0;
-        //    });
-        //    return activities 
-        //},
+        allActivity() {
+            let activities = []
+            if(this.theUser.Comments) {
+                this.theUser.Comments.forEach(comment => {
+                    console.log("coment activity : ",comment)
+                    comment.activityType = 'commenté'
+                    activities.push(comment)
+                })
+            }
+            if(this.theUser.Posts) {
+                this.theUser.Posts.forEach(post => {
+                    post.activityType = 'ajouté un nouveau post'
+                    activities.push(post)
+                })
+            }
+            if(this.theUser.Likes) {
+                this.theUser.Likes.forEach(like => {
+                    like.activityType = 'aimé'
+                    activities.push(like)
+                })
+            }
+            
+            activities.sort(function(a, b) {
+                a = new Date(a.createdAt);
+                b = new Date(b.createdAt);
+                return a>b ? -1 : a<b ? 1 : 0;
+            });
+            return activities 
+        },
 
         sexe(){
             if(this.theUser.sexe) {
@@ -207,10 +239,6 @@ export default {
                 return 'Homme'
             }
         }
-    },
-
-    mounted(){
-        this.$store.dispatch('getProfilUsers', this.$route.params.userId )
     },
 
     methods: {
@@ -231,15 +259,18 @@ export default {
         },
 
         deleteUser() {
-            if(confirm("Voulez vous vraiment supprimer votre compte ?")){
-                this.$store.dispatch('deleteUser', this.$route.params.userId)
+            this.$store.dispatch('deleteUser', {theUserId :this.$route.params.userId, user : this.user})
+            .then(()=> {
+                this.$store.dispatch('logout')
                 .then(()=> {
-                    this.$store.dispatch('logout')
-                    .then(()=> {
-                        this.$router.push('/')
-                    })
+                    this.$router.push('/')
+                    //if(this.user.id == this.$route.params.userId){
+                    //    this.$router.push('/')
+                    //} else {
+                    //    this.$router.push('/mur')
+                    //}
                 })
-            }
+            })
         },
     },
 }

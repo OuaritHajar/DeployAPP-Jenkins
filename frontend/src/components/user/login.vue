@@ -70,14 +70,18 @@ export default {
                 email: this.email,
                 password: this.password,
             })
-            .then(() => {
-                this.$router.push('/mur')
+            .then((response) => {
+                console.log("response login : ",response)
+                if(response){
+                    this.$router.push({ name: 'Posts', params: { page : 1} })
+                    this.$emit('userConnected')
+                }
             })
             .catch((error) =>{
               console.log(error);
             });
 
-            this.$emit('userConnected')
+            
         },
     }
 }

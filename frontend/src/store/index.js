@@ -34,6 +34,7 @@ const store = createStore({
     state: {
         user:'',
         status:'',
+        statusSignup:'',
         userProfil:'',
         posts: [],
         post:'',
@@ -46,6 +47,9 @@ const store = createStore({
         },
         get_status(state) {
             return state.status
+        },
+        get_status_signup(state){
+            return state.statusSignup
         },
         get_all_posts(state) {
             return state.posts
@@ -71,6 +75,9 @@ const store = createStore({
         STATUS: (state, status) => {
             state.status = status
         },
+        STATUS_SIGNUP: (state, status)=> {
+            state.statusSignup =  status
+        },
         LOG_OUT: (state) => {
             state.user = {
                 id: -1,
@@ -89,9 +96,14 @@ const store = createStore({
         },
         
         EDIT_PROFIL: (state, profil) => {
+            console.log("édit profil, jsis sensé etre modo")
             state.userProfil = profil
         },
-        
+        EDIT_USER: (state, user) => {
+            console.log("édit user")
+            state.user = user
+            state.userProfil = user
+        },
 
         // ---------------  POSTS  ----------------
         ALL_POSTS: (state, payload) => {
@@ -254,15 +266,16 @@ const store = createStore({
 
     // --------------  CONNECTION  ---------
         signup: ({commit}, userInfos) => {
+            commit('STATUS_SIGNUP', 'Loading');
             return new Promise((resolve,reject) => {
                 instance.post('users/signup', userInfos)
                 .then((response) => {
-                    commit('STATUS', '' )
+                    commit('STATUS_SIGNUP', 'Compte créé' )
                     resolve(response)
                 })
                 .catch((error) => {
                     console.log('erreur : ',error)
-                    commit('STATUS', 'Erreur, vérifier vos informations' )
+                    commit('STATUS_SIGNUP', 'Erreur, vérifier vos informations' )
                     reject(error)
                 })
             })
@@ -272,10 +285,11 @@ const store = createStore({
             commit('STATUS', 'Loading');
             return new Promise(( resolve,reject ) => {
                 instance.post('users/login', userInfos)
-                .then(function (response) {
+                .then( (response) => {
                     instance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
                     
                     commit('STATUS', '' )
+                    commit('STATUS_SIGNUP', '')
                     commit('LOG_USER', response.data);
                     resolve(response)
                     console.log('isAdmin : ',response.data)
@@ -309,17 +323,44 @@ const store = createStore({
         editUser:({ commit }, data) => {
             instance.put('users/' + data.get('userId'),  data) 
             .then( (response) => {
-                commit('EDIT_PROFIL', response.data)
+                console.log('edit profil user : ',response)
+
+                instance.get('users/'+ data.get('userId'))
+                .then((getResponse) => {
+                    console.log("response profil user : ",getResponse.data)
+
+                    // son propre compte
+
+
+
+
+
+
+
+
+
+                    if(getResponse.data.id == data.get('userId')) {
+                        console.log("edit son propre user")
+                        commit('EDIT_USER', getResponse.data)
+                    }
+                    // modo
+                    else {
+                        commit('EDIT_PROFIL', getResponse.data)
+                    }
+                })
             })
             .catch((error) => {
                 console.error(error)
             })
         },
 
-        deleteUser:({ commit }, userId) => {
-            instance.delete('users/' + userId)
+        deleteUser:({ commit }, data) => {
+            instance.delete('users/' + data.theUserId)
             .then( () => {
-                commit('LOG_OUT')
+                console.log("user actuel : ",data.user.id, "user cible : ", data.theUserId)
+                if(data.user.id == data.theUserId) {
+                    commit('LOG_OUT')
+                }
             })
         },
 
@@ -328,8 +369,12 @@ const store = createStore({
         
 
     // ---------------- POSTS  ------------------
-        getAllPosts: ({commit}) => {
-            instance.get('posts')
+        getAllPosts: ({commit}, page ) => {
+            console.log('page : ', page)
+            let perPage = 5
+            let offset = (page - 1) * perPage 
+            console.log('offfset : ', offset)
+            instance.get('posts?limit='+ perPage + '&offset=' + offset)
             .then((response) => {
                 response.data.allPosts.forEach(post => {
                     post.displayComment = false
@@ -440,6 +485,13 @@ const store = createStore({
                         
                         post.Comments.forEach(comment => {
                             comment.displayEditComment = false
+                        })
+
+                        post.userAlreadyLike = false
+                        post.Likes.forEach(like => {
+                            if (like.UserId === response.data.user.id) {
+                                post.userAlreadyLike = true
+                            }
                         })
                     })
                     console.log("response front All posts",response.data)
