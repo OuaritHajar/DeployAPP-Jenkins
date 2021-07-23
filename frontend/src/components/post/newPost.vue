@@ -73,17 +73,19 @@ export default{
 
             this.$store.dispatch('createPost', data)
             .then(() => {
-              //this.$router.go();
+                this.$store.dispatch('getAllPosts', this.$route.params.page);
+                this.$store.dispatch('postsNumber')
+                this.$emit('post-created')
             })
             .catch(function (error) {
               console.log(error);
             });
 
-            this.$emit('post-created')
+            
 
 
         }
-    }
+    },
 }
 </script>
 

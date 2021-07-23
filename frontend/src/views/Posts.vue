@@ -116,7 +116,6 @@ export default {
     beforeRouteUpdate(to, from, next)  {
         this.$store.dispatch('getAllPosts', to.params.page);
         console.log("tot : ", to," from : ", from)
-        console.log('beforeRoute Update', this.$route.params)
         next()
 
     },

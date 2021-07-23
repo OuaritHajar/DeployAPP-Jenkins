@@ -33,14 +33,18 @@ import { mapGetters } from 'vuex'
 import AsideMur from'@/components/home/aside-mur.vue'
 import Pagination from '@/components/post/pagination.vue'
 
+let moment = require("moment")
+
 
 export default {
     components: {
         AsideMur,
         Pagination
     },
-
-
+    mounted() {
+        moment.locale('fr');
+        this.$store.dispatch('postsNumber')
+    },
     data() {
         return{
             actuelPage : 1,

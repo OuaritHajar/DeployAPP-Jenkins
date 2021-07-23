@@ -36,6 +36,7 @@ const store = createStore({
         status:'',
         statusSignup:'',
         userProfil:'',
+        postsNumber: '',
         posts: [],
         post:'',
     },
@@ -50,6 +51,9 @@ const store = createStore({
         },
         get_status_signup(state){
             return state.statusSignup
+        },
+        get_posts_number(state) {
+            return state.postsNumber
         },
         get_all_posts(state) {
             return state.posts
@@ -106,6 +110,9 @@ const store = createStore({
         },
 
         // ---------------  POSTS  ----------------
+        POSTS_NUMBER: (state, number) => {
+            state.postsNumber = number
+        }, 
         ALL_POSTS: (state, payload) => {
             state.posts = payload
         },
@@ -369,11 +376,25 @@ const store = createStore({
         
 
     // ---------------- POSTS  ------------------
+
+        postsNumber: ({commit}) => {
+            instance.get('posts/allPosts')
+            .then((response)=> {
+                console.log(response)
+
+                commit('POSTS_NUMBER', response.data.length)
+            })
+        },
+
+
+
         getAllPosts: ({commit}, page ) => {
+
             console.log('page : ', page)
             let perPage = 5
             let offset = (page - 1) * perPage 
             console.log('offfset : ', offset)
+
             instance.get('posts?limit='+ perPage + '&offset=' + offset)
             .then((response) => {
                 response.data.allPosts.forEach(post => {

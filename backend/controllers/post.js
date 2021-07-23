@@ -72,6 +72,58 @@ module.exports = {
 
 
 
+
+    postsNumber: async (req, res) => {
+
+        // Getting auth header
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
+
+        // Params
+        const ITEMS_LIMIT = 10;
+        const fields = req.query.fields;
+        const limit = parseInt(req.query.limit);
+        const offset = parseInt(req.query.offset);
+        const order = req.query.order;
+
+        if (limit > ITEMS_LIMIT) {
+            limit = ITEMS_LIMIT;
+        }
+
+        // récupère l'user
+        try {
+            const userFound = await db.User.findOne({
+                where: { id: userId },
+                attributes: ['id', 'first_name', 'last_name', 'createdAt', 'updatedAt']
+            });
+
+            if (userFound) {
+                // récupère tout les posts
+            
+                const allPosts = await db.Post.findAll({
+                    attributes: ['id']
+                })
+
+                if (allPosts) {
+                    res.status(200).json(allPosts);
+                } else {
+                    return res.status(404).json({ "error": "no post fund" });
+                }
+            } else {
+                return res.status(404).json({ 'error': 'user not found' });
+            }
+        } catch (err) {
+            return console.error(err)
+        };
+    },
+
+
+
+
+
+
+
+
     listPosts: async (req, res) => {
 
         // Getting auth header
