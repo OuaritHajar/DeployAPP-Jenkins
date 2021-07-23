@@ -1,5 +1,4 @@
 <template>
-
 <div class="container-fluid home">
     <div v-if="userIsConnected == false" class="row">
 
@@ -20,15 +19,7 @@
             <Signup />
         </section>
     </div>
-
-
-    
-    
-
-
 </div>
-
-
 </template>
 
 
@@ -43,8 +34,7 @@ export default {
             userIsConnected : false
         }
     },
-        
-    
+
     components: {
         Login,
         Signup
@@ -55,20 +45,18 @@ export default {
             user:['get_user']
         })
     },
+
     methods: {
         deco() {
             this.$store.dispatch('logout')
         }
     },
 }
-  
 </script>
 
 
 
 <style lang="scss" scoped>
-
-
 .home{
     min-height:75vh;
 }
@@ -80,6 +68,5 @@ h1{
     font-size:2rem;
     margin:0 20px;
 }
-
 
 </style>

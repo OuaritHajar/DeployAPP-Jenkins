@@ -8,9 +8,16 @@
         <!-- Nom / Prenom -->
         <div class="form-row">
             <div class="form-group col-lg-6 col-md-12 col-sm-6">
-                <label for="inputFirstName">Nom : </label>
-                <input v-model="firstName" type="text" class="form-control" placeholder="Nom"
-                    required>
+                <div class="input-group has-validation">
+                    <input v-model="firstName" type="text" class="form-control is-invalid" id="inputFirstName"  placeholder="Nom"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="inputFirstName" class="invalid-feedback">
+                        Prénom invalide
+                    </div>
+                </div>
             </div>
             <div class="form-group col-lg-6 col-md-12 col-sm-6">
                 <label for="inputLastName">Prénom :</label>

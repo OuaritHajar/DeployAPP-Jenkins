@@ -121,7 +121,6 @@ const store = createStore({
         },
         CREATE_POST: (state, newPost) => {
             console.log('new post : ',newPost)
-            state.posts.splice(0, 0, newPost)
         },
         EDIT_POST: (state, data) => {
             console.log("mutation : edit post vue = ",data.vue)
