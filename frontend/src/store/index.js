@@ -34,6 +34,7 @@ const store = createStore({
     state: {
         user:'',
         status:'',
+        listErrors : '',
         statusSignup:'',
         userProfil:'',
         postsNumber: '',
@@ -48,6 +49,9 @@ const store = createStore({
         },
         get_status(state) {
             return state.status
+        },
+        get_list_errors(state) {
+            return state.listErrors
         },
         get_status_signup(state){
             return state.statusSignup
@@ -82,6 +86,26 @@ const store = createStore({
         STATUS_SIGNUP: (state, status)=> {
             state.statusSignup =  status
         },
+        LIST_ERRORS: (state, errors) => {
+            let listErrors = []
+            console.log('errors : ', errors)
+
+            if (errors) {
+                if(errors.status === 400) {
+                    errors.data.forEach(error => {
+                        listErrors.push(error.error)
+                    })
+                } else if (errors.status === 409) {
+                    listErrors.push(errors.data.error)
+                }
+                console.log('liste erreur : ', listErrors)
+                state.listErrors = listErrors
+            } else {
+                state.listErrors = null
+            }
+        },
+
+
         LOG_OUT: (state) => {
             state.user = {
                 id: -1,
@@ -275,13 +299,17 @@ const store = createStore({
             commit('STATUS_SIGNUP', 'Loading');
             return new Promise((resolve,reject) => {
                 instance.post('users/signup', userInfos)
-                .then((response) => {
+                .then(res=> {
                     commit('STATUS_SIGNUP', 'Compte créé' )
-                    resolve(response)
+                    commit('LIST_ERRORS', [''])
+                    resolve(res)
                 })
-                .catch((error) => {
-                    console.log('erreur : ',error)
-                    commit('STATUS_SIGNUP', 'Erreur, vérifier vos informations' )
+                .catch(error => {
+                    console.log('response : ',error.response)
+
+                    commit('STATUS_SIGNUP', 'Erreur')
+                    commit('LIST_ERRORS', error.response)
+                
                     reject(error)
                 })
             })

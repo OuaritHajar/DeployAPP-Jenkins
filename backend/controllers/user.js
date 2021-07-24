@@ -4,7 +4,7 @@ const jwtUtils = require('../utils/jwt.utils');
 const fs = require('fs');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
+const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 
 //const jwt = require('jsonwebtoken');
 module.exports = {
@@ -18,6 +18,7 @@ module.exports = {
     const sexe = req.body.sexe
     const isAdmin = false;
     let avatarUrl = ''
+    console.log('sexe : ', sexe)
 
     const pathAvatar = `${req.protocol}://${req.get('host')}/images/static/avatar/`
     function getRandomInt(max) {
@@ -29,24 +30,30 @@ module.exports = {
     } else {
       avatarUrl = pathAvatar + 'avatar' + getRandomInt(7) + '.png'
     }
-    console.log(avatarUrl)
 
-
+    let listErrors = []
 
     if (firstName === null || lastName === null || email === null || password === null) {
-      return res.status(400).json({ 'error': 'missing parameters' });
+      listErrors.push({ 'error' : 'missing parameters' })
     }
     if (firstName.length >= 30 || firstName.length <= 2) {
-      return res.status(400).json({ 'error': 'first name invalid (length : 3 - 19' });
+      listErrors.push({'error' : 'Le Prénom doit être compris encore 3 et 19 caractères' })
     }
     if (lastName.length >= 30 || lastName.length <= 2) {
-      return res.status(400).json({ 'error': 'last name invalid (length : 3 - 19' });
+      listErrors.push({ 'error' : 'Le nom doit être compris encore 3 et 19 caractères' })
     }
     if (!EMAIL_REGEX.test(email)) {
-      return res.status(400).json({ 'error': 'email is not valid' });
+      listErrors.push({ 'error': 'Adresse email non valide' })
     }
     if (!PASSWORD_REGEX.test(password)) {
-      return res.status(400).json({ 'error': 'password is not valid : length 4-8 include number' });
+      listErrors.push({ 'error': 'Mots de passe non valide : 4-12 caractère avec nombres' })
+    }
+    if(sexe === '' ) {
+      listErrors.push({ 'error': 'Veuillez sélectionner votre genre' })
+    }
+
+    if (listErrors.length > 0) {
+      return res.status(400).json(listErrors);
     }
 
     try {
@@ -67,17 +74,17 @@ module.exports = {
           })
           if (newUser) {
             console.log(newUser.dataValues);
-            return res.status(201).json({
+            return res.status(204).json({
               'id': newUser.id,
             })
           }
         });
       } else {
-        return res.status(409).json({ 'error': 'user already exist' })
+        return res.status(409).json({ 'error': 'Email déjà utilisé' })
       }
     } catch (err) {
       console.error(err);
-      return res.status(400).json({ 'erreur': err })
+      return res.status(400).json(err)
 
     }
   },
