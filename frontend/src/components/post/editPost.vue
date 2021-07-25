@@ -50,11 +50,6 @@ export default {
             user:['get_user'],
         })
     },
-    mounted(){
-        
-            console.log("route : ",this.$route.name)
-    },
-
 
     methods: {
         uploadImage(event) {

@@ -11,7 +11,7 @@
             <b>Veuillez vérifier ces informations : </b>
             
             <ul>
-                <li v-for="error in errors" :key="error.id">{{ error }}</li>
+                <li v-for="error in errors" :key="error.id"> {{ error }} </li>
             </ul>
         </div>
 
@@ -63,10 +63,11 @@
             <div class="form-group col-lg-6 col-md-12 col-sm-6">
                 <label for="inputEmail">Email :</label>
                 <input v-model.trim="email" 
-                :class="{ 'is-invalid': submitted && v$.email.$error }"
+                :class="{ 'is-invalid': submitted && ( v$.email.$error || isEmailAlreadyUsed )}"
                 type="email" class="form-control"
                     placeholder="exemple@messagerie.fr" required>
-                <span v-if=" submitted && v$.email.$error">Email invalide.</span>
+                <span v-if=" submitted && v$.email.$error">Email invalide</span>
+                <span v-if=" submitted && isEmailAlreadyUsed">Email non disponible</span>
             </div>
         </div>
 
@@ -152,9 +153,19 @@ export default {
             minLengthName: 3,
             maxLengthName: 19,
 
+            emailAlreadyUsed : false,
             submitted: false
         }
     },
+
+    computed:{
+        ...mapGetters({
+            status : ['get_status_signup'],
+            errors: ['get_list_errors']
+        }),
+    },
+
+    
     validations() {
         return{
             firstName: { 
@@ -190,21 +201,20 @@ export default {
         }
     },
 
-    computed:{
-        ...mapGetters({
-            status : ['get_status_signup'],
-            errors: ['get_list_errors']
-        })
-    },
-
 
     methods: {
 
+        isEmailAlreadyUsed() {
+            if (this.errors.includes("Email déjà utilisé")) {
+                console.log('email : ', this.errors.includes("Email déjà utilisé"))
+                return this.emailAlreadyUsed = true
+            }
+            
+        },
+
+
         signup() {
             this.submitted = true;
-
-            
-
 
             if (this.condition === true) {
                 this.$store.dispatch('signup', {
