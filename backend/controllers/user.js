@@ -126,11 +126,11 @@ module.exports = {
 
             })
           } else {
-            return res.status(403).json({ 'error': 'Invalide password' })
+            return res.status(403).json({ 'error': 'Le mot de passe ne correspond pas' })
           }
         })
       } else {
-        return res.status(404).json({ 'error': 'user not exist' })
+        return res.status(404).json({ 'error': 'Email inexistant' })
       }
 
     } catch (err) {

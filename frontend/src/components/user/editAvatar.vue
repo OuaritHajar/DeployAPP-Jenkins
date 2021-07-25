@@ -138,21 +138,18 @@ export default {
         editUser(userId) {
             let formData = new FormData()
 
+            formData.append('userId', userId); 
             if(this.useAvatar){
                 formData.append('avatarUrl', this.avatarUrl);
             } else {
                 formData.append('avatarUrl', this.file);
             }
-            formData.append('userId', userId); 
 
 
             this.$store.dispatch('editUser', formData )
             this.$store.dispatch('getProfilUsers',userId)
             .then(()=> {
-                //this.inputFirstName = false
-                //this.inputLastName = false
-                //this.modifAvatar = false
-                //this.$router.go()
+                this.$emit('avatar-updated')
                 
             })
         },

@@ -34,8 +34,10 @@ const store = createStore({
     state: {
         user:'',
         status:'',
-        listErrors : '',
+        loginError: '',
         statusSignup:'',
+        listErrors : '',
+
         userProfil:'',
         postsNumber: '',
         posts: [],
@@ -50,11 +52,15 @@ const store = createStore({
         get_status(state) {
             return state.status
         },
-        get_list_errors(state) {
-            return state.listErrors
+        get_login_error(state) {
+            return state.loginError
         },
+        
         get_status_signup(state){
             return state.statusSignup
+        },
+        get_list_errors(state) {
+            return state.listErrors
         },
         get_posts_number(state) {
             return state.postsNumber
@@ -80,13 +86,27 @@ const store = createStore({
         LOG_USER: (state, user) => {
             state.user = user;
         },
-        STATUS: (state, status) => {
+        STATUS_LOGIN: (state, status) => {
             state.status = status
+        },
+        LOGIN_ERROR: (state, error) => {
+
+        if(error){
+            state.loginError = error.data.error
+        } else {
+            state.loginError = null
+        }
+            
+
+
+
+
+
         },
         STATUS_SIGNUP: (state, status)=> {
             state.statusSignup =  status
         },
-        LIST_ERRORS: (state, errors) => {
+        SIGNUP_ERRORS: (state, errors) => {
             let listErrors = []
             console.log('errors : ', errors)
 
@@ -97,6 +117,7 @@ const store = createStore({
                     })
                 } else if (errors.status === 409) {
                     listErrors.push(errors.data.error)
+                    
                 }
                 console.log('liste erreur : ', listErrors)
                 state.listErrors = listErrors
@@ -301,14 +322,13 @@ const store = createStore({
                 instance.post('users/signup', userInfos)
                 .then(res=> {
                     commit('STATUS_SIGNUP', 'Compte créé' )
-                    commit('LIST_ERRORS', [''])
+                    commit('SIGNUP_ERRORS', [''])
+
                     resolve(res)
                 })
                 .catch(error => {
-                    console.log('response : ',error.response)
-
                     commit('STATUS_SIGNUP', 'Erreur')
-                    commit('LIST_ERRORS', error.response)
+                    commit('SIGNUP_ERRORS', error.response)
                 
                     reject(error)
                 })
@@ -316,20 +336,23 @@ const store = createStore({
         },
 
         login: ({ commit }, userInfos) => {
-            commit('STATUS', 'Loading');
+            commit('STATUS_LOGIN', 'Loading');
             return new Promise(( resolve,reject ) => {
                 instance.post('users/login', userInfos)
                 .then( (response) => {
                     instance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
                     
-                    commit('STATUS', '' )
+                    commit('STATUS_LOGIN', '' )
                     commit('STATUS_SIGNUP', '')
+                    commit('LOGIN_ERROR', '')
                     commit('LOG_USER', response.data);
                     resolve(response)
                     console.log('isAdmin : ',response.data)
                 })
-                .catch(function (error) {
-                    commit('STATUS', 'Erreur de connection')
+                .catch((error) => {
+                    console.log('error login : ', error)
+                    commit('STATUS_LOGIN', 'Erreur')
+                    commit('LOGIN_ERROR',error.response)
                     reject(error)
                 });
             })
@@ -363,24 +386,9 @@ const store = createStore({
                 .then((getResponse) => {
                     console.log("response profil user : ",getResponse.data)
 
-                    // son propre compte
-
-
-
-
-
-
-
-
-
-                    if(getResponse.data.id == data.get('userId')) {
-                        console.log("edit son propre user")
-                        commit('EDIT_USER', getResponse.data)
-                    }
-                    // modo
-                    else {
+       
                         commit('EDIT_PROFIL', getResponse.data)
-                    }
+                    
                 })
             })
             .catch((error) => {
@@ -448,26 +456,32 @@ const store = createStore({
         },
 
         createPost:({commit},data) => {
-            instance.post('posts', data)
-            .then( (createResponse) => {
-                console.log("response create : ",createResponse.data)
-                
-                instance.get('posts/' + createResponse.data.id)
-                .then((getResponse) => {
-                    console.log("postResponse : ",getResponse)
-                    
-                    getResponse.data.post.displayComment = false
-                    getResponse.data.post.displayInputComment = false
-                    getResponse.data.post.displayEditPost = false
-                    getResponse.data.post.listUsersLike = false
-                    getResponse.data.post.userAlreadyLike = false
+            return new Promise((resolve,reject) => {
+                instance.post('posts', data)
+                .then( (createResponse) => {
+                    console.log("response create : ",createResponse.data)
 
-                    commit('CREATE_POST', getResponse.data.post)
+                    instance.get('posts/' + createResponse.data.id)
+                    .then((getResponse) => {
+                        console.log("postResponse : ",getResponse)
+
+                        getResponse.data.post.displayComment = false
+                        getResponse.data.post.displayInputComment = false
+                        getResponse.data.post.displayEditPost = false
+                        getResponse.data.post.listUsersLike = false
+                        getResponse.data.post.userAlreadyLike = false
+
+                        commit('CREATE_POST', getResponse.data.post)
+                        resolve(getResponse)
+                    })
                 })
+                .catch((error) => {
+                    console.error(error)
+                    reject(error)
+                })
+            
             })
-            .catch((error) => {
-                console.error(error)
-            })
+
         },
 
         getOnePost: ({ commit }, postId) => {

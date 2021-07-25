@@ -39,8 +39,8 @@ import {mapGetters} from 'vuex'
 export default {
     data(){
         return{
-            titlePost: '',
-            descriptionPost: '',
+            titlePost: this.post.title,
+            descriptionPost: this.post.description,
             file: null,
         }
     },

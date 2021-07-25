@@ -16,6 +16,7 @@
                     <!-- Mot de passe -->
                     <div class="form-group col-sm-4">
                         <input v-model="password" type="password" class="form-control" id="inputPassword" placeholder="Mot de passe" required>
+                        <span class="status"> {{ loginError }} </span>
                     </div>
 
                     <!-- Bouton -->
@@ -23,6 +24,8 @@
                         <button @click="userLog()" class="btn btn-primary">
                             Connexion
                         </button>
+                        <span class="status"> {{ status }} </span>
+                        
                     </div>
                 </div>
 
@@ -37,7 +40,9 @@
                 </div>-->
 
                 
-                <span class="status"> {{ status }} </span>
+                
+                
+                
                 <hr>
             </fieldset>
         </form>
@@ -60,7 +65,8 @@ export default {
 
     computed: {
         ...mapGetters({
-            status: ['get_status']
+            status: ['get_status'],
+            loginError: ['get_login_error']
         })
     },
 
@@ -71,7 +77,6 @@ export default {
                 password: this.password,
             })
             .then((response) => {
-                console.log("response login : ",response)
                 if(response){
                     this.$router.push({ name: 'Posts', params: { page : 1} })
                     this.$emit('userConnected')

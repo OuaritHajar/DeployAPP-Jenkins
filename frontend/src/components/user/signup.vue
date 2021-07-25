@@ -50,7 +50,7 @@
 
             <!-- Condirm mot de passe -->
             <div class="form-group col-lg-6 col-md-12 col-sm-6">
-                <label for="inputPassword">Confirmer votre mot de passe :</label>
+                <label for="inputPassword">Confirmer mot de passe :</label>
                 <input v-model.trim="confirmPassword"
                 :class="{ 'is-invalid': submitted && v$.confirmPassword.$error }"
                 type="password" class="form-control" required>
@@ -67,7 +67,7 @@
                 type="email" class="form-control"
                     placeholder="exemple@messagerie.fr" required>
                 <span v-if=" submitted && v$.email.$error">Email invalide</span>
-                <span v-if=" submitted && isEmailAlreadyUsed">Email non disponible</span>
+                <span v-if=" submitted && isEmailAlreadyUsed">Email déjà utilisé</span>
             </div>
         </div>
 

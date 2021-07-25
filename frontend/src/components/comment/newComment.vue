@@ -50,7 +50,7 @@ export default {
                 //} else {
                 //    this.$router.go()
                 //}
-                this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
+                //this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
                 
             })
         },

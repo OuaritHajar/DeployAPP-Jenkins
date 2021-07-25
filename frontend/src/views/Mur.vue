@@ -1,22 +1,16 @@
 <template>
-<div v-if="user.id != -1" class="row">
+<div v-if="user && user.id != -1" class="row">
     
-
     <aside class="col-md-3">
         <!--<AsideMur :user="user" />-->
         <AsideMur/>
     </aside>
 
 
-
     <main class="col-md-9">
-
         <router-view></router-view>
-
         <Pagination/>
-
     </main> 
-
 
 </div>
 </template>
@@ -41,21 +35,21 @@ export default {
         AsideMur,
         Pagination
     },
-    mounted() {
-        moment.locale('fr');
-        this.$store.dispatch('postsNumber')
-    },
     data() {
         return{
             actuelPage : 1,
         }
     },
+    mounted() {
+        moment.locale('fr');
+        this.$store.dispatch('postsNumber')
+    },
+    
     computed: {
         ...mapGetters({
             user: ['get_user'],
         }),
     },
-
 }
 </script>
 

@@ -95,7 +95,7 @@
 
 
             <!-- Interface de modification -->
-            <EditAvatar v-if="modifAvatar" :user="theUser"></EditAvatar>
+            <EditAvatar v-if="modifAvatar" :user="theUser" @avatar-updated="modifAvatar = false"></EditAvatar>
             <hr>
 
             <div class="col-sm-12 activity">
@@ -111,8 +111,6 @@
                     </div>
                 </div>
             </div>
-
-
 
 
             
@@ -134,7 +132,6 @@
                                 {{ activity.Post.User.first_name }} {{ activity.Post.User.last_name }}
                             </router-link>
                         </span>
-                        
                     </span>
                 </p>
             </div>
@@ -196,7 +193,7 @@ export default {
         this.$store.dispatch('getProfilUsers', this.userId )
     },
     beforeRouteUpdate(to, from, next)  {
-        this.$store.dispatch('getProfilUsers', to.params.userId);
+        this.$store.dispatch('getProfilUsers', from.params.userId);
         console.log("tot : ", to," from : ", from)
         next()
 
