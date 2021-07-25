@@ -38,7 +38,6 @@
 import { mapGetters } from 'vuex'
 
 export default {
-
     data() {
         return{
             perPage: 5,

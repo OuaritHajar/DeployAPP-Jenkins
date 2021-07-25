@@ -1,24 +1,20 @@
 <template>
-<div v-if="user && user.id != -1" class="row">
-    
-    <aside class="col-md-3">
-        <!--<AsideMur :user="user" />-->
-        <AsideMur/>
-    </aside>
+<div class="container-fluid">
+    <div v-if="user && user.id != -1" class="row">
 
+        <aside class="col-sm-3">
+            <!--<AsideMur :user="user" />-->
+            <AsideMur/>
+        </aside>
 
-    <main class="col-md-9">
-        <router-view></router-view>
-        <Pagination/>
-    </main> 
+        <main class="col-sm-9 col-md-8 col-lg-7">
+            <router-view></router-view>
+            <Pagination/>
+        </main> 
 
+    </div>
 </div>
 </template>
-
-
-
-
-
 
 
 
@@ -26,9 +22,7 @@
 import { mapGetters } from 'vuex'
 import AsideMur from'@/components/home/aside-mur.vue'
 import Pagination from '@/components/post/pagination.vue'
-
 let moment = require("moment")
-
 
 export default {
     components: {
@@ -59,11 +53,7 @@ export default {
 <style scoped lang="scss">
 
 aside{
-    margin-bottom:10px;
-    padding-right:0;
+    margin-top:30px;
 }
-
-
-
 
 </style>

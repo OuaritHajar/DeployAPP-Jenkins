@@ -35,8 +35,6 @@ export default {
         }
     },
     props: ['post'],
-    computed: {}
-    
 }
 </script>
 

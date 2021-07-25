@@ -1,37 +1,40 @@
 <template>
 <section>
 
-    <!-- icon d'interaction post -->
     <div class="row interaction-post">
+        <!-- Like -->
         <div class="col-3 text-center">
             <button @click="addLike(post.id)" @mouseover="listUsersLike(post.id)" @mouseleave="hideListUsersLike(post.id)" class="btn btn-like">
                 <i v-if="post.userAlreadyLike" class="bi bi-hand-thumbs-up-fill" title="Dislike"></i>
-                <i v-else-if="post.userAlreadyLike == false || undefined" class="bi bi-hand-thumbs-up" title="Like"></i>
+                <i v-else-if="post.userAlreadyLike === false || undefined" class="bi bi-hand-thumbs-up" title="Like"></i>
                 <span v-if="post.Likes">
                     <span v-if="post.Likes.length > 0" class="like"> {{ post.Likes.length }} </span>
                 </span>
             </button> 
         </div>
 
+        <!-- Comment -->
         <div class="col-3 text-center">
-            <button v-if="post.displayInputComment == false" @click="afficherInputCommentaire(post.id)" class="btn btn-personnaliser"><i class="bi bi-reply" title="Commenter"></i></button>
+            <button v-if="post.displayInputComment === false" @click="afficherInputCommentaire(post.id)" class="btn btn-personnaliser"><i class="bi bi-reply" title="Commenter"></i></button>
             <button v-if="post.displayInputComment" @click="masquerInputCommentaire(post.id)" class="btn btn-personnaliser"><i class="bi bi-reply-fill" title="Cacher les commentaires"></i></button>
         </div>
 
+        <!-- Edit -->
         <div class="col-3 text-center">
             <div v-if="post.UserId">
-                <button v-if="(post.UserId == user.id || user.isAdmin) && post.displayEditPost != true" @click="afficherEditPost(post.id)" class="btn">
+                <button v-if="(post.UserId === user.id || user.isAdmin) && post.displayEditPost != true" @click="afficherEditPost(post.id)" class="btn">
                     <i class="bi bi-pencil-square" title="Editer"></i>
                 </button>
-                <button v-if="(post.UserId == user.id || user.isAdmin)&& post.displayEditPost" @click="hideEditPost(post.id)" class="btn">
+                <button v-if="(post.UserId === user.id || user.isAdmin)&& post.displayEditPost" @click="hideEditPost(post.id)" class="btn">
                     <i class="bi bi-pencil-square" title="Cacher l'interface"></i>
                 </button>
             </div>
         </div>
 
+        <!-- Delete -->
         <div class="col-3 text-center">
             <div v-if="post.UserId">
-                <button v-if="post.UserId == user.id || user.isAdmin" class="btn" data-toggle="modal" data-target="#exampleModal">
+                <button v-if="post.UserId === user.id || user.isAdmin" class="btn" @click="showModal = true">
                     <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>
@@ -45,16 +48,28 @@
             <router-link :to="{name: 'Profil', params: {userId: like.UserId }}">
                 {{ like.User.first_name }} {{ like.User.last_name }}&ensp;
             </router-link>
-            <!-- <p v-if="like.UserId == user.userId"> J'ai liké </p> -->
+            <!-- <p v-if="like.UserId === user.userId"> J'ai liké </p> -->
         </span>
         </p>
     </span>
-
 
     <EditPost v-if="post.displayEditPost" :post="post"/>
 
 
     <!-- Modal -->
+    <Modal v-if="showModal" @close="showModal = false" @delete="(deletePost(post.id))">
+        <template v-slot:body>
+              <h3>Etes vous sur de vouloir supprimer ce post ?</h3>
+        </template>
+    </Modal>
+
+
+
+
+
+
+
+    <!-- Modal 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" >
             <div class="modal-content">
@@ -74,9 +89,7 @@
             </div>
         </div>
     </div>
-
-
-
+    -->
 
 </section>
 </template>
@@ -85,16 +98,21 @@
 
 
 
-
-
 <script>
 import { mapGetters } from 'vuex'
 import EditPost from '@/components/post/editPost.vue'
+import Modal from '@/components/modal.vue'
 
 
 export default {
+    data() {
+        return{
+            showModal : false
+        }
+    },
     components:{
-        EditPost
+        EditPost,
+        Modal
     },
     props: ['post'],
 
@@ -130,10 +148,13 @@ export default {
 
         // Interaction
         deletePost(postId) {
+            this.showModal = false
             this.$store.dispatch('deletePost', postId)
             .then(()=> {
+                this.$store.dispatch('postsNumber')
+                this.$store.dispatch('getAllPosts', 1);
                 if(this.$route.name === "Post"){
-                    this.$router.push('/mur')
+                     this.$router.push({ name: 'Posts', params: { page : 1} })
                 }
             })
         },

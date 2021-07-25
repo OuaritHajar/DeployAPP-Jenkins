@@ -1,9 +1,7 @@
-//importe le package http de Node
 const http = require('http');
-// importe l'application express
 const app = require('./app');
 
-//renvoie un port valide, qu'il soit fourni sous la forme d'un numéro ou d'une chaîne ;
+//renvoie un port valide
 const normalizePort = val => {
     const port = parseInt(val, 10);
 
@@ -20,7 +18,7 @@ const normalizePort = val => {
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-// recherche les différentes erreurs et les gère de manière appropriée. Elle est ensuite enregistrée dans le serveur
+// recherche les différentes erreurs
 const errorHandler = error => {
     if (error.syscall !== 'listen') {
         throw error;
@@ -41,10 +39,10 @@ const errorHandler = error => {
     }
 }
 
-//crée serveur et lance l'application dés qu'une requete est reçu
+//crée serveur
 const server = http.createServer(app);
 
-//écouteur d'évenement consignant le port ou le canal sur lequel le serveur s'exécute
+//écouteur d'évenement
 server.on('error',errorHandler);
 server.on('listening', () => {
     const address = server.address();
@@ -57,6 +55,4 @@ server.listen(port), async () => {
     console.log('Server up on http://localhost:3000')
     await sequelize.sync({ force: true })
     console.log('Database synced') 
-}
-
-;
+};

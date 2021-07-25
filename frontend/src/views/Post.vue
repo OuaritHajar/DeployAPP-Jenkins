@@ -12,8 +12,8 @@
             </div>
             
             <InteractionPost :post="post" />
-
         </div>
+
         <EditPost v-if="afficherInterfaceModification" :post="post"/>
         
     </div>
@@ -53,39 +53,12 @@ export default {
     mounted(){
         this.$store.dispatch('getOnePost', this.postId )
     },
-    //beforeUpdate() {
-    //    this.post.userAlreadyLike = false
-    //    this.post.Likes.forEach(like => {
-    //        if(like.UserId == this.user.id) {
-    //            this.post.userAlreadyLike = true
-    //        }
-    //    })
-    //},
-
     computed: {
         ...mapGetters({
             user: ['get_user'],
             post:['get_one_post']
         }),
     },
-    //methods: {
-    //    deletePost(postId) {
-    //        
-    //        if(confirm('Etes vous sur ?')) {
-    //            this.$store.dispatch('deletePost', postId)
-    //            .then(()=> {
-    //                if(this.$route.name == "Post"){
-    //                    this.$router.push('/mur')
-    //                } else {
-    //                    this.$router.go()
-    //                }
-    //            })
-    //        }
-    //    },
-//
-    //    
-    //}
-    
 }
 </script>
 
@@ -108,8 +81,6 @@ export default {
         margin-right:auto;
     }
 }
-
-
 
 .description-post{
     margin: 10px 10px 0 10px;
@@ -141,10 +112,6 @@ export default {
         margin-right:5px;
     }
 }
-
-
-
-
 
 
 

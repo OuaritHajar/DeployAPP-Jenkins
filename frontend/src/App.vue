@@ -1,10 +1,11 @@
 <template>
-    <div id="app">
-      <Nav/>
-      <router-view/>
-      <Footer/>
-    </div>
+<div id="app">
+    <Nav/>
+    <router-view/>
+    <Footer/>
+</div>
 </template>
+
 
 
 
@@ -13,11 +14,11 @@ import Nav from '@/components/home/nav.vue'
 import Footer from '@/components/home/footer.vue'
 
 export default {
-  name: "App",
-  components: {
-    Nav,
-    Footer,
-  },
+    name: "App",
+    components: {
+        Nav,
+        Footer,
+    },
 }
 </script>
 

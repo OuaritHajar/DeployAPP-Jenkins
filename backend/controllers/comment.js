@@ -42,19 +42,8 @@ module.exports = {
                         UserId: userFound.id,
                     })
                     if (createComment) {
+                        return res.status(201).json(createComment);
 
-                        // update du compteur commentaires
-                        //const updateComments = await postFound.update({
-                        //    comments: postFound.comments += 1,
-                        //})
-                        //if (updateComments) {
-                            
-                            // renvoie le nouveau commentaire
-                                return res.status(201).json(createComment);
-                        //}
-                        //else {
-                        //    res.status(500).json({ 'error': 'cannot update post like counter' });
-                        //};
                     } else {
                         return res.status(500).json({ 'error': 'cannot create comment' })
                     }
@@ -113,7 +102,6 @@ module.exports = {
                         // renvoie tout les commentaires 
                         return res.status(201).json(AllCommentsOfPost);
 
-
                     } else {
                         return res.status(500).json({ 'error': 'cannot find all comments' })
                     }
@@ -171,7 +159,7 @@ module.exports = {
                     if (commentFound) {
 
                         // on verifie que la comment a été créé par le proprio ou que l'user est admin
-                        if (commentFound.UserId == userFound.id || userFound.isAdmin == true) {
+                        if (commentFound.UserId === userFound.id || userFound.isAdmin === true) {
 
                             //update
                             const commentUpdate = await commentFound.update({
@@ -182,7 +170,7 @@ module.exports = {
                             }
                             else {
                                 res.status(500).json({ 'error': 'cannot update commentaire' });
-                            };
+                            }
                         } else {
                             return res.status(201).json({ 'error': 'non autorisé' })
                         }
@@ -229,7 +217,7 @@ module.exports = {
                     if (commentFound) {
 
                         // on verifie que le commentaire appartient à l'user
-                        if (commentFound.UserId == userFound.id || userFound.isAdmin == true) {
+                        if (commentFound.UserId === userFound.id || userFound.isAdmin === true) {
 
                             //delete
                             const destroyComment = await db.Comment.destroy({
@@ -260,12 +248,10 @@ module.exports = {
             } else {
                 return res.status(404).json({ 'error': 'user not found' })
             }
-
         }
         catch (err) {
             console.error(err)
         }
-    }
-
+    },
 
 }

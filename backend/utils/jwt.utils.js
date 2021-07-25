@@ -1,5 +1,5 @@
 // Imports
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const JWT_SIGN_SECRET = 'CLESECRETAMODIF';
 
 // Exports functions
@@ -20,16 +20,15 @@ module.exports = {
     },
 
     getUserId: function(authorization) {
-        var userId = -1;
-        var token = module.exports.parseAuthorization(authorization);
-        console.log(token)
+        let userId = -1;
+        const token = module.exports.parseAuthorization(authorization);
         if(token != null) {
             try{
-                var jwtToken = jwt.verify(token, JWT_SIGN_SECRET);
+                const jwtToken = jwt.verify(token, JWT_SIGN_SECRET);
                 if(jwtToken != null) 
                     userId = jwtToken.userId;
             } catch(err) {
-
+                console.log('Impossible de vérifier le token')
             }
         } else {
             console.log("Le token n'est pas défini")

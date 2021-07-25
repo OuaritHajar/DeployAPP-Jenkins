@@ -7,9 +7,7 @@
 
         <!-- list erreurs -->
         <div v-if="errors.length">
-            
             <b>Veuillez vérifier ces informations : </b>
-            
             <ul>
                 <li v-for="error in errors" :key="error.id"> {{ error }} </li>
             </ul>
@@ -35,9 +33,7 @@
         </div>
 
 
-
         <div class="form-row">
-
             <!-- Mot de passe -->
             <div class="form-group col-lg-6 col-md-12 col-sm-6">
                 <label for="inputPassword">Mot de passe :</label>
@@ -109,17 +105,6 @@
         </div>
 
     </fieldset>
-
-
-
-
-
-    
-
-
-
-
-
 </form>
 </template>
 
@@ -165,7 +150,6 @@ export default {
         }),
     },
 
-    
     validations() {
         return{
             firstName: { 
@@ -209,9 +193,7 @@ export default {
                 console.log('email : ', this.errors.includes("Email déjà utilisé"))
                 return this.emailAlreadyUsed = true
             }
-            
         },
-
 
         signup() {
             this.submitted = true;

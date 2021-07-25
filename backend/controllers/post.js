@@ -32,11 +32,9 @@ module.exports = {
             const userFound = await db.User.findOne({ 
                 where: { id: userId },
                 attributes: ['id', 'first_name', 'last_name', 'createdAt', 'avatarUrl', 'sexe', 'isAdmin'],
-            }
-                
-            );
+            })
             if (userFound) {
-                console.log("requete body :",req.body,"requete file :", req.file)
+
                 // on créé le post
                 const newPost = await db.Post.create({
                     title: title ? title : null,
@@ -45,20 +43,16 @@ module.exports = {
                     likes: 0,
                     comments: 0,
                     UserId: userFound.id,
-                    //firstName: userFound.first_name,
-                    //lastName: userFound.last_name,
-                    //avatarUrl: userFound.avatarUrl
                 });
 
                 if (newPost) {
                     console.log("nouveau post : ", newPost)
                     res.locals.newPost = newPost
                     next()
-                    //return res.status(201).json(newPost);
+
                 } else {
                     return res.status(500).json({ 'error': 'cannot create post' })
                 }
-
             } else {
                 return res.status(404).json({ 'error': 'user not found ou requete non authentifié' });
             }
@@ -98,8 +92,8 @@ module.exports = {
             });
 
             if (userFound) {
+
                 // récupère tout les posts
-            
                 const allPosts = await db.Post.findAll({
                     attributes: ['id']
                 })
@@ -147,10 +141,9 @@ module.exports = {
                 where: { id: userId },
                 attributes: ['id', 'first_name', 'last_name', 'createdAt', 'updatedAt']
             });
-
             if (userFound) {
+
                 // récupère tout les posts
-            
                 const allPosts = await db.Post.findAll({
                     order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
                     attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
@@ -249,10 +242,6 @@ module.exports = {
         let img_url;
         const description = req.body.description;
 
-        //if (title === null && description === null) {
-        //    return res.status(400).json({ 'error': 'missing parameters' });
-        //}
-
         if (req.file) { img_url = req.file.path }
 
         try {
@@ -260,8 +249,8 @@ module.exports = {
             const userFound = await db.User.findOne({
                 where: { id: userId }
             })
-
             if (userFound) {
+
                 // on cherche le post souhaité dans la requete
                 const postFound = await db.Post.findOne({
                     where: { id: postId }
@@ -269,7 +258,7 @@ module.exports = {
                 if (postFound) {
 
                     // on verifie que la post a été créé par le proprio
-                    if (userId == postFound.UserId || userFound.isAdmin == true) {
+                    if (userId === postFound.UserId || userFound.isAdmin === true) {
 
                         // update post
                         const postUpdate = await postFound.update({
@@ -280,7 +269,7 @@ module.exports = {
                         if (postUpdate) {
                             res.locals.postUpdate = postUpdate
                             next()
-                            //return res.status(201).json(postUpdate);
+
                         }
                     } else {
                         return res.status(201).json({ 'error': 'non autorisé' })
@@ -323,7 +312,7 @@ module.exports = {
                 if (postFound) {
 
                     // on verifie la légitimité
-                    if (postFound.UserId == userFound.id || userFound.isAdmin) {
+                    if (postFound.UserId === userFound.id || userFound.isAdmin) {
 
 
                         // on cherche les commentaires
@@ -341,7 +330,6 @@ module.exports = {
                             } 
                         }
                         
-                        
 
                         //on cherche les likes
                         const likesFound = await db.Like.findAll({
@@ -353,10 +341,6 @@ module.exports = {
                             const destroyLikes = await db.Like.destroy({
                                 where: { postId: postId }
                             })
-                            if (destroyLikes) {
-                                //res.status(202).json({ 'message': 'Likes removed' })
-                                
-                            } 
                         }
                         
                     
@@ -382,7 +366,6 @@ module.exports = {
                                           console.log('image supprimé')
                                         }
                                     })
-                                    //res.status(202).json({ 'message': ' Image from post deleted' })
                                 }
                             }
                         }
@@ -402,7 +385,6 @@ module.exports = {
 
 
 
-
                     } else {
                         res.status(404).json({ 'error': 'no permission' });
                     }
@@ -412,11 +394,10 @@ module.exports = {
             } else {
                 res.status(404).json({ 'error': 'user not found' });
             }
-
         } catch (err) {
             console.error(err)
         };
-    }
+    },
 
 }
 

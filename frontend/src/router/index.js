@@ -1,16 +1,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-
 import Mur from '../views/Mur'
 import Profil from '../views/Profil'
 import Post from '../views/Post'
 import Home from '../views/Home'
 import Posts from '../views/Posts'
 
-
 const routes = [
-
-  // nav before connection
   {
     path: '/',
     name: 'Home',
@@ -38,8 +34,6 @@ const routes = [
     component: Post,
     props: true
   },
-
-  //profils
 ]
 
 const router = createRouter({

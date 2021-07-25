@@ -40,8 +40,6 @@
 import { mapGetters } from 'vuex'
 
 export default{
-    
-
     data() {
         return{
             title: "",
@@ -81,11 +79,7 @@ export default{
             .catch(function (error) {
               console.log(error);
             });
-
-            
-
-
-        }
+        },
     },
 }
 </script>
@@ -95,7 +89,6 @@ export default{
 .new-post{
     margin: 10px 10px;
     padding: 10px 20px;
-
 
     background-color:#ececec;
     border: solid 1px #cfcfcf;

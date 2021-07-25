@@ -11,16 +11,19 @@
                     <label for="inputTitle">Titre :</label>
                     <input v-model="titlePost" type="text" class="form-control gray" id="inputTitlePost"> 
                 </div>
+
                 <!-- Message -->
                 <div class="form-group">
                     <label for="inputMessage">Message:</label>
                     <textarea v-model="descriptionPost" type="text" class="form-control gray" rows="3" id="inputMessage">  </textarea>
                 </div>
+
                 <!-- Image-->
                 <div class="form-group">
                     <label for="inputImg_url">Image : </label>
                     <input type="file" @change="uploadImage($event)" class="file-input">
                 </div>
+
             </div>
             <div class="text-center">
                 <button @click="editPost(post.id)" class="btn btn-primary">
@@ -39,7 +42,7 @@ import {mapGetters} from 'vuex'
 export default {
     data(){
         return{
-            titlePost: this.post.title,
+            titlePost: '',
             descriptionPost: this.post.description,
             file: null,
         }
@@ -57,7 +60,6 @@ export default {
             console.log(this.file)
         },
 
-
         editPost(postId) {
             let data = new FormData();
 
@@ -70,7 +72,6 @@ export default {
             this.$store.dispatch('editPost', data)
             .then(()=> {
                 this.$store.dispatch('hideEditPost', { postId: postId, vue: this.$route.name })
-                
             })
         },
     }
@@ -93,7 +94,5 @@ export default {
         margin-bottom:20px;
     }
 }
-
-
 
 </style>

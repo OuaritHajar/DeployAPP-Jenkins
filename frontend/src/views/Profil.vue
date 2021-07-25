@@ -1,6 +1,6 @@
 <template>
-    <section>
-        <form>
+<section>
+    <form>
         <fieldset>
             <legend>Votre profil utilisateur</legend>
             <hr />
@@ -11,7 +11,7 @@
                     <div class="avatar">
                         <img :src="theUser.avatarUrl" alt="avatar">
                     </div>
-                    <div v-if="user.id == theUser.id || user.isAdmin" class="text-center">
+                    <div v-if="user.id === theUser.id || user.isAdmin" class="text-center">
                         <button v-if="modifAvatar != true" class="btn btn-secondary btn-avatar" @click="modifAvatar = true ">Changer l'avatar</button>
                         <button v-if="modifAvatar" class="btn btn-secondary btn-avatar" @click="modifAvatar = false">Annuler</button>
                     </div>
@@ -20,6 +20,7 @@
 
                 <!-- Information -->
                 <div class="col-sm-7 information">
+                    <!-- Prénom -->
                     <div class="row">
                         <div class="col-3">
                             <label for="inputLastName">Prénom: </label>
@@ -35,6 +36,7 @@
                         <input v-if="(user.id === theUser.id || user.isAdmin) && inputLastName" v-model="lastName" type="text" class="form-control">
                     </div>
 
+                    <!-- Nom -->
                     <div class="row">
                         <div class="col-3">
                             <label for="inputFirstName">Nom:  </label>
@@ -50,6 +52,7 @@
                         <input v-if="( user.id === theUser.id || user.isAdmin ) && inputFirstName" v-model="firstName" type="text" class="form-control">  
                     </div>
 
+                    <!-- Email -->
                     <div class="row">
                         <div class="col-3">
                             <p>Email :  </p>
@@ -77,7 +80,6 @@
                         </div>
                     </div>
 
-
                     <!-- Btn modifier/suprrimer -->
                     <div class="text-center">
                         <button v-if="inputLastName || inputFirstName" @click="editUser(theUser.id)" class="btn btn-primary">
@@ -89,15 +91,15 @@
                     </div>
                 </div>
 
-                
-
             </div>
 
 
             <!-- Interface de modification -->
-            <EditAvatar v-if="modifAvatar" :user="theUser" @avatar-updated="modifAvatar = false"></EditAvatar>
+            <EditAvatar v-if="modifAvatar" :theUser="theUser" :user="user"  @avatar-updated="modifAvatar = false"></EditAvatar>
             <hr>
 
+
+            <!-- Resume activity -->
             <div class="col-sm-12 activity">
                 <div class="row text-center">
                     <div class="col-4 activity-posts">
@@ -113,7 +115,7 @@
             </div>
 
 
-            
+            <!-- Activity -->
             <div v-for="activity in allActivity" :key="activity.createdAt" class="activities">
                 <p v-if="activity"> 
                     le {{ moment(activity.createdAt).format("DD/MM") }}
@@ -160,8 +162,7 @@
       </div>
     </div>
 
-
-    </section>
+</section>
 </template>
 
 
@@ -251,7 +252,7 @@ export default {
 
             formData.append('first_name', this.firstName);
             formData.append('last_name', this.lastName);
-            formData.append('userId', userId); 
+            formData.append('userIdProfil', userId); 
 
             this.$store.dispatch('editUser', formData )
             .then(()=> {
@@ -267,11 +268,6 @@ export default {
                 this.$store.dispatch('logout')
                 .then(()=> {
                     this.$router.push('/')
-                    //if(this.user.id == this.$route.params.userId){
-                    //    this.$router.push('/')
-                    //} else {
-                    //    this.$router.push('/mur')
-                    //}
                 })
             })
         },
@@ -288,7 +284,6 @@ form{
     margin:0;
     padding:0;
     display: inline;
-    
 }
 
 
@@ -310,8 +305,6 @@ form{
         margin-bottom:20px;
     }
 }
-
-
 
 .information{
     margin-top:20px;
@@ -341,12 +334,5 @@ form{
         text-overflow: ellipsis;
     }
 }
-
-
-
-
-
-
-
 
 </style>

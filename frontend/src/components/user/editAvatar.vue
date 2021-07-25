@@ -80,25 +80,24 @@
                 </div>
             </div>
             </fieldset>
-            
         </form>
     </div>
+
     <div class="col-sm-12 text-center">
         <p class="separation-ou">Ou</p>
     </div>
+
     <div class="col-sm-12 interface-photo">
         <div class="form-file">
             <form>
                 <label for="input-file">Image : </label>
                 <input id="input-file" type="file" @change="uploadImage($event)">
-                
             </form>
         </div>
-        
     </div>
 
     <div class="col-sm-12 text-center mt-3">
-        <button @click="editUser(user.id)" class="btn btn-primary">
+        <button @click="editUser( theUser.id, user.id )" class="btn btn-primary">
             Modifier l'avatar
         </button>
     </div>
@@ -116,7 +115,7 @@ export default {
             useAvatar : true
         }
     },
-    props:['user'],
+    props:['user', 'theUser'],
 
     computed: {
         avatarUrl() {
@@ -135,19 +134,19 @@ export default {
             console.log(this.file)
         },
 
-        editUser(userId) {
+        editUser(userIdProfil, userId) {
             let formData = new FormData()
 
-            formData.append('userId', userId); 
+            formData.append('userIdProfil', userIdProfil); 
+            formData.append('userId', userId);
             if(this.useAvatar){
                 formData.append('avatarUrl', this.avatarUrl);
             } else {
                 formData.append('avatarUrl', this.file);
             }
 
-
             this.$store.dispatch('editUser', formData )
-            this.$store.dispatch('getProfilUsers',userId)
+            //this.$store.dispatch('getProfilUsers',userId)
             .then(()=> {
                 this.$emit('avatar-updated')
                 

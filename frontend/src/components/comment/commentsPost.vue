@@ -23,22 +23,23 @@
             <!-- button -->
             <div class="col-auto btn-edit" v-if="user.id === comment.UserId || user.isAdmin" >
                 <button v-if="comment.displayEditComment != true" 
-                @click="displayEditComment(comment.id, comment.PostId)" 
-                class="btn btn-primary">
+                    @click="displayEditComment(comment.id, comment.PostId)" 
+                    class="btn btn-primary">
+
                     <i class="bi bi-pencil-square" title="Editer"></i>
                 </button>
 
                 <button v-if="comment.displayEditComment" 
-                @click="hideEditComment(comment.id, comment.PostId)" 
-                class="btn btn-primary">
+                    @click="hideEditComment(comment.id, comment.PostId)" 
+                    class="btn btn-primary">
+
                     <i class="bi bi-pencil-square" title="Cacher"></i>
                 </button>
 
                 <span class="spacer"></span>
 
                 <button  
-                class="btn btn-danger"
-                data-toggle="modal" data-target="#deleteComment">
+                class="btn btn-danger" @click="displayDeleteComment(comment.id, comment.PostId)" >
                     <i class="bi bi-trash" title="Supprimer"></i>
                 </button>
             </div>
@@ -46,10 +47,13 @@
 
         <p class="description-comment"> {{ comment.description }} </p>
 
+
         <!-- Edit comment -->
         <div v-if="(user.id === comment.UserId || user.isAdmin) && comment.displayEditComment" >
             <form>
-                <textarea v-model="comment.editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1"></textarea>
+                <textarea v-model="comment.editDescriptionComment" type="text" class="form-control" id="inputTitle" rows="1">
+                    
+                </textarea>
             </form>
             <button @click="editComment(comment.id, comment.editDescriptionComment, comment.PostId)" class="btn btn-primary">
                 <i class="bi bi-arrow-return-right"> Modifier</i>
@@ -57,32 +61,16 @@
         </div>
 
 
-
         <!-- Modal delete comment -->
-        <div class="modal fade" id="deleteComment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" >
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                Etes vous sur de vouloir supprimer ce commentaire ?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger" @click="deleteComment(comment.id, comment.PostId)" data-dismiss="modal">Supprimer</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
+        <Modal v-if="comment.displayDelComment" @close="hideDelComment(comment.id, comment.PostId)" @delete="(deleteComment(comment.id, post.id))" :comment="comment">
+            <template v-slot:body>
+                  <h3>Etes vous sur de vouloir supprimer ce commentaire ?</h3>
+                  <span> {{ comment.id }} {{ comment.description }} </span>
+            </template>
+        </Modal>
 
     </div>
-    
+
     <NewComment :post="post"/>
 
 </section>
@@ -92,22 +80,21 @@
 <script>
 import { mapGetters } from 'vuex'
 import NewComment from '@/components/comment/newComment.vue'
-
+import Modal from '@/components/modal.vue'
 let moment = require("moment")
-
 
 export default {
     components: { 
-        NewComment 
+        NewComment,
+        Modal
     },
     data(){
         return{
             moment:moment,
-            afficherInterfaceEditComment : false
+            afficherInterfaceEditComment : false,
         }
     },
     props: ['comments', 'post'],
-    emits: [''],
     mounted(){
         moment.locale('fr');
     },
@@ -124,8 +111,6 @@ export default {
         hideEditComment(commentId, postId){
             this.$store.dispatch('hideEditComment', {commentId : commentId, postId: postId, vue: this.$route.name } )
         },
-
-
         editComment(commentId, description, postId){
             let data = { 
                 'description': description,
@@ -133,20 +118,16 @@ export default {
                 'postId': postId,
                 'vue': this.$route.name,
             }
-            console.log('vue : ', this.$route.name)
             this.$store.dispatch('editComment', data)
-            .then(()=> {
-                //if(this.$route.name == "Post"){
-                //    this.$router.push('/mur')
-                //} else {
-                //    this.$router.go()
-                //}
-                //this.$router.go()
-                
-                
-            })
         },
 
+
+        displayDeleteComment(commentId, postId) {
+            this.$store.dispatch('displayDeleteComment', {commentId : commentId, postId: postId, vue: this.$route.name })
+        },
+        hideDelComment(commentId, postId) {
+            this.$store.dispatch('hideDeleteComment', {commentId : commentId, postId: postId, vue: this.$route.name })
+        },
         deleteComment(commentId, postId){
         
             let data = {
@@ -155,8 +136,6 @@ export default {
                 'vue': this.$route.name,
             }
             this.$store.dispatch('deleteComment', data)
-            .then(()=> {
-            })
         },
     }
 }

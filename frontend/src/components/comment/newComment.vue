@@ -1,17 +1,19 @@
 <template>
     <section>
-                <!-- Ajouter un commentaire -->
+        <!-- Ajouter un commentaire -->
         <div class="new-comment">
             <form class="form-inline">  
 
                 <div class="col-sm-10">
                     <textarea v-model="descriptionComment" class="form-control" placeholder="Ajouter un commentaire" rows="2"></textarea>
                 </div>
+
                 <div class="col-sm-2 text-center">
                     <button @click="newComment(post.id)" class="btn btn-primary ">
                         Envoyer
                     </button>
                 </div>
+
             </form>
         </div>
     </section>
@@ -41,17 +43,12 @@ export default {
                 vue: this.$route.name,
                 user: this.user
             }
-            console.log("newComment : ",data)
 
             this.$store.dispatch('newComment', data)
             .then(()=> {
-                //if(this.$route.name == "Post"){
-                //    this.$router.go()
-                //} else {
-                //    this.$router.go()
-                //}
-                //this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
-                
+                this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
+                this.$store.dispatch('displayComments', postId)
+                this.$emit('comment-created')
             })
         },
     }

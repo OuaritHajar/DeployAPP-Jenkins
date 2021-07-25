@@ -4,7 +4,7 @@
         <form>
             <fieldset>
                 <legend>Connexion</legend>
-                <hr>
+                <hr class="hr">
                 <div class="form-row">
 
                     <!-- Email-->
@@ -25,24 +25,9 @@
                             Connexion
                         </button>
                         <span class="status"> {{ status }} </span>
-                        
                     </div>
+
                 </div>
-
-                <!-- sauvegarde donné
-                <div class="form-group">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gridCheck">
-                        <label class="form-check-label" for="gridCheck">
-                            Sauvegardez les informations
-                        </label>
-                    </div>
-                </div>-->
-
-                
-                
-                
-                
                 <hr>
             </fieldset>
         </form>
@@ -85,8 +70,6 @@ export default {
             .catch((error) =>{
               console.log(error);
             });
-
-            
         },
     }
 }
@@ -106,6 +89,12 @@ hr{
 .status{
     margin-left:10px;
     font-weight: bold;
+}
+.form-group{
+    margin-bottom:0;
+}
+.hr{
+    margin-bottom:22px;
 }
 
 </style>

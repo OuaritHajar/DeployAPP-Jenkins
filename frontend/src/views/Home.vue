@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid home">
-    <div v-if="userIsConnected == false" class="row">
+    <div v-if="userIsConnected === false" class="row">
 
         <div class="col-sm-12">
             <Login @userConnected="userIsConnected = true" />
