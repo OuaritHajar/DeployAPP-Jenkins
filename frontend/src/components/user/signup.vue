@@ -15,20 +15,20 @@
 
         <!-- Nom / Prenom -->
         <div class="form-row">
-            <div class="form-group col-lg-6 col-md-12 col-sm-6" >
-                <label for="inputFirstName">Prénom :</label>
-                <input v-model.trim="firstName"
-                :class="{ 'is-invalid': submitted && v$.firstName.$error }"
-                 type="text" class="form-control" id="inputFirstName"  placeholder="Prénom" required>
-                 <span v-if=" submitted && v$.firstName.$error">Entre 3 et 18 caractères.</span>
-            </div>
-
             <div class="form-group col-lg-6 col-md-12 col-sm-6">
                 <label for="inputLastName">Nom :</label>
                 <input v-model.trim="lastName" 
-                :class="{ 'is-invalid': submitted && v$.lastName.$error }"
-                type="text" class="form-control" id="inputLastName" placeholder="Nom" required >
+                    :class="{ 'is-invalid': submitted && v$.lastName.$error }"
+                    type="text" class="form-control" id="inputLastName" placeholder="Nom" required >
                 <span v-if=" submitted && v$.lastName.$error">Entre 3 et 18 caractères.</span>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-12 col-sm-6" >
+                <label for="inputFirstName">Prénom :</label>
+                <input v-model.trim="firstName"
+                    :class="{ 'is-invalid': submitted && v$.firstName.$error }"
+                     type="text" class="form-control" id="inputFirstName"  placeholder="Prénom" required>
+                 <span v-if=" submitted && v$.firstName.$error">Entre 3 et 18 caractères.</span>
             </div>
         </div>
 
@@ -56,7 +56,7 @@
 
         <!-- Email-->
         <div class="form-row"> 
-            <div class="form-group col-lg-6 col-md-12 col-sm-6">
+            <div class="form-group col-12">
                 <label for="inputEmail">Email :</label>
 
                 <div class="form-row">
@@ -67,7 +67,7 @@
                         placeholder="exemple@messagerie.fr" required>
                     </div>
 
-                    <button class="btn btn-primary col-2" @click="checkEmail()"> Vérif </button>
+                    <button class="btn btn-primary col-2" @click="checkEmail()"> Vérif. </button>
                 </div>
 
                 <div class="form-row">
@@ -104,7 +104,7 @@
             <div class="form-check">
                 <input v-model="condition" class="form-check-input" type="checkbox" id="invalidCheck1" required>
                 <label class="form-check-label" for="invalidCheck1">
-                    Accepter les termes et conditions.
+                    Accepter <a href="/">les termes et conditions</a>.
                 </label>
             </div>
         </div>
