@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
-const NAME_REGEX = /^[a-z ,.'-]+$/i;
+const NAME_REGEX = /^[a-zA-Z ,.'-éè]+$/i;
 
 
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
         }
-        if (sexe === 0) {
+        if (sexe == 0) {
             avatarUrl = pathAvatar + 'avatar' + (getRandomInt(7) + 6) + '.png'
         } else {
             avatarUrl = pathAvatar + 'avatar' + getRandomInt(7) + '.png'

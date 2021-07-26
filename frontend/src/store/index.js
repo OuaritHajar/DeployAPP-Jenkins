@@ -91,6 +91,7 @@ const store = createStore({
         // ----------------  CONNEXION  ----------------
         LOG_USER: (state, user) => {
             state.user = user;
+            state.emailAvailable =""
         },
         STATUS_LOGIN: (state, status) => {
             state.status = status
