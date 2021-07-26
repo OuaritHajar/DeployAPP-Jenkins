@@ -81,7 +81,7 @@
                     </div>
 
                     <!-- Btn modifier/suprrimer -->
-                    <div class="text-center">
+                    <div v-if="(user.id === theUser.id || user.isAdmin)" class="text-center">
                         <button v-if="inputLastName || inputFirstName" @click="editUser(theUser.id, user.id)" class="btn btn-primary">
                             Modifier
                         </button>
