@@ -39,6 +39,8 @@ const store = createStore({
         postsNumber: '',
         posts: [],
         post:'',
+        
+        information:'',
     },
 
 
@@ -74,6 +76,10 @@ const store = createStore({
         },
         get_user_profil(state) {
             return state.userProfil
+        },
+
+        get_information(state) {
+            return state.information
         }
     },
 
@@ -88,6 +94,7 @@ const store = createStore({
         },
         STATUS_LOGIN: (state, status) => {
             state.status = status
+            state.information = ''
         },
         LOGIN_ERROR: (state, error) => {
             if(error){
@@ -125,7 +132,8 @@ const store = createStore({
             }
         },
 
-        LOG_OUT: (state) => {
+        LOG_OUT: (state, information) => {
+            state.information = information
             state.user = {
                 id: -1,
                 token: '',
@@ -135,6 +143,8 @@ const store = createStore({
             localStorage.clear()
             console.log(localStorage, user)
         },
+
+
 
 
         // ----------- PROFIL -----------------
@@ -148,6 +158,9 @@ const store = createStore({
         EDIT_USER: (state, user) => {
             state.user = user
         },
+
+
+
 
         // ---------------  POSTS  ----------------
         POSTS_NUMBER: (state, number) => {
@@ -383,8 +396,8 @@ const store = createStore({
             })
         },
 
-        logout: (context) => {
-            context.commit("LOG_OUT")
+        logout: ({ commit }, information) => {
+            commit("LOG_OUT", information)
         },
 
 

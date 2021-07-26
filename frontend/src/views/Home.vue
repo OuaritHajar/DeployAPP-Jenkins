@@ -2,6 +2,10 @@
 <div class="container-fluid home">
     <div v-if="userIsConnected === false" class="row">
 
+        <div v-if="information" class="col-12 mt-3 mb-2">
+            <h3 class="text-center"> {{ information }} </h3>
+        </div>
+
         <div class="col-sm-12">
             <Login @userConnected="userIsConnected = true" />
         </div>
@@ -42,7 +46,8 @@ export default {
 
     computed: {
         ...mapGetters({ 
-            user:['get_user']
+            user:['get_user'],
+            information:['get_information']
         })
     },
 
@@ -57,9 +62,6 @@ export default {
 
 
 <style lang="scss" scoped>
-.home{
-    min-height:75vh;
-}
 .text-presentation{
     text-align:justify;
     margin: 10px 20px;
@@ -67,6 +69,9 @@ export default {
 h1{
     font-size:2rem;
     margin:0 20px;
+}
+.home{
+    margin-bottom:100px;
 }
 
 </style>

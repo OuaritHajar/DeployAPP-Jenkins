@@ -82,7 +82,7 @@
 
                     <!-- Btn modifier/suprrimer -->
                     <div class="text-center">
-                        <button v-if="inputLastName || inputFirstName" @click="editUser(theUser.id)" class="btn btn-primary">
+                        <button v-if="inputLastName || inputFirstName" @click="editUser(theUser.id, user.id)" class="btn btn-primary">
                             Modifier
                         </button>
                         <button data-toggle="modal" data-target="#deleteUser" class="btn btn-danger">
@@ -248,12 +248,13 @@ export default {
 
     methods: {
 
-        editUser(userId) {
+        editUser(userIdProfil ,userId) {
             let formData = new FormData()
 
             formData.append('first_name', this.firstName);
             formData.append('last_name', this.lastName);
-            formData.append('userIdProfil', userId); 
+            formData.append('userId', userId)
+            formData.append('userIdProfil', userIdProfil); 
 
             this.$store.dispatch('editUser', formData )
             .then(()=> {
@@ -267,7 +268,7 @@ export default {
             this.$store.dispatch('deleteUser', {theUserId :this.$route.params.userId, user : this.user})
             .then(()=> {
                 if(this.theUser.id === this.user.id) {
-                    this.$store.dispatch('logout')
+                    this.$store.dispatch('logout', "Compte supprimer avec succès")
                     this.$router.push('/')
                 } else {
                     this.$router.push({ name: 'Posts', params: { page : 1} })
@@ -280,7 +281,7 @@ export default {
 
 <style scoped lang="scss">
 form{
-    margin: 10px 10px;
+    margin: 10px 10px 150px 10px;
     padding: 10px 10px 0;
 }
 .activities .nav-link{

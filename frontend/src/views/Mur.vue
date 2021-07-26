@@ -51,7 +51,6 @@ export default {
 
 
 <style scoped lang="scss">
-
 aside{
     margin-top:30px;
 }

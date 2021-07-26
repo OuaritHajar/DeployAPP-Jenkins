@@ -56,12 +56,10 @@ export default {
 
 .footer{
     color:rgb(0, 0, 0);
-    margin-top:20px;
-    padding:0;
 
     .footer-bg{
-    background-color:#ececec;
-    border-top: solid 1px #cfcfcf;
+        background-color:#ececec;
+        border-top: solid 1px #cfcfcf;
     }
     .row{
         margin: 20px 0;

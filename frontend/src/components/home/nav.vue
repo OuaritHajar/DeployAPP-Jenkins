@@ -58,7 +58,8 @@ export default {
     },
     methods: {
         logout(){
-            this.$store.dispatch('logout')
+
+            this.$store.dispatch('logout', "Vous vous êtes déconnecté")
             this.$router.push('/')
         }
     },
