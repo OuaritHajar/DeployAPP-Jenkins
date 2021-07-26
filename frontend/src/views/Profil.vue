@@ -145,15 +145,18 @@
     <div class="modal fade" id="deleteUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" >
         <div class="modal-content">
+
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
+
           <div class="modal-body">
             Etes vous sur de vouloir supprimer votre compte ?
           </div>
+          
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
             <button type="button" class="btn btn-danger"  @click="deleteUser()" data-dismiss="modal" >Supprimer</button>
@@ -194,10 +197,9 @@ export default {
         this.$store.dispatch('getProfilUsers', this.userId )
     },
     beforeRouteUpdate(to, from, next)  {
-        this.$store.dispatch('getProfilUsers', from.params.userId);
-        console.log("tot : ", to," from : ", from)
+        this.$store.dispatch('getProfilUsers', to.params.userId);
+        console.log("to : ", to," from : ", from)
         next()
-
     },
 
     computed: {
@@ -210,7 +212,6 @@ export default {
             let activities = []
             if(this.theUser.Comments) {
                 this.theUser.Comments.forEach(comment => {
-                    console.log("coment activity : ",comment)
                     comment.activityType = 'commenté'
                     activities.push(comment)
                 })
@@ -265,10 +266,12 @@ export default {
         deleteUser() {
             this.$store.dispatch('deleteUser', {theUserId :this.$route.params.userId, user : this.user})
             .then(()=> {
-                this.$store.dispatch('logout')
-                .then(()=> {
+                if(this.theUser.id === this.user.id) {
+                    this.$store.dispatch('logout')
                     this.$router.push('/')
-                })
+                } else {
+                    this.$router.push({ name: 'Posts', params: { page : 1} })
+                }
             })
         },
     },

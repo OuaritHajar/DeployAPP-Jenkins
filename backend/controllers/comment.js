@@ -68,16 +68,16 @@ module.exports = {
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
 
-        // Params
-        const ITEMS_LIMIT = 10;
-        const fields = req.query.fields;
-        const limit = parseInt(req.query.limit);
-        const offset = parseInt(req.query.offset);
-        const order = req.query.order;
-
-        if (limit > ITEMS_LIMIT) {
-            limit = ITEMS_LIMIT;
-        }
+        //// Params
+        //const ITEMS_LIMIT = 10;
+        //const fields = req.query.fields;
+        //const limit = parseInt(req.query.limit);
+        //const offset = parseInt(req.query.offset);
+        //const order = req.query.order;
+//
+        //if (limit > ITEMS_LIMIT) {
+        //    limit = ITEMS_LIMIT;
+        //}
 
         try {
             // récupère l'user

@@ -180,12 +180,13 @@ const store = createStore({
 
 
         // -----------------  COMMENTS  ---------------
-        NEW_COMMENT: (state, data) => {
-            if(data.data.vue === "Post"){
-                state.post.Comments.push(data.newComment)
+        NEW_COMMENT: (state, response) => {
+            console.log(response)
+            if(response.data.vue === "Post"){
+                state.post.Comments = response.comments
             } else {
-                const LePost = state.posts.find(post => post.id === data.data.postId)
-                LePost.Comments.push(data.newComment)
+                const LePost = state.posts.find(post => post.id === response.data.postId)
+                LePost.Comments = response.comments
             }
         },
         DELETE_COMMENT: (state, data)=> {
@@ -485,26 +486,33 @@ const store = createStore({
         },
 
         getOnePost: ({ commit }, postId) => {
-            instance.get('posts/' + postId)
-            .then((response)=> {
-                response.data.post.displayEditPost = false
-                response.data.post.displayInputComment = false
-                response.data.post.listUsersLike = false
+            return new Promise((resolve, reject) => {
+                instance.get('posts/' + postId)
+                .then((response)=> {
+                    response.data.post.displayEditPost = false
+                    response.data.post.displayInputComment = false
+                    response.data.post.listUsersLike = false
 
-                response.data.post.Comments.forEach(comment => {
-                    comment.displayEditComment = false
-                    comment.displayDelComment = false
+                    response.data.post.Comments.forEach(comment => {
+                        comment.displayEditComment = false
+                        comment.displayDelComment = false
+                    })
+
+                    response.data.post.userAlreadyLike = false
+                    response.data.post.Likes.forEach(like => {
+                        if (like.UserId === response.data.user.id) {
+                            response.data.post.userAlreadyLike = true
+                        }
+                    })
+
+                    console.log('respose post : ', response.data)
+                    commit('GET_ONE_POST', response.data.post)
+                    resolve(response)
                 })
-
-                response.data.post.userAlreadyLike = false
-                response.data.post.Likes.forEach(like => {
-                    if (like.UserId === response.data.user.id) {
-                        response.data.post.userAlreadyLike = true
-                    }
+                .catch((error)=> {
+                    console.error(error)
+                    reject(error)
                 })
-
-                console.log('respose post : ', response.data)
-                commit('GET_ONE_POST', response.data.post)
             })
         },
 
@@ -583,19 +591,16 @@ const store = createStore({
         newComment: ({commit}, data) => {
             return new Promise((resolve, reject) => {
                 instance.post('posts/'+ data.postId + '/comment', data )
-                .then( (createResponse) => {
-                    console.log("create Comment response : ",createResponse)
+                .then( (response) => {
+                    console.log("create Comment response : ", response)
 
-                    let addUser = {
-                        User : {
-                            'first_name' : data.user.first_name,
-                            'last_name' : data.user.last_name,
-                            'avatarUrl' : data.user.avatarUrl
-                        }
-                    }
-                    const newComment = Object.assign(createResponse.data, addUser)
-                    commit('NEW_COMMENT', { newComment: newComment, data: data})
-                    resolve(createResponse)
+                    instance.get('posts/' + data.postId + '/comments')
+                    .then((getResponse) => {
+                        console.log('get response comments : ', getResponse)
+                    
+                        commit('NEW_COMMENT', { comments: getResponse.data, data: data })
+                        resolve(response)
+                    }) 
                 })
                 .catch((err) => {
                     console.error(err);

@@ -1,35 +1,39 @@
 <template>
 <transition name="modal">
+
     <div class="modal-mask">
         <div class="modal-wrapper">
             <div class="modal-container">
               
                 <div class="modal-header">
-                    <slot name="header">
-                        Supprimer
-                    </slot>
+                    <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+
+                    <button type="button" class="close" @click="$emit('close')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
 
                 <div class="modal-body">
                     <slot name="body">
-                      default body
                     </slot>
                 </div>
 
                 <div class="modal-footer">
                     <slot name="footer">
-                        <button class="modal-default-button" @click="$emit('close')">
+                        <button type="button" class="btn btn-primary modal-default-button" @click="$emit('close')">
                             Annuler
                         </button>
 
-                        <button class="modal-default-button" @click="$emit('delete')">
+                        <button type="button" class="btn btn-danger modal-default-button" @click="$emit('delete')">
                             Supprimer
                         </button>
                     </slot>
                 </div>
+                
             </div>
         </div>
     </div>
+
 </transition>
 </template>
 
@@ -60,19 +64,19 @@ export default {
 }
 
 .modal-container {
-    width: 300px;
+    width: 60vw;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
-    border-radius: 2px;
+    border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
     font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header h3 {
+.modal-header-title {
     margin-top: 0;
-    color: #42b983;
+    font-size:1.3rem;
 }
 
 .modal-body {

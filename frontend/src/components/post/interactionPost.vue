@@ -55,41 +55,12 @@
 
     <EditPost v-if="post.displayEditPost" :post="post"/>
 
-
     <!-- Modal -->
     <Modal v-if="showModal" @close="showModal = false" @delete="(deletePost(post.id))">
         <template v-slot:body>
-              <h3>Etes vous sur de vouloir supprimer ce post ?</h3>
+              <p>Etes vous sur de vouloir supprimer ce post ?</p>
         </template>
     </Modal>
-
-
-
-
-
-
-
-    <!-- Modal 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Etes vous sur de vouloir supprimer ce post ?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-danger" @click="(deletePost(post.id))" data-dismiss="modal">Supprimer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
 
 </section>
 </template>

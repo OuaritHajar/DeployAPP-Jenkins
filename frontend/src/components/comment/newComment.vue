@@ -46,9 +46,12 @@ export default {
 
             this.$store.dispatch('newComment', data)
             .then(()=> {
-                this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
-                this.$store.dispatch('displayComments', postId)
-                this.$emit('comment-created')
+                if( this.$route.name === 'Posts') {
+                    this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
+                    this.$store.dispatch('displayComments', postId)
+                } else {
+                    this.$store.dispatch('hideInputComments', { postId: postId, vue: this.$route.name })
+                }
             })
         },
     }

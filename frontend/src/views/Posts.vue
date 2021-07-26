@@ -35,7 +35,7 @@
         <div class="comments" v-if="post.Comments">
 
             <!-- Afficher input commentaire -->
-            <NewComment v-if="post.displayInputComment" :post="post" />
+            <NewComment v-if="post.displayInputComment" @comment-created="afficheComments(post.id)" :post="post" />
 
             <!-- Bouton Commentaires -->
             <div v-if="post.Comments.length == 1" class="text-center">

@@ -64,14 +64,15 @@
         <!-- Modal delete comment -->
         <Modal v-if="comment.displayDelComment" @close="hideDelComment(comment.id, comment.PostId)" @delete="(deleteComment(comment.id, post.id))" :comment="comment">
             <template v-slot:body>
-                  <h3>Etes vous sur de vouloir supprimer ce commentaire ?</h3>
-                  <span> {{ comment.id }} {{ comment.description }} </span>
+                  <p>Etes vous sur de vouloir supprimer ce commentaire ?</p>
+                  
+                  
             </template>
         </Modal>
 
     </div>
 
-    <NewComment :post="post"/>
+    <NewComment @comment-created="afficheComments(post.id)" :post="post"/>
 
 </section>
 </template>
@@ -95,9 +96,11 @@ export default {
         }
     },
     props: ['comments', 'post'],
+    
     mounted(){
         moment.locale('fr');
     },
+
     computed:{
         ...mapGetters({
             user:['get_user'],
@@ -105,6 +108,11 @@ export default {
     },
 
     methods:{
+        afficheComments(postId) {
+            this.$store.dispatch('displayComments', postId)
+        },
+
+
         displayEditComment(commentId, postId){
             this.$store.dispatch('displayEditComment', {commentId : commentId, postId: postId, vue: this.$route.name })
         },

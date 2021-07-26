@@ -27,7 +27,7 @@
             </div>
             
             <div class="text-center">
-                <button @click="creatNewPost(user)" class="btn btn-primary">Publier</button>
+                <button @click="creatNewPost()" class="btn btn-primary">Publier</button>
             </div>
             
         </fieldset>  
@@ -58,23 +58,18 @@ export default{
             this.file = event.target.files[0]
             console.log(this.file)
         },
-        creatNewPost(user) {
+        creatNewPost() {
             
             let data = new FormData();
             data.append('title', this.title);
             data.append('description', this.description);
             data.append('img_url', this.file); 
             
-            console.log("haaaaaaaaa",user.first_name)
-            
-            
-
             this.$store.dispatch('createPost', data)
             .then(() => {
                 this.$store.dispatch('postsNumber')
                 this.$emit('post-created')
                 this.$store.dispatch('getAllPosts', 1);
-                
             })
             .catch(function (error) {
               console.log(error);

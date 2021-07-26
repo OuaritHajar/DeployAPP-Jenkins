@@ -5,7 +5,7 @@
 
             <li class="page_item mr-3" >
                 <button type="button" class="btn btn-primary" @click="lastPage">
-                    Preview
+                    Précédent
                 </button>
             </li>
 
@@ -22,7 +22,7 @@
             
             <li class="page_item ml-3">
                 <button type="button" class="btn btn-primary" @click="nextPage">
-                    Next
+                    Suivant
                 </button>
             </li>
 
