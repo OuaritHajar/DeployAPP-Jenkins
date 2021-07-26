@@ -3,7 +3,7 @@
     <fieldset>
         <legend class="text-center">Inscription</legend>
         <hr>
-        <p class="text-center">Saisissez vos informations pour créer un compte utilisateur.</p>
+        <p class="text-center mt-3">Saisissez vos informations pour créer un compte utilisateur.</p>
 
         <!-- list erreurs -->
         <div v-if="errors">
