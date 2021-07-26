@@ -5,6 +5,7 @@ const fs = require('fs');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
+const NAME_REGEX = /^[a-z ,.'-]+$/i;
 
 
 module.exports = {
@@ -39,8 +40,14 @@ module.exports = {
         if (firstName.length >= 30 || firstName.length <= 2) {
             listErrors.push({ 'error': 'Le Prénom doit être compris encore 3 et 19 caractères' })
         }
+        if (!NAME_REGEX.test(firstName)) {
+            listErrors.push({ 'error': 'Pas de nombres dans le prénom' })
+        }
         if (lastName.length >= 30 || lastName.length <= 2) {
             listErrors.push({ 'error': 'Le nom doit être compris encore 3 et 19 caractères' })
+        }
+        if (!NAME_REGEX.test(lastName)) {
+            listErrors.push({ 'error': 'Pas de nombres dans le nom' })
         }
         if (!EMAIL_REGEX.test(email)) {
             listErrors.push({ 'error': 'Adresse email non valide' })
@@ -74,13 +81,43 @@ module.exports = {
                     })
                     if (newUser) {
                         console.log(newUser.dataValues);
-                        return res.status(204).json({
+                        return res.status(201).json({
                             'id': newUser.id,
                         })
                     }
                 });
             } else {
                 return res.status(409).json({ 'error': 'Email déjà utilisé' })
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(400).json(err)
+        }
+    },
+
+
+
+
+
+
+
+
+    email: async (req, res, next) => {
+
+        // Params
+        const email = req.body.email;
+        console.log("email verif : ",req.body)
+
+        try {
+            const emailAlreadyExist = await db.User.findOne({
+                attributes: ['email'],
+                where: { email: email }
+            })
+            if (!emailAlreadyExist) {
+                return res.status(200).json({ 'message': 'Email disponible' })
+                
+            } else {
+                return res.status(409).json({ 'message':'Email indisponible' })
             }
         } catch (err) {
             console.error(err);

@@ -33,6 +33,7 @@ const store = createStore({
         loginError: '',
         statusSignup:'',
         listErrors : '',
+        emailAvailable: '',
 
         userProfil:'',
         postsNumber: '',
@@ -52,6 +53,9 @@ const store = createStore({
             return state.loginError
         },
         
+        get_email_available(state){
+            return state.emailAvailable
+        },
         get_status_signup(state){
             return state.statusSignup
         },
@@ -95,18 +99,25 @@ const store = createStore({
         STATUS_SIGNUP: (state, status)=> {
             state.statusSignup =  status
         },
+        CHECK_EMAIL: (state, response) => {
+            state.emailAvailable = response
+        },
         SIGNUP_ERRORS: (state, errors) => {
             let listErrors = []
             console.log('errors : ', errors)
 
-            if (errors) {
+            if (errors.data) {
+
                 if(errors.status === 400) {
                     errors.data.forEach(error => {
                         listErrors.push(error.error)
                     })
+
                 } else if (errors.status === 409) {
                     listErrors.push(errors.data.error)
                 }
+
+
                 console.log('liste erreur : ', listErrors)
                 state.listErrors = listErrors
             } else {
@@ -336,6 +347,16 @@ const store = createStore({
                     commit('SIGNUP_ERRORS', error.response)
                     reject(error)
                 })
+            })
+        },
+
+        checkEmail: ({commit}, email) => {
+            instance.post('users/signup/email',{ email: email })
+            .then((response) => {
+                commit('CHECK_EMAIL', response.data.message)
+            })
+            .catch((error)=> {
+                commit('CHECK_EMAIL', error.response.data.message)
             })
         },
 

@@ -1,12 +1,12 @@
 <template>
-    <form @submit.prevent="signup">
+    <form >
     <fieldset>
         <legend class="text-center">Inscription</legend>
         <hr>
         <p class="text-center">Saisissez vos informations pour créer un compte utilisateur.</p>
 
         <!-- list erreurs -->
-        <div v-if="errors.length">
+        <div v-if="errors">
             <b>Veuillez vérifier ces informations : </b>
             <ul>
                 <li v-for="error in errors" :key="error.id"> {{ error }} </li>
@@ -58,12 +58,27 @@
         <div class="form-row"> 
             <div class="form-group col-lg-6 col-md-12 col-sm-6">
                 <label for="inputEmail">Email :</label>
-                <input v-model.trim="email" 
-                :class="{ 'is-invalid': submitted && ( v$.email.$error || isEmailAlreadyUsed )}"
-                type="email" class="form-control"
-                    placeholder="exemple@messagerie.fr" required>
-                <span v-if=" submitted && v$.email.$error">Email invalide</span>
-                <span v-if=" submitted && isEmailAlreadyUsed">Email déjà utilisé</span>
+
+                <div class="form-row">
+                    <div class="col-10">
+                        <input v-model.trim="email" 
+                        :class="{ 'is-invalid': submitted && ( v$.email.$error )}"
+                        type="email" class="form-control"
+                        placeholder="exemple@messagerie.fr" required>
+                    </div>
+
+                    <button class="btn btn-primary col-2" @click="checkEmail()"> Vérif </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-auto mr-auto pl-0">
+                        <span class="col-auto mr-auto" v-if="v$.email.$error">Email invalide</span>
+                    </div>
+                    <div class="col-auto">
+                        <span v-if="emailAvailable" class="email-disponible" > {{ emailAvailable }} </span>
+                    </div>
+                </div>
+                
             </div>
         </div>
 
@@ -98,7 +113,7 @@
 
         <!-- Bouton -->
         <div class="text-center">
-            <button class="btn btn-primary">
+            <button @click="signup" class="btn btn-primary">
                 S'enregistrer
             </button>
             <p class="status"> {{ status }} </p>
@@ -146,7 +161,8 @@ export default {
     computed:{
         ...mapGetters({
             status : ['get_status_signup'],
-            errors: ['get_list_errors']
+            errors: ['get_list_errors'],
+            emailAvailable: ['get_email_available']
         }),
     },
 
@@ -188,15 +204,13 @@ export default {
 
     methods: {
 
-        isEmailAlreadyUsed() {
-            if (this.errors.includes("Email déjà utilisé")) {
-                console.log('email : ', this.errors.includes("Email déjà utilisé"))
-                return this.emailAlreadyUsed = true
-            }
+        checkEmail() {
+            this.$store.dispatch('checkEmail',  this.email )
         },
 
         signup() {
             this.submitted = true;
+            this.checkEmail()
 
             if (this.condition === true) {
                 this.$store.dispatch('signup', {
@@ -232,6 +246,10 @@ hr{
 .status{
     margin-left:10px;
     font-weight: bold;
+}
+.email-disponible{
+    width: 500px;
+    text-align: right;
 }
 
 </style>

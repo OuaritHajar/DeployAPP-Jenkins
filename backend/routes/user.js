@@ -10,6 +10,7 @@ const fileWorker = require('../controllers/image.js');
 
 // Users routes
 router.post('/signup', usersCtrl.signup);
+router.post('/signup/email', usersCtrl.email);
 router.post('/login', usersCtrl.login);
 router.get('/:userId', auth, usersCtrl.getUserProfile);
 router.put('/:userId', auth, uploadPhoto.single("avatarUrl"), usersCtrl.updateUserProfile, fileWorker.updatePhoto);
