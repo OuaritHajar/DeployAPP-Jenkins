@@ -71,6 +71,9 @@
 
         </div>
     </div>
+
+    <Pagination/>
+
 </div>
 </template>
 
@@ -83,6 +86,8 @@ import Comments from '@/components/comment/commentsPost.vue'
 import InteractionPost from '@/components/post/interactionPost.vue'
 import NewComment from '@/components/comment/newComment.vue'
 
+import Pagination from '@/components/post/pagination.vue'
+
 
 export default {
     components: {
@@ -91,6 +96,7 @@ export default {
         Comments,
         InteractionPost,
         NewComment,
+        Pagination
     },
 
     data() {

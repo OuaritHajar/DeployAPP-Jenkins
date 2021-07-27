@@ -20,20 +20,20 @@ const routes = [
       path: '/posts/:page',
       name: 'Posts',
       component: Posts
-    }]
-  },
-  {
-    path: '/user/:userId',
-    name: 'Profil',
-    component: Profil,
-    props: true
-  },
-  {
-    path: '/post/:postId',
-    name: 'Post',
-    component: Post,
-    props: true
-  },
+    },
+    {
+      path: '/user/:userId',
+      name: 'Profil',
+      component: Profil,
+      props: true
+    },
+    {
+      path: '/post/:postId',
+      name: 'Post',
+      component: Post,
+      props: true
+    },
+  ]},
 ]
 
 const router = createRouter({

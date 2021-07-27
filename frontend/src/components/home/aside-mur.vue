@@ -1,13 +1,15 @@
 <template>
 <div class="aside row">
-    
-    <div class="col-4 col-md-12 text-center image">
-        <img :src="user.avatarUrl">
-    </div>
-    
-    <div class="col-8 col-md-12">
-        <p class="name">Bonjour,<br> {{ name }} </p>
-    </div>
+
+    <router-link :to="{name: 'Profil', params: {userId: user.id}}" class="nav-link">
+        <div class="col-4 col-md-12 text-center image">
+            <img :src="user.avatarUrl">
+        </div>
+
+        <div class="col-8 col-md-12">
+            <p class="name">Bonjour,<br> {{ name }} </p>
+        </div>
+    </router-link>
 
 </div>
 </template>
@@ -33,6 +35,10 @@ export default {
 .aside{
     margin:0;
     padding:0;
+
+    a{
+        color: black;
+    }
 
     .image{ 
         margin-left:auto;

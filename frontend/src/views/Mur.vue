@@ -9,7 +9,7 @@
 
         <main class="col-sm-9 col-md-8 col-lg-7">
             <router-view></router-view>
-            <Pagination/>
+            
         </main> 
 
     </div>
@@ -21,13 +21,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import AsideMur from'@/components/home/aside-mur.vue'
-import Pagination from '@/components/post/pagination.vue'
 let moment = require("moment")
 
 export default {
     components: {
         AsideMur,
-        Pagination
     },
     data() {
         return{
