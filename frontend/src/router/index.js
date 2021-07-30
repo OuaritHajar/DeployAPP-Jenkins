@@ -33,7 +33,8 @@ const routes = [
       component: Post,
       props: true
     },
-  ]},
+    ]
+  },
 ]
 
 const router = createRouter({

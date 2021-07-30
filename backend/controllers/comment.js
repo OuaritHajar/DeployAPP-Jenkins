@@ -12,7 +12,6 @@ module.exports = {
 
         // Params
         const description = req.body.description;
-        console.log("req body : ",req.body.description)
 
         // condition
         if (description === null) {
@@ -21,7 +20,6 @@ module.exports = {
         if (description.length <= 3) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
-
         try {
             // récupère l'user
             const userFound = await db.User.findOne({
@@ -61,23 +59,11 @@ module.exports = {
 
 
 
-
     listPostComments: async (req, res) => {
 
         // Getting auth header
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
-
-        //// Params
-        //const ITEMS_LIMIT = 10;
-        //const fields = req.query.fields;
-        //const limit = parseInt(req.query.limit);
-        //const offset = parseInt(req.query.offset);
-        //const order = req.query.order;
-//
-        //if (limit > ITEMS_LIMIT) {
-        //    limit = ITEMS_LIMIT;
-        //}
 
         try {
             // récupère l'user
@@ -119,10 +105,6 @@ module.exports = {
 
 
 
-
-
-
-
     updateOneComment: async (req, res) => {
 
         // Getting auth header
@@ -131,7 +113,6 @@ module.exports = {
         const postId = req.params.postId;
         const commentId = req.params.commentId;
 
-        console.log("req.body est : ", req.body)
         //Params
         const description = req.body.description;
 
@@ -253,5 +234,4 @@ module.exports = {
             console.error(err)
         }
     },
-
 }

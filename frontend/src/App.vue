@@ -1,7 +1,7 @@
 <template>
-<div id="app" class="app">
+<div>
     <Nav/>
-    <router-view/>
+    <router-view class="router-view"/>
     <Footer/>
 </div>
 </template>
@@ -27,6 +27,9 @@ export default {
 
 <style>
 body{
-  margin-top:95px;
+  padding-top:95px;
+}
+.router-view{
+    min-height: 80vh;
 }
 </style>

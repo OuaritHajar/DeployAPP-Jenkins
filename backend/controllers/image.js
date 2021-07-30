@@ -5,10 +5,8 @@ const jwtUtils = require('../utils/jwt.utils');
 
 module.exports = {
     upload: async (req, res) => {
-
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
-
         try {
             // récupère l'user
             const userFound = await db.User.findOne({
@@ -55,11 +53,9 @@ module.exports = {
     },
 
     update: async (req, res) => {
-
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
         const postId = req.params.postId;
-
         try {
             // récupère l'user
             const userFound = await db.User.findOne({
@@ -78,8 +74,6 @@ module.exports = {
                         console.log("pas d'image dans la requete");
                         return res.status(201).json(res.locals.postUpdate);
 
-
-
                     // image dans la requete
                     } else {
                         // vérifie si il y a déjà une image
@@ -97,7 +91,6 @@ module.exports = {
                                     console.log('image supprimé')
                                 }
                             })
-
 
                             // update image dans la bdd
                             const updateImage = await imageFound.update({
@@ -120,7 +113,6 @@ module.exports = {
                                 data: (req.body.data ? fs.readFileSync(__basedir + '/resources/static/assets/uploads/' + req.file.filename) : imageFound.data),
                                 url: (req.file.path ? req.file.path : imageFound.path),
                             })
-
                             if (updateImage) {
                                 return res.status(201).json(res.locals.postUpdate);
                             }
@@ -141,12 +133,9 @@ module.exports = {
 
 
     updatePhoto: async (req, res) => {
-
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
         const userCibleId = req.params.userId;
-        console.log("response local update profil : ", res.locals.updateProfil)
-
         try {
             // récupère l'user
             const userFound = await db.User.findOne({
@@ -182,7 +171,6 @@ module.exports = {
                                 }
                             })
 
-
                             // update image dans la bdd
                             const updatePhoto = await photoFound.update({
                                 type: (req.file.mimetype ? req.file.mimetype : photoFound.mimetype),
@@ -193,19 +181,16 @@ module.exports = {
                             if (updatePhoto) {
                                 return res.status(201).json(res.locals.updateProfil);
                             }
-
                         } else {
                             console.log('Created new photo')
                             // update image dans la bdd
                             const createPhoto = await db.Photo.create({
-
                                 type: req.file.mimetype,
                                 name: req.file.originalname,
                                 data: fs.readFileSync(__basedir + '/resources/static/assets/photos/' + req.file.filename),
                                 url: req.file.path,
                                 UserId: userCibleId
                             })
-
                             if (createPhoto) {
                                 return res.status(201).json(res.locals.updateProfil);
                             }

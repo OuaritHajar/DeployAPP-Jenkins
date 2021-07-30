@@ -16,17 +16,14 @@ module.exports = {
         const title = req.body.title;
         const description = req.body.description;
         let img_url;
-        console.log(req.body)
 
         if (req.file) { img_url = req.file.path } 
-
         if ( description === null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
         if ( description.length <= 2) {
             return res.status(400).json({ 'error': 'titre ou description trop cour' });
         }
-
         try {
             // récupère l'user
             const userFound = await db.User.findOne({ 
@@ -34,7 +31,6 @@ module.exports = {
                 attributes: ['id', 'first_name', 'last_name', 'createdAt', 'avatarUrl', 'sexe', 'isAdmin'],
             })
             if (userFound) {
-
                 // on créé le post
                 const newPost = await db.Post.create({
                     title: title ? title : null,
@@ -46,7 +42,6 @@ module.exports = {
                 });
 
                 if (newPost) {
-                    console.log("nouveau post : ", newPost)
                     res.locals.newPost = newPost
                     next()
 
@@ -63,34 +58,18 @@ module.exports = {
     },
 
 
-
-
-
-
     postsNumber: async (req, res) => {
 
         // Getting auth header
         const headerAuth = req.headers['authorization'];
         const userId = jwtUtils.getUserId(headerAuth);
 
-        // Params
-        const ITEMS_LIMIT = 10;
-        const fields = req.query.fields;
-        const limit = parseInt(req.query.limit);
-        const offset = parseInt(req.query.offset);
-        const order = req.query.order;
-
-        if (limit > ITEMS_LIMIT) {
-            limit = ITEMS_LIMIT;
-        }
-
         // récupère l'user
         try {
             const userFound = await db.User.findOne({
                 where: { id: userId },
-                attributes: ['id', 'first_name', 'last_name', 'createdAt', 'updatedAt']
+                attributes: ['id']
             });
-
             if (userFound) {
 
                 // récupère tout les posts
@@ -110,11 +89,6 @@ module.exports = {
             return console.error(err)
         };
     },
-
-
-
-
-
 
 
 
@@ -175,12 +149,6 @@ module.exports = {
     },
 
 
-
-
-
-
-
-
     selectOnePost: async (req, res) => {
 
         // Getting auth header
@@ -224,10 +192,6 @@ module.exports = {
 
 
 
-
-
-
-
     updateOnePost: async (req, res, next) => {
 
         // Getting auth header
@@ -235,15 +199,12 @@ module.exports = {
         const userId = jwtUtils.getUserId(headerAuth);
         const postId = JSON.parse(req.params.postId);
 
-        console.log('req.body est : :', req.body)
-
         //Params
         const title = req.body.title;
         let img_url;
         const description = req.body.description;
 
         if (req.file) { img_url = req.file.path }
-
         try {
             // on cherche l'utilisateur
             const userFound = await db.User.findOne({
@@ -269,7 +230,6 @@ module.exports = {
                         if (postUpdate) {
                             res.locals.postUpdate = postUpdate
                             next()
-
                         }
                     } else {
                         return res.status(201).json({ 'error': 'non autorisé' })
@@ -287,8 +247,6 @@ module.exports = {
 
 
 
-
-
     removeOnePost: async (req, res) => {
 
         // Getting auth header
@@ -297,23 +255,20 @@ module.exports = {
         const postId = req.params.postId;
 
         try {
-
             // on cherche l'utilisateur
             const userFound = await db.User.findOne({
                 where: { id: userId }
             })
             if (userFound) {
-                
 
                 // on cherche le post
                 const postFound = await db.Post.findOne({
                     where: { id: postId }
                 })
                 if (postFound) {
-
+                    
                     // on verifie la légitimité
                     if (postFound.UserId === userFound.id || userFound.isAdmin) {
-
 
                         // on cherche les commentaires
                         const commentsFound = await db.Comment.findAll({
@@ -329,7 +284,6 @@ module.exports = {
                                 //res.status(202).json({ 'message': 'Comments removed' })
                             } 
                         }
-                        
 
                         //on cherche les likes
                         const likesFound = await db.Like.findAll({
@@ -343,8 +297,6 @@ module.exports = {
                             })
                         }
                         
-                    
-
                         //on cherche l'image
                         const imageFound = await db.Image.findOne({
                             where: { id : req.params.postId}
@@ -370,8 +322,6 @@ module.exports = {
                             }
                         }
 
-
-
                         // Supprime le post
                         const destroyPost = await db.Post.destroy({
                             where: { id: postId }
@@ -382,8 +332,6 @@ module.exports = {
                         else {
                             res.status(500).json({ 'error': 'cannot destroy post' });
                         };
-
-
 
                     } else {
                         res.status(404).json({ 'error': 'no permission' });

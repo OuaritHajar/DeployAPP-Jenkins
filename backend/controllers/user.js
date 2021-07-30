@@ -7,7 +7,6 @@ const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 const NAME_REGEX = /^[a-zA-Z ,.'-éè]+$/i;
 
-
 module.exports = {
     signup: async (req, res, next) => {
 
@@ -19,7 +18,6 @@ module.exports = {
         const sexe = req.body.sexe
         const isAdmin = false;
         let avatarUrl = ''
-        console.log('sexe : ', sexe)
 
         // avatar
         const pathAvatar = `${req.protocol}://${req.get('host')}/images/static/avatar/`
@@ -58,11 +56,9 @@ module.exports = {
         if (sexe === '') {
             listErrors.push({ 'error': 'Veuillez sélectionner votre genre' })
         }
-
         if (listErrors.length > 0) {
             return res.status(400).json(listErrors);
         }
-
         try {
             const userFound = await db.User.findOne({
                 attributes: ['email'],
@@ -80,7 +76,6 @@ module.exports = {
                         sexe: sexe
                     })
                     if (newUser) {
-                        console.log(newUser.dataValues);
                         return res.status(201).json({
                             'id': newUser.id,
                         })
@@ -98,16 +93,8 @@ module.exports = {
 
 
 
-
-
-
-
-    email: async (req, res, next) => {
-
-        // Params
+    email: async (req, res) => {
         const email = req.body.email;
-        console.log("email verif : ",req.body)
-
         try {
             const emailAlreadyExist = await db.User.findOne({
                 attributes: ['email'],
@@ -115,7 +102,6 @@ module.exports = {
             })
             if (!emailAlreadyExist) {
                 return res.status(200).json({ 'message': 'Email disponible' })
-                
             } else {
                 return res.status(409).json({ 'message':'Email indisponible' })
             }
@@ -127,13 +113,7 @@ module.exports = {
 
 
 
-
-
-
-
-
-    login: async (req, res, next) => {
-
+    login: async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
 
@@ -159,7 +139,6 @@ module.exports = {
                             'updatedAt': userFound.updatedAt,
                             'email': userFound.updatedAt,
                             'isAdmin': userFound.isAdmin,
-
                         })
                     } else {
                         return res.status(403).json({ 'error': 'Le mot de passe ne correspond pas' })
@@ -175,9 +154,6 @@ module.exports = {
 
 
 
-
-
-
     getUserProfile: async (req, res) => {
 
         const headerAuth = req.headers['authorization'];
@@ -185,7 +161,6 @@ module.exports = {
 
         if (userId < 0)
             return res.status(400).json({ 'error': 'wrong token' })
-
         try {
             const userFound = await db.User.findOne({
                 attributes: ['id', 'first_name', 'last_name', 'email', 'createdAt', 'avatarUrl', 'sexe', 'isAdmin'],
@@ -222,7 +197,6 @@ module.exports = {
 
 
 
-
     updateUserProfile: async (req, res, next) => {
         // Getting auth header
         const headerAuth = req.headers['authorization'];
@@ -233,16 +207,13 @@ module.exports = {
         const firstName = req.body.first_name;
         const lastName = req.body.last_name;
         let avatarUrl
-        console.log("req.body est : ", req.body, "req.file est : ", req.file)
 
         try {
-
             // user
             const userFound = await db.User.findOne({
                 where: { id: userId }
             })
             if (userFound) {
-
 
                 // on cherche l'utilisateur ciblé
                 const userCible = await db.User.findOne({
@@ -310,10 +281,6 @@ module.exports = {
 
 
 
-
-
-
-
     deleteUser: async (req, res) => {
 
         // Getting auth header
@@ -332,7 +299,6 @@ module.exports = {
                     where: { id: req.params.userId }
                 })
                 if (userTargetFound) {
-
                     if (userId === userTargetFound.id || userFound.isAdmin) {
 
                         // on cherche les likes de l'user sur tout les posts
@@ -343,7 +309,6 @@ module.exports = {
 
                             //likes qui appartiennent à l'user delete
                             for (like of likesFound) {
-                                console.log("un like", like)
 
                                 //récupère post du like
                                 const postOuYAvaitLeLike = await db.Post.findOne({
@@ -351,7 +316,6 @@ module.exports = {
                                         id: like.PostId
                                     }
                                 })
-
                                 if (postOuYAvaitLeLike) {
                                     const destroyLikes = await like.destroy({
                                         where: { UserId: userTargetFound.id }
@@ -359,45 +323,32 @@ module.exports = {
                                 }
                             }
                         }
-
-
-
-
                         // comments de l'user delete
                         const commentsFound = await db.Comment.findAll({
                             where: { userId: userTargetFound.id }
                         })
                         if (commentsFound) {
-
                             for (comment of commentsFound) {
-
                                 // pour chaque commentaire on cherche le post ou y a le comment
                                 const postOuYAvaitLeComment = await db.Post.findOne({
                                     where: {
                                         id: comment.PostId
                                     }
                                 })
-
                                 //destroy comments
                                 const destroyComments = await db.Comment.destroy({
                                     where: { id: comment.id }
                                 })
                             }
                         }
-
-
-
-
-
                         // on cherche les images
                         const imageFound = await db.Image.findAll({
                             where: { userId: userTargetFound.id }
                         })
                         if (imageFound) {
-                            
+
                             // supprime les images
                             for (image in imageFound) {
-
                                 if (`${imageFound[image].url}` != null) {
                                     fs.unlink(`${imageFound[image].url}`, (err) => {
                                         if (err) {
@@ -413,9 +364,6 @@ module.exports = {
                                 where: { userId: userTargetFound.id }
                             })
                         }
-
-
-
                         // on cherche l'avatar
                         const avatarFound = await db.Photo.findOne({
                             where: { userId: userTargetFound.id }
@@ -430,25 +378,17 @@ module.exports = {
                                     console.log('image ' + avatarFound.name + ' supprimé')
                                 }
                             })
-
                             // on supprime l'avatar de la database
                             const destroyAvatar = await db.Photo.destroy({
                                 where: { userId: userTargetFound.id }
                             })
                         }
-
-
-
-
-
                         // on cherche les posts
                         const postsFound = await db.Post.findAll({
                             where: { userId: userTargetFound.id },
                         })
                         if (postsFound) {
-                            
                             for (post of postsFound) {
-
                                 // on récupère tout les commentaires
                                 const commentsFromOtherFound = await db.Comment.findAll({
                                     where: { PostId: post.id }
@@ -461,7 +401,6 @@ module.exports = {
                                     })
                                 }
 
-
                                 //mtn on cherche les likes des autres gugus
                                 const likesFromOtherFound = await db.Like.findAll({
                                     where: { postId: post.id }
@@ -473,7 +412,6 @@ module.exports = {
                                     })
                                 }
 
-
                                 // on supprime enfin le post
                                 const destroyPosts = await db.Post.destroy({
                                     where: { id: post.id }
@@ -481,15 +419,10 @@ module.exports = {
                             }
                         }
 
-
-
-
                         // on supprimer l'utilisateur
                         const deleteUserTarget = await db.User.destroy({
                             where: { id: userTargetFound.id }
                         })
-
-
 
                         if (deleteUserTarget)
                             res.status(201).json({ 'message': 'User deleted' })
