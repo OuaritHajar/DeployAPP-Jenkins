@@ -6,7 +6,7 @@
         <fieldset>
           <legend class="text-center avatar-title">Avatar</legend>
           <div class="row">
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio1">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar1.png"
@@ -21,7 +21,7 @@
                 value=" 1"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio2">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar2.png"
@@ -36,7 +36,7 @@
                 value="2"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio3">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar3.png"
@@ -51,7 +51,7 @@
                 value="3"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio4">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar4.png"
@@ -66,7 +66,7 @@
                 value="4"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio5">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar5.png"
@@ -81,7 +81,7 @@
                 value="5"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio6">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar6.png"
@@ -96,7 +96,7 @@
                 value="6"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio7">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar7.png"
@@ -111,7 +111,7 @@
                 value="7"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio8">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar8.png"
@@ -126,7 +126,7 @@
                 value="8"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio9">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar9.png"
@@ -141,7 +141,7 @@
                 value="9"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio10">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar10.png"
@@ -156,7 +156,7 @@
                 value="10"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio11">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar11.png"
@@ -171,7 +171,7 @@
                 value="11"
               />
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 text-center">
+            <div class="col-3 col-sm-2 text-center">
               <label class="" for="inlineRadio12">
                 <img
                   src="http://localhost:3000/images/static/avatar/avatar12.png"
@@ -205,7 +205,7 @@
     </div>
 
     <div class="col-sm-12 text-center mt-3">
-      <button @click="editUser(theUser.id, user.id)" class="btn btn-primary">
+      <button @click="editUser(theUser.id, user.id)" class="btn btn-primary btn-edit">
         Modifier l'avatar
       </button>
     </div>
@@ -290,12 +290,17 @@ export default {
     border-radius: 5px;
 
     margin-top: 20px;
+    padding-left: 20px;
+    padding-right:20px;
   }
   .inputAvatar {
     display: flex;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
+  }
+  .btn-edit{
+    margin-bottom:50px;
   }
 }
 .separation-ou {

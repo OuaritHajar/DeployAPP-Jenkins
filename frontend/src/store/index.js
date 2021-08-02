@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import createPersistedState from "vuex-persistedstate";
+//import createPersistedState from "vuex-persistedstate";
 const axios = require('axios');
 
 let instance = axios.create({
@@ -669,7 +669,7 @@ const store = createStore({
         }
 
     },
-    plugins: [createPersistedState()],
+    //plugins: [createPersistedState()],
 });
 
 export default store;
