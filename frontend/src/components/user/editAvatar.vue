@@ -259,7 +259,6 @@ export default {
 
       this.$store
         .dispatch("editUser", formData)
-        //this.$store.dispatch('getProfilUsers',userId)
         .then(() => {
           this.$emit("avatar-updated");
         });

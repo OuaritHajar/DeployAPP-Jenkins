@@ -82,7 +82,6 @@ module.exports = {
                         })
                         if (imageFound.url != null) {
 
-
                             // supprime ancienne image
                             fs.unlink(imageFound.url, (err) => {
                                 if (err) {
