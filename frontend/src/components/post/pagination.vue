@@ -3,7 +3,7 @@
     <nav aria-label="pagination">
       <ul class="pagination">
         <li class="page_item mr-3">
-          <button type="button" class="btn btn-primary" @click="lastPage">
+          <button v-if="actuelPage != 1" type="button" class="btn btn-primary" @click="lastPage">
             Précédent
           </button>
         </li>
@@ -31,9 +31,8 @@
             </button>
           </li>
         </div>
-
         <li class="page_item ml-3">
-          <button type="button" class="btn btn-primary" @click="nextPage">
+          <button v-if="actuelPage != nombreDePages" type="button" class="btn btn-primary" @click="nextPage">
             Suivant
           </button>
         </li>

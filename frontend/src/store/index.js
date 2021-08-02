@@ -5,22 +5,11 @@ const axios = require('axios');
 let instance = axios.create({
     baseURL: 'http://localhost:3000/api/',
 });
-let user = localStorage.getItem('user');
-if (!user) {
-    user = {
-        id: -1,
-        token: '',
-    }
-} else {
-    try {
-        user = JSON.parse(user);
-        instance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
-    } catch (ex) {
-        user = {
-            id: -1,
-            token: '',
-        };
-    }
+
+
+let token = localStorage.getItem('token');
+if (token) { 
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
 const store = createStore({
@@ -345,10 +334,11 @@ const store = createStore({
                 instance.post('users/login', userInfos)
                     .then((response) => {
                         instance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+                        commit('LOG_USER', response.data);
+                        localStorage.setItem('token', response.data.token)
                         commit('STATUS_LOGIN', '')
                         commit('STATUS_SIGNUP', '')
                         commit('LOGIN_ERROR', '')
-                        commit('LOG_USER', response.data);
                         resolve(response)
                     })
                     .catch((error) => {
@@ -358,10 +348,17 @@ const store = createStore({
                     });
             })
         },
+
+        getUserAlreadyConnected: ({ commit }) => {
+            instance.get('users/user')
+            .then((response) => {
+                commit('LOG_USER', response.data);
+            })
+        },
+
         logout: ({ commit }, information) => {
             commit("LOG_OUT", information)
         },
-
 
         // --------------  PROFIL  ---------------
         getProfilUsers: ({ commit }, userId) => {

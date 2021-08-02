@@ -28,6 +28,11 @@ export default {
     };
   },
   mounted() {
+    let token = localStorage.getItem('token')
+    if (token){
+      this.$store.dispatch("getUserAlreadyConnected");
+    }
+
     moment.locale("fr");
     this.$store.dispatch("postsNumber");
   },

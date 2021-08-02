@@ -134,10 +134,6 @@ module.exports = {
                             'first_name': userFound.first_name,
                             'last_name': userFound.last_name,
                             'avatarUrl': userFound.avatarUrl,
-                            'sexe': userFound.sexe,
-                            'createdAt': userFound.createdAt,
-                            'updatedAt': userFound.updatedAt,
-                            'email': userFound.updatedAt,
                             'isAdmin': userFound.isAdmin,
                         })
                     } else {
@@ -149,6 +145,30 @@ module.exports = {
             }
         } catch (err) {
             console.error(err);
+        }
+    },
+
+
+
+    getUserAlreadyConnected: async (req, res) => {
+        const headerAuth = req.headers['authorization'];
+        const userId = jwtUtils.getUserId(headerAuth);
+
+        if (userId < 0)
+            return res.status(400).json({ 'error': 'wrong token' })
+        try {
+             const userFound = await db.User.findOne({
+                attributes: ['id', 'first_name', 'last_name', 'avatarUrl', 'isAdmin'],
+                where: { id: userId }
+            })
+            if (userFound) {
+                res.status(201).json(userFound);
+            } else {
+                res.status(404).json({ 'error': 'user not found' });
+            }
+
+        } catch (err) {
+            console.error(err)
         }
     },
 
