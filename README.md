@@ -47,13 +47,13 @@ DB_USER='root'
 DB_PASS='motdepasse'
 `
 1. Dépendances backend -------------  `cd backend` => `npm install`
-3. Lancer le serveur -------------------   `nodemon server`
+2. Lancer le serveur -------------------   `nodemon server`
 
   
   
   
 ## Front-End VueJs   
-1. Installer les dépendances  ---------- `cd frontend/groupomania-app` => `npm install`
+1. Installer les dépendances  ---------- `cd frontend` => `npm install`
 2. Lancer le serveur ------------------- `npm run serve`
   
   
