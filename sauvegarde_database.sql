@@ -188,7 +188,7 @@ DROP TABLE IF EXISTS `sequelizemeta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sequelizemeta` (
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`name`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
@@ -223,7 +223,7 @@ CREATE TABLE `users` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,7 +232,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Jean-Luc','Picard','user1@hotmail.fr','$2b$05$SJtgk2bqf0fnznplw1ifpOb8JO6.4ZyHzdHmwoQLA2W65WyF7F0N.','http://localhost:3000/images/static/avatar/avatar12.png',0,0,'2021-07-26 20:53:16','2021-07-26 21:11:14'),(2,'André','Biller','user2@hotmail.fr','$2b$05$tqaWUXJc2o60ZeuDCyNrKexodjP/GZKhCFwO7rPv/j6JJ2FfHswUm','http://localhost:3000/images/static/avatar/avatar11.png',0,0,'2021-07-26 20:55:37','2021-07-26 21:11:27'),(3,'Cédric','Schmitt','user3@hotmail.fr','$2b$05$djeesFrNWudjFR6EPOrlOO3SCekzDR9sOYDXEjwsEdBkLlY4p82i.','http://localhost:3000/images/static/avatar/avatar7.png',0,0,'2021-07-26 20:56:14','2021-07-26 21:11:44'),(4,'Delphine','Edelwiss','user4@hotmail.fr','$2b$05$H2SHiILD8k.6mKOU7sI.nOcojE6efIgjhMr9TTK1uHCt2R1FOpwL.','http://localhost:3000/images/static/avatar/avatar4.png',1,0,'2021-07-26 20:56:38','2021-07-26 20:56:38'),(5,'Eric','De la rue','user5@hotmail.fr','$2b$05$wf9Zyu17c4wdG630TjlQteTTaWdSTYOlLZNl6w.UzfEAxPRJpN77y','http://localhost:3000/images/static/assets/photos/avatarUrl-1627337214398-man.jpg',0,0,'2021-07-26 20:59:41','2021-07-26 22:06:54'),(6,'Frédéric','Androus','user6@hotmail.fr','$2b$05$HizhtmeYna3LfrfzQtaw3egQUBcaVocIVvfv9P.hyBwq3nSNNBD4W','http://localhost:3000/images/static/avatar/avatar9.png',0,0,'2021-07-26 21:00:23','2021-07-26 21:12:23'),(7,'Gertrude','Cotensseau','user7@hotmail.fr','$2b$05$S3DyEADjP5rC4SSoBJm86.FmBAYb8AZ/btbIFEuR.7OLC95vBUJQm','http://localhost:3000/images/static/avatar/avatar4.png',1,0,'2021-07-26 21:06:38','2021-07-26 21:12:46'),(8,'Henri','Duglass','user8@hotmail.fr','$2b$05$ooEI.6idI/7iuQPHufE1z.Bl9gi/axukM8J.ihjdaV.hs4SuJ8LQu','http://localhost:3000/images/static/avatar/avatar11.png',0,0,'2021-07-26 21:08:20','2021-07-26 21:13:05'),(9,'Isabelle','Bignossi','user9@hotmail.fr','$2b$05$bl/eRzb0OgH/217mHd7V/ugJO5mSM95aI7PdiUOEcT3YW2aJ7yUBG','http://localhost:3000/images/static/assets/photos/avatarUrl-1627337314333-girl.jpg',1,0,'2021-07-26 21:09:54','2021-07-26 22:08:34'),(10,'Joris','Hanz','user10@hotmail.fr','$2b$05$p/BTHZb3eghFXJ5BW7IWCeSrkTRTzPpD2d4XJHyxN34Yqse8bBpWG','http://localhost:3000/images/static/avatar/avatar7.png',0,0,'2021-07-26 21:10:40','2021-07-26 21:10:40');
+INSERT INTO `users` VALUES (1,'Jean-Luc','Picard','user1@hotmail.fr','$2b$05$SJtgk2bqf0fnznplw1ifpOb8JO6.4ZyHzdHmwoQLA2W65WyF7F0N.','http://localhost:3000/images/static/avatar/avatar12.png',0,0,'2021-07-26 20:53:16','2021-07-26 21:11:14'),(2,'André','Biller','user2@hotmail.fr','$2b$05$tqaWUXJc2o60ZeuDCyNrKexodjP/GZKhCFwO7rPv/j6JJ2FfHswUm','http://localhost:3000/images/static/avatar/avatar11.png',0,0,'2021-07-26 20:55:37','2021-07-26 21:11:27'),(3,'Cédric','Schmitt','user3@hotmail.fr','$2b$05$djeesFrNWudjFR6EPOrlOO3SCekzDR9sOYDXEjwsEdBkLlY4p82i.','http://localhost:3000/images/static/avatar/avatar7.png',0,0,'2021-07-26 20:56:14','2021-07-26 21:11:44'),(4,'Delphine','Edelwiss','user4@hotmail.fr','$2b$05$H2SHiILD8k.6mKOU7sI.nOcojE6efIgjhMr9TTK1uHCt2R1FOpwL.','http://localhost:3000/images/static/avatar/avatar4.png',1,0,'2021-07-26 20:56:38','2021-07-26 20:56:38'),(5,'Eric','De la rue','user5@hotmail.fr','$2b$05$wf9Zyu17c4wdG630TjlQteTTaWdSTYOlLZNl6w.UzfEAxPRJpN77y','http://localhost:3000/images/static/assets/photos/avatarUrl-1627337214398-man.jpg',0,0,'2021-07-26 20:59:41','2021-07-26 22:06:54'),(6,'Frédéric','Androus','user6@hotmail.fr','$2b$05$HizhtmeYna3LfrfzQtaw3egQUBcaVocIVvfv9P.hyBwq3nSNNBD4W','http://localhost:3000/images/static/avatar/avatar9.png',0,0,'2021-07-26 21:00:23','2021-07-26 21:12:23'),(7,'Gertrude','Cotensseau','user7@hotmail.fr','$2b$05$S3DyEADjP5rC4SSoBJm86.FmBAYb8AZ/btbIFEuR.7OLC95vBUJQm','http://localhost:3000/images/static/avatar/avatar4.png',1,0,'2021-07-26 21:06:38','2021-07-26 21:12:46'),(8,'Henri','Duglass','user8@hotmail.fr','$2b$05$ooEI.6idI/7iuQPHufE1z.Bl9gi/axukM8J.ihjdaV.hs4SuJ8LQu','http://localhost:3000/images/static/avatar/avatar11.png',0,0,'2021-07-26 21:08:20','2021-07-26 21:13:05'),(9,'Isabelle','Bignossi','user9@hotmail.fr','$2b$05$bl/eRzb0OgH/217mHd7V/ugJO5mSM95aI7PdiUOEcT3YW2aJ7yUBG','http://localhost:3000/images/static/assets/photos/avatarUrl-1627337314333-girl.jpg',1,0,'2021-07-26 21:09:54','2021-07-26 22:08:34'),(10,'Joris','Hanz','user10@hotmail.fr','$2b$05$p/BTHZb3eghFXJ5BW7IWCeSrkTRTzPpD2d4XJHyxN34Yqse8bBpWG','http://localhost:3000/images/static/avatar/avatar7.png',0,0,'2021-07-26 21:10:40','2021-07-26 21:10:40'),(11,'Admin','Admin','admin@admin.fr','$2b$05$uB1RKdxyRbsB6wDsDunaCeO2Olr2cz9vVGwLlwwRPIZtVhSi73GdK','http://localhost:3000/images/static/avatar/avatar11.png',0,1,'2021-08-02 21:57:31','2021-08-02 21:57:31');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -245,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-27  0:13:42
+-- Dump completed on 2021-08-03  0:02:20
