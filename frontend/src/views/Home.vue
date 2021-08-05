@@ -54,11 +54,6 @@ export default {
       information: ["get_information"],
     }),
   },
-  methods: {
-    deco() {
-      this.$store.dispatch("logout");
-    },
-  },
 };
 </script>
 

@@ -1,11 +1,9 @@
 import { createStore } from 'vuex'
 //import createPersistedState from "vuex-persistedstate";
 const axios = require('axios');
-
 let instance = axios.create({
     baseURL: 'http://localhost:3000/api/',
 });
-
 
 let token = localStorage.getItem('token');
 if (token) { 
@@ -447,7 +445,6 @@ const store = createStore({
                                 getResponse.data.post.displayEditPost = false
                                 getResponse.data.post.listUsersLike = false
                                 getResponse.data.post.userAlreadyLike = false
-
                                 commit('CREATE_POST', getResponse.data.post)
                                 resolve(getResponse)
                             })

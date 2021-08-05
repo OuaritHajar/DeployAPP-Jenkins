@@ -75,8 +75,8 @@ export default {
         })
         .then((response) => {
           if (response) {
-            this.$router.push({ name: "Posts", params: { page: 1 } });
             this.$emit("userConnected");
+            this.$router.push({ name: "Posts", params: { page: 1 } });
           }
         })
         .catch((error) => {

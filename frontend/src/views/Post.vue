@@ -5,7 +5,7 @@
 
       <!-- Titre / Description -->
       <div class="description-post">
-        <p class="title" v-if="post.title">{{ post.title }}</p>
+        <p class="title"> {{ post.title }}</p>
         <p class="description">{{ post.description }}</p>
         <div class="img-post">
           <img v-if="post.img_url != null" :src="post.img_url" alt="photo" />

@@ -154,7 +154,7 @@
           </div>
         </div>
 
-        <!-- Interface de modification -->
+        <!-- Interface de modification avatar -->
         <EditAvatar
           v-if="modifAvatar"
           :theUser="theUser"
