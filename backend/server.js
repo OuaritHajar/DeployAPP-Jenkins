@@ -51,8 +51,13 @@ server.on('listening', () => {
 });
 
 // écoute le port
-server.listen(port), async () => {
-    console.log('Server up on http://localhost:3000')
-    await sequelize.sync({ force: true })
-    console.log('Database synced') 
-};
+server.listen(port, async () => {
+    console.log('Serveur disponible sur http://localhost:3000');
+});
+
+// Synchronisation de la base de données en dehors de l'événement server.on
+(async () => {
+    console.log('Synchronisation de la base de données...');
+    await sequelize.sync({ force: true });
+    console.log('Base de données synchronisée');
+})();
